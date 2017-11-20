@@ -1,0 +1,42 @@
+language: generic
+
+branches:
+  only:
+    - master
+    - /^\d+\.\d+\.\d+$/
+
+cache:
+  directories:
+    - $HOME/.dotnet
+
+before_install:
+  - if [ "$OS" = "linux" ]; then sudo apt-get install libunwind8 libicu-dev libcurl4-openssl-dev; fi
+
+script:
+  - wget https://dot.net/v1/dotnet-install.sh && chmod +x dotnet-install.sh
+  - ./dotnet-install.sh --channel 2.0 --version latest --install-dir $HOME/.dotnet
+  - $HOME/.dotnet/dotnet restore
+  - $HOME/.dotnet/dotnet test Clarifai.IntegrationTests/Clarifai.IntegrationTests.csproj
+  - $HOME/.dotnet/dotnet test Clarifai.UnitTests/Clarifai.UnitTests.csproj
+
+before_cache:
+  - rm -rf $HOME/.dotnet/optimizationdata
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      env: OS=linux
+    - os: osx
+      osx_image: xcode9
+      env: OS=osx
+
+deploy:
+  provider: script
+  script:
+    - ./deploy.sh
+  skip_cleanup: true
+  on:
+    condition: $OS = osx
+    tags: true
+    repo: Clarifai/clarifai-csharp
