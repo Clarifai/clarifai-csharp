@@ -23,7 +23,12 @@ namespace Clarifai.DTOs.Searches
 
         public static SearchBy ConceptName(string name)
         {
-            return new SearchByConceptName(name);
+            return new SearchByConceptName("output", name);
+        }
+
+        public static SearchBy UserTaggedConceptName(string name)
+        {
+            return new SearchByConceptName("input", name);
         }
 
         public static SearchBy ImageURL(ClarifaiURLImage image)
@@ -63,19 +68,19 @@ namespace Clarifai.DTOs.Searches
 
         private class SearchByConceptID : SearchBy
         {
-            private readonly string _owningObjectID;
+            private readonly string _ownerObjectKey;
             private readonly string _id;
 
-            public SearchByConceptID(string owningObjectID, string id)
+            public SearchByConceptID(string ownerObjectKey, string id)
             {
-                _owningObjectID = owningObjectID;
+                _ownerObjectKey = ownerObjectKey;
                 _id = id;
             }
 
             public override JObject Serialize()
             {
                 return new JObject(
-                    new JProperty(_owningObjectID, new JObject(
+                    new JProperty(_ownerObjectKey, new JObject(
                         new JProperty("data", new JObject(
                             new JProperty("concepts", new JArray(new JObject(
                                 new JProperty("id", _id)))))))));
@@ -84,17 +89,19 @@ namespace Clarifai.DTOs.Searches
 
         private class SearchByConceptName : SearchBy
         {
+            private readonly string _ownerObjectKey;
             private readonly string _name;
 
-            public SearchByConceptName(string name)
+            public SearchByConceptName(string ownerObjectKey, string name)
             {
+                _ownerObjectKey = ownerObjectKey;
                 _name = name;
             }
 
             public override JObject Serialize()
             {
                 return new JObject(
-                    new JProperty("output", new JObject(
+                    new JProperty(_ownerObjectKey, new JObject(
                         new JProperty("data", new JObject(
                             new JProperty("concepts", new JArray(new JObject(
                                 new JProperty("name", _name)))))))));
