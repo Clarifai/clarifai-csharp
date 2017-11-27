@@ -45,7 +45,7 @@ namespace Clarifai.DTOs.Models
         /// <param name="areConceptsMutuallyExclusive">are concepts mutually exclusive</param>
         /// <param name="isEnvironmentClosed">is environment closed</param>
         /// <param name="language">the language</param>
-        public ModifyModelRequest Modify(ModifyAction action, string name = null,
+        public ModifyModelRequest Modify(ModifyAction action = null, string name = null,
             IEnumerable<Concept> concepts = null, bool? areConceptsMutuallyExclusive = null,
             bool? isEnvironmentClosed = null, string language = null)
         {

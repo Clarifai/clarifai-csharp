@@ -6,7 +6,6 @@ using Clarifai.API.Requests.Models;
 using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
-using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
 using Clarifai.DTOs.Searches;
 using Newtonsoft.Json.Linq;
@@ -279,7 +278,7 @@ namespace Clarifai.API
         /// <param name="isEnvironmentClosed">is environment closed</param>
         /// <param name="language">the language</param>
         /// <returns>a new model modification request</returns>
-        ModifyModelRequest ModifyModel(string modelID, ModifyAction action,
+        ModifyModelRequest ModifyModel(string modelID, ModifyAction action = null,
             string name = null, IEnumerable<Concept> concepts = null,
             bool? areConceptsMutuallyExclusive = null, bool? isEnvironmentClosed = null,
             string language = null);

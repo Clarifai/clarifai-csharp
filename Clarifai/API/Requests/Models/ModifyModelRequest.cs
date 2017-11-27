@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Clarifai.DTOs.Models;
-using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
 using Newtonsoft.Json.Linq;
 
@@ -33,8 +32,8 @@ namespace Clarifai.API.Requests.Models
         /// <param name="areConceptsMutuallyExclusive">are concepts mutually exclusive</param>
         /// <param name="isEnvironmentClosed">is environment closed</param>
         /// <param name="language">the language</param>
-        public ModifyModelRequest(IClarifaiClient client, string modelID, ModifyAction action,
-            string name = null, IEnumerable<Concept> concepts = null,
+        public ModifyModelRequest(IClarifaiClient client, string modelID,
+            ModifyAction action = null, string name = null, IEnumerable<Concept> concepts = null,
             bool? areConceptsMutuallyExclusive = null, bool? isEnvironmentClosed = null,
             string language = null) : base(client)
         {
@@ -54,10 +53,14 @@ namespace Clarifai.API.Requests.Models
                 Client,
                 _modelID,
                 name: _name);
-            return new JObject(
+            var body = new JObject(
                 new JProperty("models", new JArray(model.Serialize(_concepts,
-                    _areConceptsMutuallyExclusive, _isEnvironmentClosed, _language))),
-                new JProperty("action", _action.Serialize()));
+                    _areConceptsMutuallyExclusive, _isEnvironmentClosed, _language))));
+
+            ModifyAction action = _action ?? ModifyAction.Merge;
+            body.Add("action", action.Serialize());
+
+            return body;
         }
 
         /// <inheritdoc />
