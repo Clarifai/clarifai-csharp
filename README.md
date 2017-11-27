@@ -1,8 +1,42 @@
+# Note that this is a pre 1.0.0 release and is subject to change and break pending an official stable release.
+
+In NYC? We're hosting a [Clarifai .NET Hack Night](https://clarifainethacknight.splashthat.com/) on December, 5th to solicit community feedback.
+
 # Clarifai API C# Client
 
 [![NuGet](https://img.shields.io/nuget/v/Clarifai.svg)](https://www.nuget.org/packages/Clarifai)
 [![Build Status](https://travis-ci.org/Clarifai/clarifai-csharp.svg?branch=master)](https://travis-ci.org/Clarifai/clarifai-csharp)
 [![Build status](https://ci.appveyor.com/api/projects/status/osiexiua9ig1w3as/branch/master?svg=true)](https://ci.appveyor.com/project/robertwenquan/clarifai-csharp-1dm15/branch/master)
+
+## Installation
+
+### Adding the Clarifai C# library to your project
+
+Within Visual Studio IDE:
+
+```
+Install-Package Clarifai
+```
+
+with the `dotnet` command line tool:
+
+```
+dotnet add package Clarifai
+```
+
+###  Prerequisites
+
+This library supports .NET Standard 1.3 which means it can be used in the following .NET implementations:
+
+- .NET Framework 4.6+
+- .NET Core 1.0+
+- Mono 4.6+
+- Xamarin.iOS 10.0+
+- Xamarin.Mac 3.0+
+- Xamarin.Andoid 7.0+
+- UWP 10.0+
+
+The library can be used on any platform supporting one of the above libraries.
 
 ## Getting Started
 
@@ -77,36 +111,6 @@ if (models[0].OutputInfo.TypeExt == "concept")
 In a similar way you may cast `IPrediction` when the actual class type is not known at compile time.
 
 Please see more in the [Developer's Guide](https://clarifai.com/developer/guide/).
-
-## Installation
-
-### Adding the Clarifai C# library to your project
-
-Within Visual Studio IDE:
-
-```
-Install-Package Clarifai
-```
-
-with the `dotnet` command line tool:
-
-```
-dotnet add package Clarifai
-```
-
-###  Prerequisites
-
-This library supports .NET Standard 1.3 which means it can be used in the following .NET implementations:
-
-- .NET Framework 4.6+
-- .NET Core 1.0+
-- Mono 4.6+
-- Xamarin.iOS 10.0+
-- Xamarin.Mac 3.0+
-- Xamarin.Andoid 7.0+
-- UWP 10.0+
-
-The library can be used on any platform supporting one of the above libraries.
 
 ## Running the tests
 
