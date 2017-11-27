@@ -8,21 +8,21 @@ namespace Clarifai.DTOs
     public class GeoPoint
     {
         /// <summary>
-        /// The latitude - X axis.
-        /// </summary>
-        public decimal Latitude { get; }
-
-        /// <summary>
-        /// The longitude - Y axis.
+        /// The longitude - X axis.
         /// </summary>
         public decimal Longitude { get; }
 
         /// <summary>
+        /// The latitude - Y axis.
+        /// </summary>
+        public decimal Latitude { get; }
+
+        /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="latitude">the latitude - latitude axis</param>
         /// <param name="longitude">the longitude - longitude axis</param>
-        public GeoPoint(decimal latitude, decimal longitude)
+        /// <param name="latitude">the latitude - latitude axis</param>
+        public GeoPoint(decimal longitude, decimal latitude)
         {
             Latitude = latitude;
             Longitude = longitude;
@@ -31,46 +31,46 @@ namespace Clarifai.DTOs
         /// <summary>
         /// Returns a new point moved by the new coordinates
         /// </summary>
-        /// <param name="latitude">the latitude to translate by</param>
         /// <param name="longitude">the longitude to translate by</param>
+        /// <param name="latitude">the latitude to translate by</param>
         /// <returns>a translated geographical point</returns>
-        public GeoPoint Translated(decimal latitude, decimal longitude)
+        public GeoPoint Translated(decimal longitude, decimal latitude)
         {
-            return new GeoPoint(Latitude + latitude, Longitude + longitude);
+            return new GeoPoint(Longitude + longitude, Latitude + latitude);
         }
 
         public JObject Serialize()
         {
             return new JObject(
-                new JProperty("latitude", Latitude),
-                new JProperty("longitude", Longitude));
+                new JProperty("longitude", Longitude),
+                new JProperty("latitude", Latitude));
         }
 
         public static GeoPoint Deserialize(dynamic jsonObject)
         {
             dynamic point = jsonObject.geo_point;
-            return new GeoPoint((decimal)point.latitude, (decimal)point.longitude);
+            return new GeoPoint((decimal)point.longitude, (decimal)point.latitude);
         }
 
         public override bool Equals(object obj)
         {
             return obj is GeoPoint point &&
-                   Latitude == point.Latitude &&
-                   Longitude == point.Longitude;
+                   Longitude == point.Longitude &&
+                   Latitude == point.Latitude;
         }
 
         public override int GetHashCode()
         {
             var hashCode = 1861411795;
-            hashCode = hashCode * -1521134295 + Latitude.GetHashCode();
             hashCode = hashCode * -1521134295 + Longitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + Latitude.GetHashCode();
             return hashCode;
         }
 
         public override string ToString()
         {
-            return string.Format("[GeoPoint: (latitude: {0}, longitude: {0})]",
-                Latitude, Longitude);
+            return string.Format("[GeoPoint: (longitude: {0}, latitude: {0})]",
+                Longitude, Latitude);
         }
     }
 }
