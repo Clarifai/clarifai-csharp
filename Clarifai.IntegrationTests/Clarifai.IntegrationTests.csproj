@@ -1,27 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="Assets\balloons.jpg" />
     <None Remove="Assets\beer.mp4" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Assets\balloons.jpg" />
     <EmbeddedResource Include="Assets\beer.mp4" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="NUnit" Version="3.8.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Clarifai\Clarifai.csproj" />
   </ItemGroup>
-
 </Project>

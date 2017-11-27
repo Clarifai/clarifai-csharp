@@ -74,24 +74,36 @@ namespace Clarifai.DTOs.Models
             {
                 body.Add("created_at", CreatedAt);
             }
-            if (OutputInfo != null)
+
+            var outputInfo = new JObject();
+            if (concepts != null)
             {
-                var outputInfo = new JObject(
-                    new JProperty("data", new JObject(
-                        new JProperty("concepts",
-                            new JArray(concepts.Select(c => c.Serialize()))))));
-                if (areConceptsMutuallyExclusive != null)
-                {
-                    outputInfo.Add("concepts_mutually_exclusive", areConceptsMutuallyExclusive);
-                }
-                if (isEnvironmentClosed != null)
-                {
-                    outputInfo.Add("closed_environment", isEnvironmentClosed);
-                }
-                if (language != null)
-                {
-                    outputInfo.Add("language", language);
-                }
+                outputInfo.Add("data", new JObject(
+                    new JProperty("concepts",
+                        new JArray(concepts.Select(c => c.Serialize())))));
+            }
+
+            var outputConfig = new JObject();
+            if (areConceptsMutuallyExclusive != null)
+            {
+                outputConfig.Add("concepts_mutually_exclusive", areConceptsMutuallyExclusive);
+            }
+            if (isEnvironmentClosed != null)
+            {
+                outputConfig.Add("closed_environment", isEnvironmentClosed);
+            }
+            if (language != null)
+            {
+                outputConfig.Add("language", language);
+            }
+
+            if (outputConfig.Count > 0)
+            {
+                outputInfo.Add("output_config", outputConfig);
+            }
+
+            if (outputInfo.Count > 0)
+            {
                 body.Add("output_info", outputInfo);
             }
             return body;

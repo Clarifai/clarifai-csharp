@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Clarifai.API;
+using Clarifai.API.Requests.Models;
 using Clarifai.API.Responses;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
 using Clarifai.UnitTests.Fakes;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace Clarifai.UnitTests
@@ -125,6 +127,89 @@ namespace Clarifai.UnitTests
 
             Assert.True(response.IsSuccessful);
             Assert.AreEqual("Ok", response.Status.Description);
+        }
+
+        [Test]
+        public async Task ModifyModelRequestAndResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                patchResponse: @"
+{
+    ""status"": {
+        ""code"": 10000,
+        ""description"": ""Ok""
+    },
+    ""models"": [{
+        ""id"": ""@modelID"",
+        ""name"": ""@newModelName"",
+        ""created_at"": ""2017-11-27T08:35:13.911899Z"",
+        ""app_id"": ""@appID"",
+        ""output_info"": {
+            ""output_config"": {
+                ""concepts_mutually_exclusive"": true,
+                ""closed_environment"": true
+            },
+            ""message"": ""Show output_info with: GET /models/{model_id}/output_info"",
+            ""type"": ""concept"",
+            ""type_ext"": ""concept""
+        },
+        ""model_version"": {
+            ""id"": ""@modelVersionID"",
+            ""created_at"": ""2017-11-27T08:35:14.298376733Z"",
+            ""status"": {
+                ""code"": 21102,
+                ""description"": ""Model not yet trained""
+            }
+        }
+    }]
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            var response = await client.ModifyModel(
+                    "@modelID",
+                    ModifyAction.Merge,
+                    name: "@newModelName",
+                    concepts: new List<Concept> {new Concept("@conceptID1")},
+                    areConceptsMutuallyExclusive: true,
+                    isEnvironmentClosed: true)
+                .ExecuteAsync();
+
+            var expectedRequestBody = JObject.Parse(@"
+{
+    ""models"": [
+      {
+        ""id"": ""@modelID"",
+        ""name"": ""@newModelName"",
+        ""output_info"": {
+          ""data"": {
+            ""concepts"": [
+              {
+                ""id"": ""@conceptID1""
+              }
+            ]
+          },
+          ""output_config"": {
+            ""concepts_mutually_exclusive"": true,
+            ""closed_environment"": true
+          }
+        }
+      }
+    ],
+    ""action"": ""merge""
+  }
+");
+
+            Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PatchedBody));
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual("Ok", response.Status.Description);
+
+            ConceptModel model = response.Get();
+            Assert.AreEqual("@modelID", model.ModelID);
+            Assert.AreEqual("@newModelName", model.Name);
+            Assert.AreEqual("@modelVersionID", model.ModelVersion.ID);
+            Assert.AreEqual(true, model.OutputInfo.AreConceptsMutuallyExclusive);
+            Assert.AreEqual(true, model.OutputInfo.IsEnvironmentClosed);
         }
     }
 }

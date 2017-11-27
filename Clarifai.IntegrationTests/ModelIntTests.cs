@@ -62,13 +62,17 @@ namespace Clarifai.IntegrationTests
                     await Client.CreateModel(
                         modelID,
                         name: originalName,
-                        concepts: originalConcepts)
+                        concepts: originalConcepts,
+                        areConceptsMutuallyExclusive: false,
+                        isEnvironmentClosed: false)
                     .ExecuteAsync();
 
                 Assert.True(createResponse.IsSuccessful);
                 ConceptModel createdModel = createResponse.Get();
                 Assert.AreEqual(modelID, createdModel.ModelID);
                 Assert.AreEqual(originalName, createdModel.Name);
+                Assert.AreEqual(false, createdModel.OutputInfo.AreConceptsMutuallyExclusive);
+                Assert.AreEqual(false, createdModel.OutputInfo.IsEnvironmentClosed);
                 Assert.AreEqual(HttpStatusCode.OK, createResponse.HttpCode);
 
                 /*
@@ -79,13 +83,17 @@ namespace Clarifai.IntegrationTests
                         modelID,
                         ModifyAction.Overwrite,
                         name: newName,
-                        concepts: newConcepts)
+                        concepts: newConcepts,
+                        areConceptsMutuallyExclusive: true,
+                        isEnvironmentClosed: true)
                     .ExecuteAsync();
 
                 Assert.True(modifyResponse.IsSuccessful);
                 ConceptModel modifiedModel = modifyResponse.Get();
                 Assert.AreEqual(modelID, modifiedModel.ModelID);
                 Assert.AreEqual(newName, modifiedModel.Name);
+                Assert.AreEqual(true, modifiedModel.OutputInfo.AreConceptsMutuallyExclusive);
+                Assert.AreEqual(true, modifiedModel.OutputInfo.IsEnvironmentClosed);
                 Assert.AreEqual(HttpStatusCode.OK, modifyResponse.HttpCode);
 
                 /*
