@@ -307,6 +307,66 @@ namespace Clarifai.IntegrationTests
             }
         }
 
+        [Test]
+        [Retry(3)]
+        public async Task AddingImageUrlWithCropShouldBeSuccessful()
+        {
+            string inputID = GenerateRandomID();
+            try
+            {
+                /*
+                 * Add input with concepts.
+                 */
+                ClarifaiResponse<List<IClarifaiInput>> addResponse = await Client.AddInputs(
+                        new ClarifaiURLImage(
+                            CELEB1,
+                            id: inputID,
+                            crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M),
+                            allowDuplicateUrl: true))
+                    .ExecuteAsync();
+                Assert.True(addResponse.IsSuccessful);
+                var input = (ClarifaiURLImage) addResponse.Get()[0];
+                Assert.AreEqual(new Crop(0.1M, 0.2M, 0.3M, 0.4M), input.Crop);
+            }
+            finally
+            {
+                /*
+                 * Delete the input.
+                 */
+                await DeleteInput(inputID);
+            }
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task AddingImageFileWithCropShouldBeSuccessful()
+        {
+            string inputID = GenerateRandomID();
+            try
+            {
+                /*
+                 * Add input with concepts.
+                 */
+                ClarifaiResponse<List<IClarifaiInput>> addResponse = await Client.AddInputs(
+                        new ClarifaiFileImage(
+                            ReadResource(BALLOONS_IMAGE_FILE),
+                            id: inputID,
+                            crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
+                    .ExecuteAsync();
+                Assert.True(addResponse.IsSuccessful);
+
+                ClarifaiURLImage input = (ClarifaiURLImage) addResponse.Get()[0];
+                Assert.AreEqual(new Crop(0.1M, 0.2M, 0.3M, 0.4M), input.Crop);
+            }
+            finally
+            {
+                /*
+                 * Delete the input.
+                 */
+                await DeleteInput(inputID);
+            }
+        }
+
         private async Task DeleteInput(string inputID)
         {
             var response = await Client.DeleteInputs(inputID)

@@ -28,7 +28,12 @@ namespace Clarifai.DTOs
             Right = right;
         }
 
-        public JObject Serialize()
+        public JArray SerializeAsArray()
+        {
+            return new JArray(new [] {Top, Left, Bottom, Right});
+        }
+
+        public JObject SerializeAsObject()
         {
             return new JObject(
                 new JProperty("top_row", Top),
@@ -39,11 +44,22 @@ namespace Clarifai.DTOs
 
         public static Crop Deserialize(dynamic jsonObject)
         {
-            return new Crop(
-                (decimal)jsonObject.top_row,
-                (decimal)jsonObject.left_col,
-                (decimal)jsonObject.bottom_row,
-                (decimal)jsonObject.right_col);
+            if (jsonObject is JArray)
+            {
+                return new Crop(
+                    top: (decimal) jsonObject[0],
+                    left: (decimal) jsonObject[1],
+                    bottom: (decimal) jsonObject[2],
+                    right: (decimal) jsonObject[3]);
+            }
+            else
+            {
+                return new Crop(
+                    (decimal) jsonObject.top_row,
+                    (decimal) jsonObject.left_col,
+                    (decimal) jsonObject.bottom_row,
+                    (decimal) jsonObject.right_col);
+            }
         }
 
         public override bool Equals(object obj)

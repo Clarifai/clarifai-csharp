@@ -10,8 +10,17 @@ namespace Clarifai.DTOs.Inputs
     /// </summary>
     public class ClarifaiURLImage : ClarifaiInput
     {
+        /// <summary>
+        /// The URL where image is located.
+        /// </summary>
         public string URL { get; }
+
         public bool? AllowDuplicateUrl { get; }
+
+        /// <summary>
+        /// The bounding box.
+        /// </summary>
+        public Crop Crop { get; }
 
         /// <summary>
         /// Ctor.
@@ -24,15 +33,17 @@ namespace Clarifai.DTOs.Inputs
         /// <param name="metadata">the image's optional metadata by which you can search</param>
         /// <param name="createdAt">the date & time of image's creation</param>
         /// <param name="geo">input's geographical point</param>
+        /// <param name="crop">the crop</param>
         public ClarifaiURLImage(string url, string id = null, bool? allowDuplicateUrl = null,
             IEnumerable<Concept> positiveConcepts = null,
             IEnumerable<Concept> negativeConcepts = null, JObject metadata = null,
-            DateTime? createdAt = null, GeoPoint geo = null)
-            : base(InputType.Image, InputForm.URL, id, positiveConcepts, negativeConcepts, metadata,
-                  createdAt, geo)
+            DateTime? createdAt = null, GeoPoint geo = null, Crop crop = null)
+            : base(InputType.Image, InputForm.URL, id, positiveConcepts, negativeConcepts,
+                metadata, createdAt, geo)
         {
             URL = url;
             AllowDuplicateUrl = allowDuplicateUrl;
+            Crop = crop;
         }
 
         /// <summary>
@@ -41,10 +52,18 @@ namespace Clarifai.DTOs.Inputs
         /// <returns>a new JSON object</returns>
         public override JObject Serialize()
         {
+            var image = new JObject(
+                new JProperty("url", URL));
+            if (Crop != null)
+            {
+                image.Add("crop", Crop.SerializeAsArray());
+            }
+            if (AllowDuplicateUrl != null)
+            {
+                image.Add("allow_duplicate_url", AllowDuplicateUrl);
+            }
             return Serialize(
-                new JProperty("image", new JObject(
-                    new JProperty("url", URL),
-                    new JProperty("allow_duplicate_url", AllowDuplicateUrl))));
+                new JProperty("image", image));
         }
 
         /// <summary>
@@ -71,6 +90,11 @@ namespace Clarifai.DTOs.Inputs
                     }
                 }
             }
+            Crop crop = null;
+            if (jsonObject.data.image.crop != null)
+            {
+                crop = DTOs.Crop.Deserialize(jsonObject.data.image.crop);
+            }
             JObject metadata = null;
             if (jsonObject.data.metadata != null)
             {
@@ -91,6 +115,7 @@ namespace Clarifai.DTOs.Inputs
                 url: (string) jsonObject.data.image.url,
                 positiveConcepts: positiveConcepts,
                 negativeConcepts: negativeConcepts,
+                crop: crop,
                 metadata: metadata,
                 createdAt: createdAt,
                 geo: geoPoint);

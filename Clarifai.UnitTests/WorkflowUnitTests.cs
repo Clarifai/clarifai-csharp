@@ -144,8 +144,7 @@ namespace Clarifai.UnitTests
       ""id"": null,
       ""data"": {
         ""image"": {
-          ""url"": ""@url"",
-          ""allow_duplicate_url"": null
+          ""url"": ""@url""
         }
       }
     }

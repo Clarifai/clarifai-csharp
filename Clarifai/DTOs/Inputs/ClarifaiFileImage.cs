@@ -18,6 +18,11 @@ namespace Clarifai.DTOs.Inputs
         public byte[] Bytes => (byte[]) _bytes.Clone();
 
         /// <summary>
+        /// The bounding box.
+        /// </summary>
+        public Crop Crop { get; }
+
+        /// <summary>
         /// Ctor.
         /// </summary>
         /// <param name="bytes">the image bytes</param>
@@ -27,14 +32,16 @@ namespace Clarifai.DTOs.Inputs
         /// <param name="metadata">the video's optional metadata by which you can search</param>
         /// <param name="createdAt">the date & time of video's creation</param>
         /// <param name="geo">input's geographical point</param>
+        /// <param name="crop">the crop</param>
         public ClarifaiFileImage(byte[] bytes, string id = null,
             IEnumerable<Concept> positiveConcepts = null,
             IEnumerable<Concept> negativeConcepts = null, JObject metadata = null,
-            DateTime? createdAt = null, GeoPoint geo = null)
+            DateTime? createdAt = null, GeoPoint geo = null, Crop crop = null)
             : base(InputType.Image, InputForm.File, id, positiveConcepts, negativeConcepts,
                   metadata, createdAt, geo)
         {
             _bytes = bytes;
+            Crop = crop;
         }
 
         /// <summary>
@@ -43,9 +50,14 @@ namespace Clarifai.DTOs.Inputs
         /// <returns>a new JSON object</returns>
         public override JObject Serialize()
         {
+            var image = new JObject(
+                new JProperty("base64", Convert.ToBase64String(_bytes)));
+            if (Crop != null)
+            {
+                image.Add("crop", Crop.SerializeAsArray());
+            }
             return Serialize(
-                new JProperty("image", new JObject(
-                    new JProperty("base64", Convert.ToBase64String(_bytes)))));
+                new JProperty("image", image));
         }
 
         public override bool Equals(object obj)

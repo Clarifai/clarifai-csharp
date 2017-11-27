@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
+using Clarifai.DTOs;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
@@ -44,6 +45,24 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
+            Assert.NotNull(response.Get()[0].Data[0]);
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task ConceptPredictForOneImageWithCropShouldBeSuccessful()
+        {
+            var response = await Client.Predict<Concept>(
+                    Client.PublicModels.GeneralModel.ModelID,
+                    new List<IClarifaiInput>{new ClarifaiURLImage(
+                        CELEB1,
+                        crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M))})
+                .ExecuteAsync();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual(10000, response.Status.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
+            Assert.NotNull(response.RawBody);
             Assert.NotNull(response.Get()[0].Data[0]);
         }
 

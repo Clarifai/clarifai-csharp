@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
-using Clarifai.Extensions;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.API.Requests.Models

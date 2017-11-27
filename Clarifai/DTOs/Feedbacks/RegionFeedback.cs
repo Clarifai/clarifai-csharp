@@ -32,7 +32,7 @@ namespace Clarifai.DTOs.Feedbacks
         {
             return new JObject(
                 new JProperty("region_info", new JObject(
-                    new JProperty("bounding_box", _crop.Serialize()),
+                    new JProperty("bounding_box", _crop.SerializeAsObject()),
                     new JProperty("feedback", _feedback.Value))),
                 new JProperty("data", new JObject(
                     new JProperty("concepts", _concepts.Select(c => c.Serialize())))));
