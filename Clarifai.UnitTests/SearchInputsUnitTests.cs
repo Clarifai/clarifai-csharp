@@ -198,8 +198,8 @@ namespace Clarifai.UnitTests
           ""data"": {
             ""geo"": {
               ""geo_point"": {
-                ""longitude"": -1.0,
-                ""latitude"": 1.5
+                ""longitude"": 1.5,
+                ""latitude"": -1.0
               },
               ""geo_limit"": {
                 ""type"": ""withinKilometers"",
