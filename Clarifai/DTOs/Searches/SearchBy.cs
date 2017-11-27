@@ -31,24 +31,24 @@ namespace Clarifai.DTOs.Searches
             return new SearchByConceptName("input", name);
         }
 
-        public static SearchBy ImageURL(ClarifaiURLImage image)
+        public static SearchBy ImageURL(ClarifaiURLImage image, Crop crop = null)
         {
-            return ImageURL(image.URL);
+            return ImageURL(image.URL, crop);
         }
 
-        public static SearchBy ImageURL(string URL)
+        public static SearchBy ImageURL(string URL, Crop crop = null)
         {
-            return new SearchByImageURL(URL);
+            return new SearchByImageURL(URL, crop);
         }
 
-        public static SearchBy ImageBytes(ClarifaiFileImage fileImage)
+        public static SearchBy ImageBytes(ClarifaiFileImage fileImage, Crop crop = null)
         {
-            return ImageBytes(fileImage.Bytes);
+            return ImageBytes(fileImage.Bytes, crop);
         }
 
-        public static SearchBy ImageBytes(byte[] bytes)
+        public static SearchBy ImageBytes(byte[] bytes, Crop crop = null)
         {
-            return new SearchByImageBytes(bytes);
+            return new SearchByImageBytes(bytes, crop);
         }
 
         public static SearchBy Metadata(JObject metadata)
@@ -111,38 +111,52 @@ namespace Clarifai.DTOs.Searches
         private class SearchByImageURL : SearchBy
         {
             private readonly string _imageUrl;
+            private readonly Crop _crop;
 
-            public SearchByImageURL(string imageUrl)
+            public SearchByImageURL(string imageUrl, Crop crop = null)
             {
                 _imageUrl = imageUrl;
+                _crop = crop;
             }
 
             public override JObject Serialize()
             {
+                var image = new JObject(
+                    new JProperty("url", _imageUrl));
+                if (_crop != null)
+                {
+                    image.Add("crop", _crop.SerializeAsArray());
+                }
                 return new JObject(
                     new JProperty("input", new JObject(
                         new JProperty("data", new JObject(
-                            new JProperty("image", new JObject(
-                                new JProperty("url", _imageUrl))))))));
+                            new JProperty("image", image))))));
             }
         }
 
         private class SearchByImageBytes : SearchBy
         {
             private readonly byte[] _bytes;
+            private readonly Crop _crop;
 
-            public SearchByImageBytes(byte[] bytes)
+            public SearchByImageBytes(byte[] bytes, Crop crop = null)
             {
                 _bytes = bytes;
+                _crop = crop;
             }
 
             public override JObject Serialize()
             {
+                var image = new JObject(
+                    new JProperty("base64", Convert.ToBase64String(_bytes)));
+                if (_crop != null)
+                {
+                    image.Add("crop", _crop.SerializeAsArray());
+                }
                 return new JObject(
                     new JProperty("output", new JObject(
                         new JProperty("data", new JObject(
-                            new JProperty("image", new JObject(
-                                new JProperty("base64", Convert.ToBase64String(_bytes)))))))));
+                            new JProperty("image", image))))));
             }
         }
 
