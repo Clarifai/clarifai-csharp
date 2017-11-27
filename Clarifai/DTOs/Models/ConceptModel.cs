@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Clarifai.API;
+using Clarifai.API.Requests.Models;
 using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
 using Newtonsoft.Json.Linq;
@@ -34,6 +35,23 @@ namespace Clarifai.DTOs.Models
             ConceptOutputInfo outputInfo = null)
             : base(client, modelID, name, createdAt, appID, modelVersion, outputInfo)
         { }
+
+        /// <summary>
+        /// A shorthand method for executing <see cref="ModifyModelRequest"/> for this model..
+        /// </summary>
+        /// <param name="action">the modification action</param>
+        /// <param name="name">the new model name</param>
+        /// <param name="concepts">the concepts update the model with</param>
+        /// <param name="areConceptsMutuallyExclusive">are concepts mutually exclusive</param>
+        /// <param name="isEnvironmentClosed">is environment closed</param>
+        /// <param name="language">the language</param>
+        public ModifyModelRequest Modify(ModifyAction action, string name = null,
+            IEnumerable<Concept> concepts = null, bool? areConceptsMutuallyExclusive = null,
+            bool? isEnvironmentClosed = null, string language = null)
+        {
+            return new ModifyModelRequest(Client, ModelID, action, name, concepts,
+                areConceptsMutuallyExclusive, isEnvironmentClosed, language);
+        }
 
         /// <summary>
         /// Serializes the instance to a new JSON object.
