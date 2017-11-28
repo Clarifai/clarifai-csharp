@@ -38,9 +38,17 @@
         /// <inheritdoc />
         protected override string BuildUrl()
         {
-            return Url +
-                (_page != null ? "?page=" + _page : "") +
-                (_perPage != null ? "&per_page=" + _perPage : "");
+            if (_page == null && _perPage == null)
+            {
+                return Url;
+            }
+            else
+            {
+                return Url + "?" +
+                       (_page != null ? "page=" + _page : "") +
+                       (_page != null && _perPage != null ? "&" : "") +
+                       (_perPage != null ? "per_page=" + _perPage : "");
+            }
         }
     }
 }
