@@ -31,24 +31,38 @@ namespace Clarifai.DTOs.Searches
             return new SearchByConceptName("input", name);
         }
 
-        public static SearchBy ImageURL(ClarifaiURLImage image, Crop crop = null)
+        /// <summary>
+        /// A search clause that will match inputs that had images with the given URL.
+        ///
+        /// Note: This is NOT a visual-similarity search. This is a simple string search for the
+        /// given image's URL. For visual similarity please use
+        /// <see cref="ImageVisually(string,Crop)"/>
+        /// </summary>
+        /// <param name="url">the URL of the image to search by</param>
+        /// <returns>a new SearchBy instance</returns>
+        public static SearchBy ImageURL(string url)
         {
-            return ImageURL(image.URL, crop);
+            return new SearchByImageURL(url);
         }
 
-        public static SearchBy ImageURL(string URL, Crop crop = null)
+        public static SearchBy ImageVisually(ClarifaiURLImage image, Crop crop = null)
         {
-            return new SearchByImageURL(URL, crop);
+            return ImageVisually(image.URL, crop);
         }
 
-        public static SearchBy ImageBytes(ClarifaiFileImage fileImage, Crop crop = null)
+        public static SearchBy ImageVisually(string url, Crop crop = null)
         {
-            return ImageBytes(fileImage.Bytes, crop);
+            return new SearchByImageVisuallyWithUrl(url, crop);
         }
 
-        public static SearchBy ImageBytes(byte[] bytes, Crop crop = null)
+        public static SearchBy ImageVisually(ClarifaiFileImage fileImage, Crop crop = null)
         {
-            return new SearchByImageBytes(bytes, crop);
+            return ImageVisually(fileImage.Bytes, crop);
+        }
+
+        public static SearchBy ImageVisually(byte[] bytes, Crop crop = null)
+        {
+            return new SearchByImageVisuallyWithBytes(bytes, crop);
         }
 
         public static SearchBy Metadata(JObject metadata)
@@ -134,12 +148,39 @@ namespace Clarifai.DTOs.Searches
             }
         }
 
-        private class SearchByImageBytes : SearchBy
+        private class SearchByImageVisuallyWithUrl : SearchBy
+        {
+            private readonly string _imageUrl;
+            private readonly Crop _crop;
+
+            public SearchByImageVisuallyWithUrl (string imageUrl, Crop crop = null)
+            {
+                _imageUrl = imageUrl;
+                _crop = crop;
+            }
+
+            public override JObject Serialize()
+            {
+                var image = new JObject(
+                    new JProperty("url", _imageUrl));
+                if (_crop != null)
+                {
+                    image.Add("crop", _crop.SerializeAsArray());
+                }
+                return new JObject(
+                    new JProperty("output", new JObject(
+                        new JProperty("input", new JObject(
+                            new JProperty("data", new JObject(
+                                new JProperty("image", image))))))));
+            }
+        }
+
+        private class SearchByImageVisuallyWithBytes : SearchBy
         {
             private readonly byte[] _bytes;
             private readonly Crop _crop;
 
-            public SearchByImageBytes(byte[] bytes, Crop crop = null)
+            public SearchByImageVisuallyWithBytes(byte[] bytes, Crop crop = null)
             {
                 _bytes = bytes;
                 _crop = crop;
@@ -155,8 +196,9 @@ namespace Clarifai.DTOs.Searches
                 }
                 return new JObject(
                     new JProperty("output", new JObject(
-                        new JProperty("data", new JObject(
-                            new JProperty("image", image))))));
+                        new JProperty("input", new JObject(
+                            new JProperty("data", new JObject(
+                                new JProperty("image", image))))))));
             }
         }
 

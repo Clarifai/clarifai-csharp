@@ -52,7 +52,7 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        [Ignore("Not yet finished.")]
+        [Ignore("WIP")]
         public async Task SearchByConceptNameWithLanguageShouldBeSuccessful()
         {
             ClarifaiResponse<List<IClarifaiInput>> addInputResponse =
@@ -105,10 +105,10 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task SearchByImageURLShouldBeSuccessful()
+        public async Task SearchVisuallyByImageUrlShouldBeSuccessful()
         {
             ClarifaiResponse<SearchInputsResult> response =
-                await Client.SearchInputs(SearchBy.ImageURL(new ClarifaiURLImage(CELEB1)))
+                await Client.SearchInputs(SearchBy.ImageVisually(CELEB1))
                     .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
@@ -117,11 +117,23 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task SearchByImageURLWithCropShouldBeSuccessful()
+        public async Task SearchVisuallyByImageUrlUsingImageShouldBeSuccessful()
         {
             ClarifaiResponse<SearchInputsResult> response =
-                await Client.SearchInputs(SearchBy.ImageURL(
-                        new ClarifaiURLImage(CELEB1),
+                await Client.SearchInputs(SearchBy.ImageVisually(new ClarifaiURLImage(CELEB1)))
+                    .ExecuteAsync();
+
+            Assert.True(response.IsSuccessful);
+            Assert.NotNull(response.Get().SearchHits);
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task SearchVisuallyByImageUrlWithCropShouldBeSuccessful()
+        {
+            ClarifaiResponse<SearchInputsResult> response =
+                await Client.SearchInputs(SearchBy.ImageVisually(
+                        CELEB1,
                         new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
                     .ExecuteAsync();
 
@@ -131,11 +143,11 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task SearchByImageBytesShouldBeSuccessful()
+        public async Task SearchVisuallyByImageFileShouldBeSuccessful()
         {
             ClarifaiResponse<SearchInputsResult> response =
-                await Client.SearchInputs(SearchBy.ImageBytes(new ClarifaiFileImage(
-                        ReadResource(BALLOONS_IMAGE_FILE))))
+                await Client.SearchInputs(SearchBy.ImageVisually(
+                        new ClarifaiFileImage(ReadResource(BALLOONS_IMAGE_FILE))))
                     .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
@@ -144,11 +156,11 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task SearchByImageBytesWithCropShouldBeSuccessful()
+        public async Task SearchVisuallyByImageFileWithCropShouldBeSuccessful()
         {
             ClarifaiResponse<SearchInputsResult> response =
-                await Client.SearchInputs(SearchBy.ImageBytes(new ClarifaiFileImage(
-                        ReadResource(BALLOONS_IMAGE_FILE)),
+                await Client.SearchInputs(SearchBy.ImageVisually(
+                        new ClarifaiFileImage(ReadResource(BALLOONS_IMAGE_FILE)),
                         new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
                     .ExecuteAsync();
 
