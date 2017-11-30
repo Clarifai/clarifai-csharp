@@ -21,22 +21,22 @@ namespace Clarifai.IntegrationTests
                 Client.PublicModels.ApparelModel,
                 Client.PublicModels.FoodModel,
                 Client.PublicModels.GeneralModel,
-                Client.PublicModels.LandscapeQuality,
+                Client.PublicModels.LandscapeQualityModel,
                 Client.PublicModels.ModerationModel,
                 Client.PublicModels.NsfwModel,
-                Client.PublicModels.PortraitQuality,
-                Client.PublicModels.TexturesAndPatterns,
+                Client.PublicModels.PortraitQualityModel,
+                Client.PublicModels.TexturesAndPatternsModel,
                 Client.PublicModels.TravelModel,
                 Client.PublicModels.WeddingModel,
             };
             foreach (Model model in conceptModels)
             {
                 ClarifaiResponse<List<ClarifaiOutput<Concept>>> response =
-                    await Client.Predict<Concept>(
+                    await Client.BatchPredict<Concept>(
                             model.ModelID,
                             new List<IClarifaiInput> {new ClarifaiURLImage(CAT1)})
                         .ExecuteAsync();
-                Assert.True(response.IsSuccessful, $"Predict on {model.Name} not successful.");
+                Assert.True(response.IsSuccessful, $"BatchPredict on {model.Name} not successful.");
             }
         }
 
@@ -56,11 +56,11 @@ namespace Clarifai.IntegrationTests
             foreach (Model model in videoModels)
             {
                 ClarifaiResponse<List<ClarifaiOutput<Frame>>> response =
-                    await Client.Predict<Frame>(
+                    await Client.BatchPredict<Frame>(
                             model.ModelID,
                             new List<IClarifaiInput> {new ClarifaiURLVideo(GIF1)})
                         .ExecuteAsync();
-                Assert.True(response.IsSuccessful, $"Predict on {model.Name} not successful.");
+                Assert.True(response.IsSuccessful, $"BatchPredict on {model.Name} not successful.");
             }
         }
     }

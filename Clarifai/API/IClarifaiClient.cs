@@ -183,7 +183,7 @@ namespace Clarifai.API
             where T : IPrediction;
 
         /// <summary>
-        /// Runs prediction on inputs using a certain <see cref="Model{T}"/>.
+        /// Runs prediction on multiple inputs using a certain <see cref="Model{T}"/>.
         /// </summary>
         /// <typeparam name="T">the model type</typeparam>
         /// <param name="modelID">the model ID</param>
@@ -198,7 +198,7 @@ namespace Clarifai.API
         /// </param>
         /// <param name="selectConcepts">only selectConcepts will be returned</param>
         /// <returns>a new PredictionRequest instance</returns>
-        PredictRequest<T> Predict<T>(string modelID, IEnumerable<IClarifaiInput> inputs,
+        BatchPredictRequest<T> BatchPredict<T>(string modelID, IEnumerable<IClarifaiInput> inputs,
             string modelVersionID = null, string language = null, decimal? minValue = null,
             int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null)
             where T : IPrediction;

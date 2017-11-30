@@ -30,7 +30,7 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Landscape quality model predicts the quality of a landscape image.
         /// </summary>
-        public ConceptModel LandscapeQuality { get; }
+        public ConceptModel LandscapeQualityModel { get; }
 
         /// <summary>
         /// Moderation model predicts inputs such as safety, gore, nudity, etc.
@@ -45,12 +45,12 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Portrait quality model predicts the quality of a portrait image.
         /// </summary>
-        public ConceptModel PortraitQuality { get; }
+        public ConceptModel PortraitQualityModel { get; }
 
         /// <summary>
         /// Textures & Patterns model predicts textures and patterns on an image.
         /// </summary>
-        public ConceptModel TexturesAndPatterns { get; }
+        public ConceptModel TexturesAndPatternsModel { get; }
 
         /// <summary>
         /// Travel model recognizes travel and hospitality-related concepts.
@@ -121,11 +121,11 @@ namespace Clarifai.DTOs.Models
             ApparelModel = new ConceptModel(client, "e0be3b9d6a454f0493ac3a30784001ff");
             FoodModel = new ConceptModel(client, "bd367be194cf45149e75f01d59f77ba7");
             GeneralModel = new ConceptModel(client, "aaa03c23b3724a16a56b629203edc62c");
-            LandscapeQuality = new ConceptModel(client, "bec14810deb94c40a05f1f0eb3c91403");
+            LandscapeQualityModel = new ConceptModel(client, "bec14810deb94c40a05f1f0eb3c91403");
             ModerationModel = new ConceptModel(client, "d16f390eb32cad478c7ae150069bd2c6");
             NsfwModel = new ConceptModel(client, "e9576d86d2004ed1a38ba0cf39ecb4b1");
-            PortraitQuality = new ConceptModel(client, "de9bd05cfdbf4534af151beb2a5d0953");
-            TexturesAndPatterns = new ConceptModel(client, "fbefb47f9fdb410e8ce14f24f54b47ff");
+            PortraitQualityModel = new ConceptModel(client, "de9bd05cfdbf4534af151beb2a5d0953");
+            TexturesAndPatternsModel = new ConceptModel(client, "fbefb47f9fdb410e8ce14f24f54b47ff");
             TravelModel = new ConceptModel(client, "eee28c313d69466f836ab83287a54ed9");
             WeddingModel = new ConceptModel(client, "c386b7a870114f4a87477c0824499348");
 

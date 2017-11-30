@@ -147,17 +147,17 @@ namespace Clarifai.API
             int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null)
             where T : IPrediction
         {
-            return new PredictRequest<T>(this, modelID, new List<IClarifaiInput> {input},
-                modelVersionID, language, minValue, maxConcepts, selectConcepts);
+            return new PredictRequest<T>(this, modelID, input, modelVersionID, language, minValue,
+                maxConcepts, selectConcepts);
         }
 
         /// <inheritdoc />
-        public PredictRequest<T> Predict<T>(string modelID, IEnumerable<IClarifaiInput> inputs,
+        public BatchPredictRequest<T> BatchPredict<T>(string modelID, IEnumerable<IClarifaiInput> inputs,
             string modelVersionID = null, string language = null, decimal? minValue = null,
             int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null)
             where T : IPrediction
         {
-            return new PredictRequest<T>(this, modelID, inputs, modelVersionID, language, minValue,
+            return new BatchPredictRequest<T>(this, modelID, inputs, modelVersionID, language, minValue,
                 maxConcepts, selectConcepts);
         }
 

@@ -20,7 +20,7 @@ namespace Clarifai.IntegrationTests
         {
             var response = await Client.Predict<Color>(
                     Client.PublicModels.ColorModel.ModelID,
-                    new List<IClarifaiInput>{new ClarifaiURLImage(CELEB1)})
+                    new ClarifaiURLImage(CELEB1))
                 .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
@@ -28,7 +28,7 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            Assert.NotNull(response.Get()[0].Data[0]);
+            Assert.NotNull(response.Get().Data[0]);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Clarifai.IntegrationTests
         {
             var response = await Client.Predict<Concept>(
                     Client.PublicModels.GeneralModel.ModelID,
-                    new List<IClarifaiInput>{new ClarifaiURLImage(CELEB1)})
+                    new ClarifaiURLImage(CELEB1))
                 .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
@@ -45,7 +45,7 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            Assert.NotNull(response.Get()[0].Data[0]);
+            Assert.NotNull(response.Get().Data[0]);
         }
 
         [Test]
@@ -54,23 +54,23 @@ namespace Clarifai.IntegrationTests
         {
             var response = await Client.Predict<Concept>(
                     Client.PublicModels.GeneralModel.ModelID,
-                    new List<IClarifaiInput>{new ClarifaiURLImage(
+                    new ClarifaiURLImage(
                         CELEB1,
-                        crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M))})
+                        crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
                 .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
-            Assert.NotNull(response.Get()[0].Data[0]);
+            Assert.NotNull(response.Get().Data[0]);
         }
 
         [Test]
         [Retry(3)]
         public async Task ConceptPredictForSeveralImagesShouldBeSuccessful()
         {
-            var response = await Client.Predict<Concept>(
+            var response = await Client.BatchPredict<Concept>(
                     Client.PublicModels.GeneralModel.ModelID,
                     new List<IClarifaiInput>
                     {
@@ -94,7 +94,7 @@ namespace Clarifai.IntegrationTests
         [Retry(3)]
         public async Task ConceptPredictForSeveralImagesUsingListShouldBeSuccessful()
         {
-            var response = await Client.Predict<Concept>(
+            var response = await Client.BatchPredict<Concept>(
                 Client.PublicModels.GeneralModel.ModelID,
                 new List<IClarifaiInput>
                 {
@@ -122,7 +122,7 @@ namespace Clarifai.IntegrationTests
 
             var response = await Client.Predict<Concept>(
                     Client.PublicModels.GeneralModel.ModelID,
-                    new List<IClarifaiInput> {new ClarifaiFileImage(bytes)})
+                    new ClarifaiFileImage(bytes))
                 .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
@@ -130,7 +130,7 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            Assert.NotNull(response.Get()[0].Data[0]);
+            Assert.NotNull(response.Get().Data[0]);
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace Clarifai.IntegrationTests
 
             var response = await Client.Predict<Frame>(
                     Client.PublicModels.GeneralVideoModel.ModelID,
-                    new List<IClarifaiInput> {new ClarifaiFileVideo(bytes)})
+                    new ClarifaiFileVideo(bytes))
                 .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
@@ -149,7 +149,7 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            Assert.NotNull(response.Get()[0].Data[0].Concepts[0]);
+            Assert.NotNull(response.Get().Data[0].Concepts[0]);
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace Clarifai.IntegrationTests
 
             var response = await Client.Predict<Concept>(
                     modelID,
-                    new List<IClarifaiInput>{new ClarifaiURLImage(CELEB1)},
+                    new ClarifaiURLImage(CELEB1),
                     modelVersionID: modelVersionID)
                 .ExecuteAsync();
 
@@ -171,16 +171,15 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            Assert.NotNull(response.Get()[0].Data[0]);
+            Assert.NotNull(response.Get().Data[0]);
         }
 
         [Test]
         [Retry(3)]
-        public async Task ShorthandConceptPredictForOneImageShouldBeSuccessful()
+        public async Task ShorthandConceptPredictImageShouldBeSuccessful()
         {
-            ClarifaiResponse<List<ClarifaiOutput<Concept>>> response =
-                await Client.PublicModels.GeneralModel.Predict(
-                        new ClarifaiURLImage(CELEB1))
+            ClarifaiResponse<ClarifaiOutput<Concept>> response =
+                await Client.PublicModels.GeneralModel.Predict(new ClarifaiURLImage(CELEB1))
                     .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
@@ -188,16 +187,16 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            Assert.NotNull(response.Get()[0].Data[0]);
+            Assert.NotNull(response.Get().Data[0]);
         }
 
         [Test]
         [Retry(3)]
         public async Task ShorthandConceptPredictWithMinValueShouldBeSuccessful()
         {
-            ClarifaiResponse<List<ClarifaiOutput<Concept>>> response =
+            ClarifaiResponse<ClarifaiOutput<Concept>> response =
                 await Client.PublicModels.GeneralModel.Predict(
-                        new List<IClarifaiInput>{new ClarifaiURLImage(CELEB1)}, minValue: 0.95M)
+                        new ClarifaiURLImage(CELEB1), minValue: 0.95M)
                     .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
@@ -205,7 +204,7 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            List<Concept> concepts = response.Get()[0].Data;
+            List<Concept> concepts = response.Get().Data;
             Assert.True(concepts.TrueForAll(c => c.Value >= 0.95M));
         }
 
@@ -213,9 +212,9 @@ namespace Clarifai.IntegrationTests
         [Retry(3)]
         public async Task ShorthandConceptPredictWithMaxConceptsShouldBeSuccessful()
         {
-            ClarifaiResponse<List<ClarifaiOutput<Concept>>> response =
+            ClarifaiResponse<ClarifaiOutput<Concept>> response =
                 await Client.PublicModels.GeneralModel.Predict(
-                        new List<IClarifaiInput>{new ClarifaiURLImage(CELEB1)}, maxConcepts: 3)
+                        new ClarifaiURLImage(CELEB1), maxConcepts: 3)
                     .ExecuteAsync();
 
             Assert.True(response.IsSuccessful);
@@ -223,7 +222,7 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            List<Concept> concepts = response.Get()[0].Data;
+            List<Concept> concepts = response.Get().Data;
             Assert.True(concepts.Count <= 3);
         }
 
@@ -233,9 +232,9 @@ namespace Clarifai.IntegrationTests
         {
             string catConceptId = "ai_mFqxrph2";
             string dogConceptId = "ai_8S2Vq3cR";
-            ClarifaiResponse<List<ClarifaiOutput<Concept>>> response =
+            ClarifaiResponse<ClarifaiOutput<Concept>> response =
                 await Client.PublicModels.GeneralModel.Predict(
-                        new List<IClarifaiInput> {new ClarifaiURLImage(CELEB1)},
+                        new ClarifaiURLImage(CELEB1),
                         selectConcepts: new List<Concept>
                         {
                             new Concept(catConceptId), new Concept(dogConceptId)
@@ -247,7 +246,7 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            List<string> conceptNames = response.Get()[0].Data.Select(c => c.ID).ToList();
+            List<string> conceptNames = response.Get().Data.Select(c => c.ID).ToList();
             Assert.AreEqual(2, conceptNames.Count);
             CollectionAssert.Contains(conceptNames, catConceptId);
             CollectionAssert.Contains(conceptNames, dogConceptId);

@@ -167,16 +167,16 @@ namespace Clarifai.DTOs.Models
             decimal? minValue = null, int? maxConcepts = null,
             IEnumerable<Concept> selectConcepts = null)
         {
-            return Predict(new List<IClarifaiInput> {input}, language, minValue, maxConcepts,
-                selectConcepts);
+            return new PredictRequest<T>(Client, ModelID, input, ModelVersion?.ID, language,
+                minValue, maxConcepts, selectConcepts);
         }
 
         /// <inheritdoc />
-        public PredictRequest<T> Predict(IEnumerable<IClarifaiInput> inputs, string language = null,
-            decimal? minValue =  null, int? maxConcepts = null,
+        public BatchPredictRequest<T> BatchPredict(IEnumerable<IClarifaiInput> inputs,
+            string language = null, decimal? minValue =  null, int? maxConcepts = null,
             IEnumerable<Concept> selectConcepts = null)
         {
-            return new PredictRequest<T>(Client, ModelID, inputs, ModelVersion?.ID, language,
+            return new BatchPredictRequest<T>(Client, ModelID, inputs, ModelVersion?.ID, language,
                 minValue, maxConcepts, selectConcepts);
         }
 

@@ -3,16 +3,15 @@ using System.Linq;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
-using Clarifai.Exceptions;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.API.Requests.Models
 {
     /// <summary>
-    /// Request for running a prediction on a model.
+    /// Request for running predictions on a model for multiple inputs at the same time.
     /// </summary>
     /// <typeparam name="T">the model type</typeparam>
-    public class PredictRequest<T> : ClarifaiRequest<ClarifaiOutput<T>>
+    public class BatchPredictRequest<T> : ClarifaiRequest<List<ClarifaiOutput<T>>>
         where T : IPrediction
     {
         protected override RequestMethod Method => RequestMethod.POST;
@@ -32,7 +31,7 @@ namespace Clarifai.API.Requests.Models
         }
 
         private readonly string _modelID;
-        private readonly IClarifaiInput _input;
+        private readonly IEnumerable<IClarifaiInput> _inputs;
         private readonly string _modelVersionID;
         private readonly string _language;
         private readonly decimal? _minValue;
@@ -44,7 +43,7 @@ namespace Clarifai.API.Requests.Models
         /// </summary>
         /// <param name="client">the Clarifai client</param>
         /// <param name="modelID">the model ID</param>
-        /// <param name="input">the Clarifai input</param>
+        /// <param name="inputs">Clarifai inputs</param>
         /// <param name="modelVersionID">the model version ID - leave null for latest</param>
         /// <param name="language">the language</param>
         /// <param name="minValue">
@@ -54,14 +53,14 @@ namespace Clarifai.API.Requests.Models
         /// the maximum maxConcepts number of predictions that will be returned
         /// </param>
         /// <param name="selectConcepts">only selectConcepts will be returned</param>
-        public PredictRequest(IClarifaiClient client, string modelID,
-            IClarifaiInput input, string modelVersionID = null,
+        public BatchPredictRequest(IClarifaiClient client, string modelID,
+            IEnumerable<IClarifaiInput> inputs, string modelVersionID = null,
             string language = null, decimal? minValue =  null, int? maxConcepts = null,
             IEnumerable<Concept> selectConcepts = null)
             : base(client)
         {
             _modelID = modelID;
-            _input = input;
+            _inputs = inputs;
             _modelVersionID = modelVersionID;
             _language = language;
             _minValue = minValue;
@@ -73,7 +72,7 @@ namespace Clarifai.API.Requests.Models
         protected override JObject HttpRequestBody()
         {
             JObject body = new JObject(
-                new JProperty("inputs", new JArray(_input.Serialize())));
+                new JProperty("inputs", new JArray(_inputs.Select(i => i.Serialize()))));
 
             if (_language != null || _minValue != null || _maxConcepts != null ||
                 _selectConcepts != null)
@@ -106,14 +105,14 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override ClarifaiOutput<T> Unmarshaller(dynamic jsonObject)
+        protected override List<ClarifaiOutput<T>> Unmarshaller(dynamic jsonObject)
         {
-            if (jsonObject.outputs != null && jsonObject.outputs.Count == 1)
+            var outputs = new List<ClarifaiOutput<T>>();
+            foreach (var jsonOutput in jsonObject.outputs)
             {
-                var jsonOutput = jsonObject.outputs[0];
-                return ClarifaiOutput<T>.Deserialize(jsonOutput);
+                outputs.Add(ClarifaiOutput<T>.Deserialize(jsonOutput));
             }
-            throw new ClarifaiException("A single output is not present in the API");
+            return outputs;
         }
     }
 }

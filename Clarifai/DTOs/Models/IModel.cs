@@ -62,13 +62,13 @@ namespace Clarifai.DTOs.Models
         /// the maximum maxConcepts number of predictions that will be returned
         /// </param>
         /// <param name="selectConcepts">only selectConcepts will be returned</param>
-        /// <returns>a new PredictRequest instance</returns>
+        /// <returns>a new BatchPredictRequest instance</returns>
         PredictRequest<T> Predict(IClarifaiInput input, string language = null,
             decimal? minValue =  null, int? maxConcepts = null,
             IEnumerable<Concept> selectConcepts = null);
 
         /// <summary>
-        /// A shorthand method for executing <see cref="PredictRequest{T}"/> for this model.
+        /// A shorthand method for executing <see cref="BatchPredictRequest{T}"/> for this model.
         /// </summary>
         /// <param name="inputs">the inputs to run a prediction on</param>
         /// <param name="language">the language</param>
@@ -79,8 +79,8 @@ namespace Clarifai.DTOs.Models
         /// the maximum maxConcepts number of predictions that will be returned
         /// </param>
         /// <param name="selectConcepts">only selectConcepts will be returned</param>
-        /// <returns>a new PredictRequest instance</returns>
-        PredictRequest<T> Predict(IEnumerable<IClarifaiInput> inputs, string language = null,
+        /// <returns>a new BatchPredictRequest instance</returns>
+        BatchPredictRequest<T> BatchPredict(IEnumerable<IClarifaiInput> inputs, string language = null,
             decimal? minValue =  null, int? maxConcepts = null,
             IEnumerable<Concept> selectConcepts = null);
 

@@ -60,7 +60,7 @@ var response = await Client.Predict<Concept>("SOME CONCEPT MODEL ID", new Clarif
 There are several public models that have been pretrained that you can use. Go to the [public models page](https://www.clarifai.com/models), find their model ID (located on each model page has its ID listed), and plug it in the code above. Or even better, use the `PublicModels` and use `Predict` on the model directly, like this:
 
 ```cs
-ClarifaiResponse<List<ClarifaiOutput<Concept>>> response =
+var response =
     await Client.PublicModels.GeneralModel.Predict(
         new ClarifaiURLImage("IMAGE URL"))
     .ExecuteAsync();
@@ -73,7 +73,7 @@ After the prediction process has been finished and the response has arrived, the
 The following code will take the first (and only) `ClarifaiOutput` and print all the predicted concept IDs, along with prediction confidences:
 
 ```cs
-foreach (Concept concept in response.Get()[0].Data) {
+foreach (Concept concept in response.Get().Data) {
     Console.WriteLine(concept.ID + " " + concept.Value);
 }
 

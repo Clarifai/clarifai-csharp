@@ -37,13 +37,13 @@ namespace Clarifai.IntegrationTests
         {
             string modelID = Client.PublicModels.ColorModel.ModelID;
 
-            ClarifaiResponse<List<ClarifaiOutput<Color>>> predictResponse =
+            ClarifaiResponse<ClarifaiOutput<Color>> predictResponse =
                 await Client.Predict<Color>(
                         modelID,
-                        new List<IClarifaiInput> {new ClarifaiURLImage(APPAREL1)})
+                        new ClarifaiURLImage(APPAREL1))
                     .ExecuteAsync();
             Assert.True(predictResponse.IsSuccessful);
-            Color color = predictResponse.Get()[0].Data[0];
+            Color color = predictResponse.Get().Data[0];
             Assert.NotNull(color.Name);
         }
 
@@ -71,14 +71,14 @@ namespace Clarifai.IntegrationTests
         {
             string modelID = Client.PublicModels.DemographicsModel.ModelID;
 
-            ClarifaiResponse<List<ClarifaiOutput<Demographics>>> predictResponse =
+            ClarifaiResponse<ClarifaiOutput<Demographics>> predictResponse =
                 await Client.Predict<Demographics>(
                         modelID,
-                        new List<IClarifaiInput> {new ClarifaiURLImage(CELEB1)})
+                        new ClarifaiURLImage(CELEB1))
                     .ExecuteAsync();
             Assert.True(predictResponse.IsSuccessful);
 
-            Demographics demographics = predictResponse.Get()[0].Data[0];
+            Demographics demographics = predictResponse.Get().Data[0];
             Assert.NotNull(demographics.Crop);
             Assert.NotNull(demographics.AgeAppearanceConcepts);
             Assert.NotNull(demographics.GenderAppearanceConcepts);
@@ -109,13 +109,13 @@ namespace Clarifai.IntegrationTests
         {
             string modelID = Client.PublicModels.GeneralEmbeddingModel.ModelID;
 
-            ClarifaiResponse<List<ClarifaiOutput<Embedding>>> predictResponse =
+            ClarifaiResponse<ClarifaiOutput<Embedding>> predictResponse =
                 await Client.Predict<Embedding>(
                         modelID,
-                        new List<IClarifaiInput> {new ClarifaiURLImage(CELEB1)})
+                        new ClarifaiURLImage(CELEB1))
                     .ExecuteAsync();
             Assert.True(predictResponse.IsSuccessful);
-            Embedding embedding = predictResponse.Get()[0].Data[0];
+            Embedding embedding = predictResponse.Get().Data[0];
             Assert.NotNull(embedding.Vector);
         }
 
@@ -143,13 +143,13 @@ namespace Clarifai.IntegrationTests
         {
             string modelID = Client.PublicModels.CelebrityModel.ModelID;
 
-            ClarifaiResponse<List<ClarifaiOutput<FaceConcepts>>> predictResponse =
+            ClarifaiResponse<ClarifaiOutput<FaceConcepts>> predictResponse =
                 await Client.Predict<FaceConcepts>(
                         modelID,
-                        new List<IClarifaiInput> {new ClarifaiURLImage(FACE1)})
+                        new ClarifaiURLImage(FACE1))
                     .ExecuteAsync();
             Assert.True(predictResponse.IsSuccessful);
-            FaceConcepts faceConcepts = predictResponse.Get()[0].Data[0];
+            FaceConcepts faceConcepts = predictResponse.Get().Data[0];
             Assert.NotNull(faceConcepts.Crop);
             Assert.NotNull(faceConcepts.Concepts);
         }
@@ -178,13 +178,13 @@ namespace Clarifai.IntegrationTests
         {
             string modelID = Client.PublicModels.FaceDetectionModel.ModelID;
 
-            ClarifaiResponse<List<ClarifaiOutput<FaceDetection>>> predictResponse =
+            ClarifaiResponse<ClarifaiOutput<FaceDetection>> predictResponse =
                 await Client.Predict<FaceDetection>(
                         modelID,
-                        new List<IClarifaiInput> {new ClarifaiURLImage(FACE1)})
+                        new ClarifaiURLImage(FACE1))
                     .ExecuteAsync();
             Assert.True(predictResponse.IsSuccessful);
-            FaceDetection faceDetection = predictResponse.Get()[0].Data[0];
+            FaceDetection faceDetection = predictResponse.Get().Data[0];
             Assert.NotNull(faceDetection.Crop);
         }
 
@@ -212,15 +212,15 @@ namespace Clarifai.IntegrationTests
         {
             string modelID = Client.PublicModels.FaceEmbeddingModel.ModelID;
 
-            ClarifaiResponse<List<ClarifaiOutput<FaceEmbedding>>> predictResponse =
+            ClarifaiResponse<ClarifaiOutput<FaceEmbedding>> predictResponse =
                 await Client.Predict<FaceEmbedding>(
                         modelID,
-                        new List<IClarifaiInput> {new ClarifaiURLImage(CELEB1)})
+                        new ClarifaiURLImage(CELEB1))
                     .ExecuteAsync();
 
             Assert.True(predictResponse.IsSuccessful);
 
-            FaceEmbedding faceEmbedding = predictResponse.Get()[0].Data[0];
+            FaceEmbedding faceEmbedding = predictResponse.Get().Data[0];
             Assert.NotNull(faceEmbedding.Crop);
             Assert.NotNull(faceEmbedding.Embeddings[0].Vector);
         }
@@ -248,13 +248,13 @@ namespace Clarifai.IntegrationTests
         {
             string modelID = Client.PublicModels.FocusModel.ModelID;
 
-            ClarifaiResponse<List<ClarifaiOutput<Focus>>> predictResponse =
+            ClarifaiResponse<ClarifaiOutput<Focus>> predictResponse =
                 await Client.Predict<Focus>(
                         modelID,
-                        new List<IClarifaiInput> {new ClarifaiURLImage(APPAREL1)})
+                        new ClarifaiURLImage(APPAREL1))
                     .ExecuteAsync();
             Assert.True(predictResponse.IsSuccessful);
-            Focus focus = predictResponse.Get()[0].Data[0];
+            Focus focus = predictResponse.Get().Data[0];
             Assert.NotNull(focus.Crop);
         }
 
@@ -282,12 +282,12 @@ namespace Clarifai.IntegrationTests
         {
             string modelID = Client.PublicModels.LogoModel.ModelID;
 
-            ClarifaiResponse<List<ClarifaiOutput<Logo>>> predictResponse =
+            ClarifaiResponse<ClarifaiOutput<Logo>> predictResponse =
                 await Client.Predict<Logo>(
-                        modelID, new List<IClarifaiInput> {new ClarifaiURLImage(APPAREL1)})
+                        modelID, new ClarifaiURLImage(APPAREL1))
                     .ExecuteAsync();
             Assert.True(predictResponse.IsSuccessful);
-            Logo logo = predictResponse.Get()[0].Data[0];
+            Logo logo = predictResponse.Get().Data[0];
             Assert.NotNull(logo.Crop);
             Assert.NotNull(logo.Concepts);
         }
@@ -317,14 +317,14 @@ namespace Clarifai.IntegrationTests
         {
             string modelID = Client.PublicModels.NsfwVideoModel.ModelID;
 
-            ClarifaiResponse<List<ClarifaiOutput<Frame>>> predictResponse =
+            ClarifaiResponse<ClarifaiOutput<Frame>> predictResponse =
                 await Client.Predict<Frame>(
-                        modelID, new List<IClarifaiInput> {new ClarifaiURLVideo(GIF1)})
+                        modelID, new ClarifaiURLVideo(GIF1))
                     .ExecuteAsync();
 
             Assert.True(predictResponse.IsSuccessful);
 
-            Frame video = predictResponse.Get()[0].Data[0];
+            Frame video = predictResponse.Get().Data[0];
             Assert.NotNull(video.Concepts);
         }
     }
