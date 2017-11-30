@@ -21,7 +21,7 @@ The code must be a valid .NET Standard code. Open `Clarifai/Clarifai.csproj` to 
 
 Recommended environment is the following:
 
-* Latest version of Visual Studio. Other IDEs might be fine, but have not been tested.
+* Latest version of Visual Studio, Visual Studio Code, or JetBrains Rider. Other IDEs might be fine, but have not been tested.
 
 ### Convention
 

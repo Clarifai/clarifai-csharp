@@ -26,7 +26,7 @@ dotnet add package Clarifai
 
 ###  Prerequisites
 
-This library supports .NET Standard 1.3 which means it can be used in the following .NET implementations:
+This library supports .NET Standard 1.3 which means it can be used on the following .NET implementations:
 
 - .NET Framework 4.6+
 - .NET Core 1.0+
@@ -35,8 +35,6 @@ This library supports .NET Standard 1.3 which means it can be used in the follow
 - Xamarin.Mac 3.0+
 - Xamarin.Andoid 7.0+
 - UWP 10.0+
-
-The library can be used on any platform supporting one of the above libraries.
 
 ## Getting Started
 
