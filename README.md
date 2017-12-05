@@ -33,7 +33,7 @@ This library supports .NET Standard 1.3 which means it can be used on the follow
 - Mono 4.6+
 - Xamarin.iOS 10.0+
 - Xamarin.Mac 3.0+
-- Xamarin.Andoid 7.0+
+- Xamarin.Android 7.0+
 - UWP 10.0+
 
 ## Getting Started
@@ -58,8 +58,7 @@ var response = await Client.Predict<Concept>("SOME CONCEPT MODEL ID", new Clarif
 There are several public models that have been pretrained that you can use. Go to the [public models page](https://www.clarifai.com/models), find their model ID (located on each model page has its ID listed), and plug it in the code above. Or even better, use the `PublicModels` and use `Predict` on the model directly, like this:
 
 ```cs
-var response =
-    await Client.PublicModels.GeneralModel.Predict(
+var response = await Client.PublicModels.GeneralModel.Predict(
         new ClarifaiURLImage("IMAGE URL"))
     .ExecuteAsync();
 ```
