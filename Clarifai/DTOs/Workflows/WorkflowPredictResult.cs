@@ -16,7 +16,11 @@ namespace Clarifai.DTOs.Workflows
 
         public static WorkflowPredictResult Deserialize(dynamic jsonObject)
         {
-            Workflow workflow = Workflows.Workflow.Deserialize(jsonObject.workflow);
+            Workflow workflow = null;
+            if (jsonObject.workflow != null)
+            {
+                workflow = Workflows.Workflow.Deserialize(jsonObject.workflow);
+            }
             var workflowResults = new List<WorkflowResult>();
             foreach (dynamic result in jsonObject.results)
             {
