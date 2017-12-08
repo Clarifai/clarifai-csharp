@@ -71,9 +71,13 @@ namespace Clarifai.DTOs.Models.OutputsInfo
             List<Concept> concepts = null;
             if (jsonObject.data != null)
             {
-                concepts = new List<Concept>();
-                foreach (var concept in jsonObject.data.concepts) {
-                    concepts.Add(Concept.Deserialize(concept));
+                if (jsonObject.data.concepts != null)
+                {
+                    concepts = new List<Concept>();
+                    foreach (var concept in jsonObject.data.concepts)
+                    {
+                        concepts.Add(Concept.Deserialize(concept));
+                    }
                 }
             }
             bool areConceptsMutuallyExclusive = false;
