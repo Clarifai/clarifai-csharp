@@ -32,11 +32,22 @@ matrix:
       env: OS=osx
 
 deploy:
-  provider: script
-  script:
-    - ./deploy.sh
-  skip_cleanup: true
-  on:
-    condition: $OS = osx
-    tags: true
-    repo: Clarifai/clarifai-csharp
+  - provider: script
+    script:
+      - ./deploy.sh
+    skip_cleanup: true
+    on:
+      condition: $OS = osx
+      tags: true
+      repo: Clarifai/clarifai-csharp
+  - provider: releases
+    skip_cleanup: true
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file:
+      - Clarifai/bin/Release/Clarifai.*.nupkg
+      - Clarifai/bin/Release/netstandard1.3/Clarifai.dll
+    on:
+      condition: $OS = osx
+      tags: true
+      repo: Clarifai/clarifai-csharp
