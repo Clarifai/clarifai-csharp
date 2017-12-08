@@ -219,7 +219,7 @@ namespace Clarifai.UnitTests
 ");
 
             var client = new ClarifaiClient(httpClient);
-            var response = await client.BatchPredict<Concept>(
+            var response = await client.Predict<Concept>(
                     "",
                     new List<IClarifaiInput>
                     {

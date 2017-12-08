@@ -198,7 +198,7 @@ namespace Clarifai.API
         /// </param>
         /// <param name="selectConcepts">only selectConcepts will be returned</param>
         /// <returns>a new PredictionRequest instance</returns>
-        BatchPredictRequest<T> BatchPredict<T>(string modelID, IEnumerable<IClarifaiInput> inputs,
+        BatchPredictRequest<T> Predict<T>(string modelID, IEnumerable<IClarifaiInput> inputs,
             string modelVersionID = null, string language = null, decimal? minValue = null,
             int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null)
             where T : IPrediction;

@@ -70,7 +70,7 @@ namespace Clarifai.IntegrationTests
         [Retry(3)]
         public async Task ConceptPredictForSeveralImagesShouldBeSuccessful()
         {
-            var response = await Client.BatchPredict<Concept>(
+            var response = await Client.Predict<Concept>(
                     Client.PublicModels.GeneralModel.ModelID,
                     new List<IClarifaiInput>
                     {
@@ -94,7 +94,7 @@ namespace Clarifai.IntegrationTests
         [Retry(3)]
         public async Task ConceptPredictForSeveralImagesUsingListShouldBeSuccessful()
         {
-            var response = await Client.BatchPredict<Concept>(
+            var response = await Client.Predict<Concept>(
                 Client.PublicModels.GeneralModel.ModelID,
                 new List<IClarifaiInput>
                 {

@@ -152,7 +152,7 @@ namespace Clarifai.API
         }
 
         /// <inheritdoc />
-        public BatchPredictRequest<T> BatchPredict<T>(string modelID, IEnumerable<IClarifaiInput> inputs,
+        public BatchPredictRequest<T> Predict<T>(string modelID, IEnumerable<IClarifaiInput> inputs,
             string modelVersionID = null, string language = null, decimal? minValue = null,
             int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null)
             where T : IPrediction

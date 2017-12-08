@@ -32,11 +32,11 @@ namespace Clarifai.IntegrationTests
             foreach (Model model in conceptModels)
             {
                 ClarifaiResponse<List<ClarifaiOutput<Concept>>> response =
-                    await Client.BatchPredict<Concept>(
+                    await Client.Predict<Concept>(
                             model.ModelID,
                             new List<IClarifaiInput> {new ClarifaiURLImage(CAT1)})
                         .ExecuteAsync();
-                Assert.True(response.IsSuccessful, $"BatchPredict on {model.Name} not successful.");
+                Assert.True(response.IsSuccessful, $"Predict on {model.Name} not successful.");
             }
         }
 
@@ -56,11 +56,11 @@ namespace Clarifai.IntegrationTests
             foreach (Model model in videoModels)
             {
                 ClarifaiResponse<List<ClarifaiOutput<Frame>>> response =
-                    await Client.BatchPredict<Frame>(
+                    await Client.Predict<Frame>(
                             model.ModelID,
                             new List<IClarifaiInput> {new ClarifaiURLVideo(GIF1)})
                         .ExecuteAsync();
-                Assert.True(response.IsSuccessful, $"BatchPredict on {model.Name} not successful.");
+                Assert.True(response.IsSuccessful, $"Predict on {model.Name} not successful.");
             }
         }
     }
