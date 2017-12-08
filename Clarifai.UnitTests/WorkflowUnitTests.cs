@@ -133,7 +133,7 @@ namespace Clarifai.UnitTests
 
             var client = new ClarifaiClient(httpClient);
             var response = await client.WorkflowPredict(
-                    "", new List<IClarifaiInput> {new ClarifaiURLImage("@url")})
+                    "", new ClarifaiURLImage("@url"))
                 .ExecuteAsync();
             var workflow = response.Get();
 
@@ -157,7 +157,7 @@ namespace Clarifai.UnitTests
             Assert.AreEqual("@workflowID", workflow.Workflow.ID);
             Assert.AreEqual("@appID", workflow.Workflow.AppID);
 
-            WorkflowResult results = workflow.WorkflowResults[0];
+            WorkflowResult results = workflow.WorkflowResult;
             Assert.AreEqual("@inputID", results.Input.ID);
 
             ClarifaiOutput output1 = results.Predictions[0];

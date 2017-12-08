@@ -11,13 +11,13 @@ namespace Clarifai.API.Requests.Models
     /// The latency that would otherwise be required for each model predict request is with
     /// workflow predict reduced to a latency of one request.
     /// </summary>
-    public class WorkflowPredictRequest : ClarifaiRequest<WorkflowPredictResult>
+    public class WorkflowBatchPredictRequest : ClarifaiRequest<WorkflowBatchPredictResult>
     {
         protected override RequestMethod Method => RequestMethod.POST;
         protected override string Url => $"/v2/workflows/{_workflowID}/results";
 
         private readonly string _workflowID;
-        private readonly IClarifaiInput _input;
+        private readonly IEnumerable<IClarifaiInput> _inputs;
         private readonly decimal? _minValue;
         private readonly int? _maxConcepts;
 
@@ -26,15 +26,15 @@ namespace Clarifai.API.Requests.Models
         /// </summary>
         /// <param name="client">the Clarifai client</param>
         /// <param name="workflowID">the workflow ID</param>
-        /// <param name="input">the input to run predictions on</param>
+        /// <param name="inputs">the inputs to run predictions on</param>
         /// <param name="minValue">return only results that have at least this value</param>
         /// <param name="maxConcepts">the maximum number of concepts to return</param>
-        public WorkflowPredictRequest(IClarifaiClient client, string workflowID,
-            IClarifaiInput input, decimal? minValue = null, int? maxConcepts = null)
+        public WorkflowBatchPredictRequest(IClarifaiClient client, string workflowID,
+            IEnumerable<IClarifaiInput> inputs, decimal? minValue = null, int? maxConcepts = null)
             : base(client)
         {
             _workflowID = workflowID;
-            _input = input;
+            _inputs = inputs;
             _minValue = minValue;
             _maxConcepts = maxConcepts;
         }
@@ -42,27 +42,28 @@ namespace Clarifai.API.Requests.Models
         /// <inheritdoc />
         protected override JObject HttpRequestBody()
         {
-            var body = new JObject(new JProperty("inputs", new JArray(_input.Serialize())));
-            if (_minValue != null || _maxConcepts != null)
+            var body = new JObject(
+                new JProperty("inputs", new JArray(_inputs.Select(i => i.Serialize()))));
+            var outputConfig = new JObject();
+            if (_minValue != null)
             {
-                var outputConfig = new JObject();
-                if (_minValue != null)
-                {
-                    outputConfig["min_value"] = _minValue;
-                }
-                if (_maxConcepts != null)
-                {
-                    outputConfig["max_concepts"] = _maxConcepts;
-                }
-                body.Add(outputConfig);
+                outputConfig["min_value"] = _minValue;
+            }
+            if (_maxConcepts != null)
+            {
+                outputConfig["max_concepts"] = _maxConcepts;
+            }
+            if (outputConfig.Count > 0)
+            {
+                body.Add("output_config", outputConfig);
             }
             return body;
         }
 
         /// <inheritdoc />
-        protected override WorkflowPredictResult Unmarshaller(dynamic jsonObject)
+        protected override WorkflowBatchPredictResult Unmarshaller(dynamic jsonObject)
         {
-            return WorkflowPredictResult.Deserialize(jsonObject);
+            return WorkflowBatchPredictResult.Deserialize(jsonObject);
         }
     }
 }

@@ -1,32 +1,24 @@
-﻿using System.Collections.Generic;
-
-namespace Clarifai.DTOs.Workflows
+﻿namespace Clarifai.DTOs.Workflows
 {
     public class WorkflowPredictResult
     {
         public Workflow Workflow { get; }
 
-        public List<WorkflowResult> WorkflowResults { get; }
+        public WorkflowResult WorkflowResult { get; }
 
-        private WorkflowPredictResult(Workflow workflow, List<WorkflowResult> workflowResults)
+        private WorkflowPredictResult(Workflow workflow, WorkflowResult workflowResult)
         {
             Workflow = workflow;
-            WorkflowResults = workflowResults;
+            WorkflowResult = workflowResult;
         }
 
         public static WorkflowPredictResult Deserialize(dynamic jsonObject)
         {
-            Workflow workflow = null;
-            if (jsonObject.workflow != null)
-            {
-                workflow = Workflows.Workflow.Deserialize(jsonObject.workflow);
-            }
-            var workflowResults = new List<WorkflowResult>();
-            foreach (dynamic result in jsonObject.results)
-            {
-                workflowResults.Add(WorkflowResult.Deserialize(result));
-            }
-            return new WorkflowPredictResult(workflow, workflowResults);
+            return new WorkflowPredictResult(
+                jsonObject.workflow != null
+                    ? Workflows.Workflow.Deserialize(jsonObject.workflow)
+                    : null,
+                Workflows.WorkflowResult.Deserialize(jsonObject.results[0]));
         }
     }
 }

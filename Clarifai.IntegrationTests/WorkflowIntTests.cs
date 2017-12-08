@@ -14,7 +14,22 @@ namespace Clarifai.IntegrationTests
         [Retry(3)]
         public async Task WorkflowPredictShouldBeSuccessful()
         {
-            ClarifaiResponse<WorkflowPredictResult> response =
+            var response = await Client.WorkflowPredict(
+                    "food-and-general",
+                    new ClarifaiURLImage(CELEB1))
+                .ExecuteAsync();
+
+            WorkflowResult result = response.Get().WorkflowResult;
+            Assert.AreEqual(2, result.Predictions.Count);
+            Assert.NotNull(result.Predictions[0].Data);
+            Assert.NotNull(result.Predictions[1].Data);
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task WorkflowBatchPredictShouldBeSuccessful()
+        {
+            ClarifaiResponse<WorkflowBatchPredictResult> response =
                 await Client.WorkflowPredict(
                         "food-and-general",
                         new List<IClarifaiInput>

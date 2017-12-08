@@ -209,11 +209,24 @@ namespace Clarifai.API
         /// workflow predict reduced to a latency of one request.
         /// </summary>
         /// <param name="workflowID">the workflow ID</param>
+        /// <param name="input">the input to run a prediction on</param>
+        /// <param name="minValue">return only results that have at least this value</param>
+        /// <param name="maxConcepts">the maximum number of concepts to return</param>
+        /// <returns>a new WorkflowPredictRequest instance</returns>
+        WorkflowPredictRequest WorkflowPredict(string workflowID, IClarifaiInput input,
+            decimal? minValue = null, int? maxConcepts = null);
+
+        /// <summary>
+        /// Using workflows, you can predict using multiple models with one request.
+        /// The latency that would otherwise be required for each model predict request is with
+        /// workflow predict reduced to a latency of one request.
+        /// </summary>
+        /// <param name="workflowID">the workflow ID</param>
         /// <param name="inputs">the inputs to run predictions on</param>
         /// <param name="minValue">return only results that have at least this value</param>
         /// <param name="maxConcepts">the maximum number of concepts to return</param>
         /// <returns>a new WorkflowPredictRequest instance</returns>
-        WorkflowPredictRequest WorkflowPredict(string workflowID,
+        WorkflowBatchPredictRequest WorkflowPredict(string workflowID,
             IEnumerable<IClarifaiInput> inputs, decimal? minValue = null, int? maxConcepts = null);
 
         /// <summary>

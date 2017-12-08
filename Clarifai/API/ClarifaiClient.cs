@@ -162,10 +162,17 @@ namespace Clarifai.API
         }
 
         /// <inheritdoc />
-        public WorkflowPredictRequest WorkflowPredict(string workflowID,
-            IEnumerable<IClarifaiInput> inputs, decimal? minValue = null, int? maxConcepts = null)
+        public WorkflowPredictRequest WorkflowPredict(string workflowID, IClarifaiInput inputs,
+            decimal? minValue = null, int? maxConcepts = null)
         {
             return new WorkflowPredictRequest(this, workflowID, inputs, minValue, maxConcepts);
+        }
+
+        /// <inheritdoc />
+        public WorkflowBatchPredictRequest WorkflowPredict(string workflowID,
+            IEnumerable<IClarifaiInput> inputs, decimal? minValue = null, int? maxConcepts = null)
+        {
+            return new WorkflowBatchPredictRequest(this, workflowID, inputs, minValue, maxConcepts);
         }
 
         /// <inheritdoc />
