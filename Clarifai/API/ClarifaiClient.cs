@@ -8,6 +8,7 @@ using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Predictions;
 using Clarifai.DTOs.Searches;
+using Clarifai.Exceptions;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.API
@@ -19,6 +20,12 @@ namespace Clarifai.API
 
         /// <inheritdoc />
         public PublicModels PublicModels { get; }
+
+        /// <summary>
+        /// Ctor.
+        /// </summary>
+        public ClarifaiClient() : this(GetEnvVar())
+        { }
 
         /// <summary>
         /// Ctor.
@@ -288,6 +295,23 @@ namespace Clarifai.API
             string endUserID, string sessionID)
         {
             return new SearchesFeedbackRequest(this, inputID, searchID, endUserID, sessionID);
+        }
+
+        /// <summary>
+        /// Retrieves the Clarifai API key from the environment.
+        /// </summary>
+        /// <returns>the Clarifai API key</returns>
+        /// <exception cref="ClarifaiException">throws if the env. var. doesn't exist</exception>
+        private static string GetEnvVar()
+        {
+            var apiKey = System.Environment.GetEnvironmentVariable("CLARIFAI_API_KEY");
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                throw new ClarifaiException(
+                    "Either set CLARIFAI_API_KEY as as an environment variable or provide it " +
+                    "in an argument.");
+            }
+            return apiKey;
         }
     }
 }
