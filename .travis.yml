@@ -28,7 +28,7 @@ matrix:
       dist: trusty
       env: OS=linux
     - os: osx
-      osx_image: xcode9
+      osx_image: xcode9.2
       env: OS=osx
 
 deploy:
