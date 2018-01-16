@@ -1,7 +1,3 @@
-# Note that this is a pre 1.0.0 release and is subject to change and break pending an official stable release.
-
-In NYC? We're hosting a [Clarifai .NET Hack Night](https://clarifainethacknight.splashthat.com/) on December, 5th to solicit community feedback.
-
 # Clarifai API C# Client
 
 [![NuGet](https://img.shields.io/nuget/v/Clarifai.svg)](https://www.nuget.org/packages/Clarifai)
@@ -38,67 +34,70 @@ This library supports .NET Standard 1.3 which means it can be used on the follow
 
 ## Getting Started
 
-These instructions will show you how to use the Clarifai API in C#.
+Find complete code samples in the [docs](https://clarifai.com/developer/docs/).
 
-First and foremost, you need an instance of `ClarifaiClient`.
+```csharp
+using System;
+using Clarifai.API;
+using Clarifai.DTOs.Inputs;
 
-```cs
-var client = new ClarifaiClient("YOUR API KEY").
-```
+namespace hello_csharp
+{
+    internal class Program
+    {
+        public static void Main()
+        {
+            // With `CLARIFAI_API_KEY` defined as an environment variable
+            var client = new ClarifaiClient().
+            
+            // When passed in as a string
+            var client = new ClarifaiClient("YOUR_CLARIFAI_API_KEY");
+            
+            // When using async/await
+            var res = await client.PublicModels.GeneralModel
+                .Predict(new ClarifaiURLImage("https://samples.clarifai.com/metro-north.jpg"))
+                .ExecuteAsync()
+                            
+            // When synchronous
+            var res = client.PublicModels.GeneralModel
+                .Predict(new ClarifaiURLImage("https://samples.clarifai.com/metro-north.jpg"))
+                .ExecuteAsync()
+                .Result;
 
-Using `client` you can access all the available API functionality.
-
-One of the methods the client implements is `Predict`. If you want recognize concepts on a certain image, do the following:
-
-```cs
-var response = await Client.Predict<Concept>("SOME CONCEPT MODEL ID", new ClarifaiURLImage("IMAGE URL"))
-    .ExecuteAsync();
-```
-
-There are several public models that have been pretrained that you can use. Go to the [public models page](https://www.clarifai.com/models), find their model ID (located on each model page has its ID listed), and plug it in the code above. Or even better, use the `PublicModels` and use `Predict` on the model directly, like this:
-
-```cs
-var response = await Client.PublicModels.GeneralModel.Predict(
-        new ClarifaiURLImage("IMAGE URL"))
-    .ExecuteAsync();
-```
-
-If you want to use your own custom model, you'll have to pass the model ID directly, or use `client.SearchModels("my-model-name")` to get the model instance (you have to train the custom model before using it, please see more [in the Train section of the Developer's Guide](https://clarifai.com/developer/guide/train#train)).
-
-After the prediction process has been finished and the response has arrived, the returned object `ClarifaiResponse` will contain a list of `ConceptOutput` objects - in this case, there'll be only one instance in the list since we specified one image - and concepts that were recognized on the image (plus some other metadata).
-
-The following code will take the first (and only) `ClarifaiOutput` and print all the predicted concept IDs, along with prediction confidences:
-
-```cs
-foreach (Concept concept in response.Get().Data) {
-    Console.WriteLine(concept.ID + " " + concept.Value);
+            // Print the concepts
+            foreach (var concept in res.Get().Data)
+            {
+                Console.WriteLine($"{concept.Name}: {concept.Value}");
+            }
+        }
+    }
 }
-
 ```
 
-### Synchronous/asynchronous requests
+[Public models](https://www.clarifai.com/models) can easily be used:
 
-The client utilizes the C# async/await functionality. If wanting to use the library in a simple synchronous way, see the previous example. Using the client asynchronously is easy as well. Simply drop the `async` before the request call and do it at some later point.
-
-```cs
-var responseTask = Client.Predict<Concept>("SOME CONCEPT MODEL ID", new ClarifaiURLImage("IMAGE URL"))
+```csharp
+var response = await client.PublicModels.GeneralModel.Predict(new ClarifaiURLImage("IMAGE URL"))
     .ExecuteAsync();
+```
 
-Console.WriteLine("This line will (most likely) be executed before the arrival of the response.");
+As well as [custom trained]():
 
-var response = await responseTask;
-
-Console.WriteLine("This line will be executed after the arrival of the response.");
-// Now you can get the response content with response.Get() as with the previous example.
+```csharp
+var response = await client.Predict<Concept>(
+        "YOUR_MODEL_ID",
+        new ClarifaiURLImage("https://samples.clarifai.com/metro-north.jpg")
+    )
+    .ExecuteAsync();
 ```
 
 ### Generics and casting
 
-The library uses generics to specify the type of an output. In the first example using the `Predict` method, we use `Concept` indicate that the model ID is a concept model. If we'd use a model ID of our public color model, we'd use `Color` instead of `Concept`.
+The library uses generics to specify the type of an output. In the first example using the `Predict` method, we use `Concept` to indicate that the model is a concept model. If we'd use a model ID of our public color model, we'd use `Color` instead of `Concept`.
 
-Not all methods can however use generics. For example, the `GetModels` is able to return multiple models and you cannot determine in advance (at compile time) the types of model that will be returned. The request therefore returns a list of `IModel` objects. You can cast these instances to specific models, if you know its type.
+Not all methods can however use generics. For example, the `GetModels` is able to return multiple models and you cannot determine in advance (at compile time) the types of model that will be returned. The request therefore returns a list of `IModel` objects. You can cast these instances to specific models, if you know its type:
 
-```cs
+```csharp
 if (models[0].OutputInfo.TypeExt == "concept")
 {
 	ConceptModel model = (ConceptModel) models[0];
@@ -109,7 +108,7 @@ In a similar way you may cast `IPrediction` when the actual class type is not kn
 
 Please see more in the [Developer's Guide](https://clarifai.com/developer/guide/).
 
-## Running the tests
+## Tests
 
 `NUnit 3 VS Test Adapter` must be installed.
 
@@ -137,5 +136,3 @@ dotnet test Clarifai.IntegrationTests/Clarifai.IntegrationTests.csproj
 ## License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
-
-
