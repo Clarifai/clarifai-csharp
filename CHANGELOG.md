@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [[1.0.1]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.0.1) - [NuGet](https://www.nuget.org/packages/Clarifai/1.0.1) - 2018-02-22
+
+### Removed
+- Dependency Microsoft.Extensions.PlatformAbstractions
+
 ## [[1.0.0]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.0.0) - [NuGet](https://www.nuget.org/packages/Clarifai/1.0.0) - 2018-01-26
 
 ### Added
