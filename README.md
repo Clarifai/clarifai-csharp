@@ -4,6 +4,10 @@
 [![Build Status](https://travis-ci.org/Clarifai/clarifai-csharp.svg?branch=master)](https://travis-ci.org/Clarifai/clarifai-csharp)
 [![Build status](https://ci.appveyor.com/api/projects/status/osiexiua9ig1w3as/branch/master?svg=true)](https://ci.appveyor.com/project/robertwenquan/clarifai-csharp-1dm15/branch/master)
 
+* Try the Clarifai demo at: https://clarifai.com/demo
+* Sign up for a free account at: https://clarifai.com/developer/signup/
+* Read the developer guide at: https://clarifai.com/developer/guide/
+
 ## Installation
 
 ### Adding the Clarifai C# library to your project
