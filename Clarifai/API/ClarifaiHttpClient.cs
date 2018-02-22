@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Clarifai.Extensions;
-using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -32,9 +31,7 @@ namespace Clarifai.API
             _httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
             _httpClient.DefaultRequestHeaders.Add(
-                "X-Clarifai-Client",
-                string.Format("c#:{0}:{1}", CurrentVersion,
-                    PlatformServices.Default.Application.RuntimeFramework.FullName));
+                "X-Clarifai-Client", string.Format("c#:{0}", CurrentVersion));
         }
 
         public async Task<HttpResponseMessage> GetAsync(string url)
