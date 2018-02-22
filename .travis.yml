@@ -34,7 +34,7 @@ matrix:
 deploy:
   - provider: script
     script:
-      - ./deploy.sh
+      - chmod +x ./deploy.sh && ./deploy.sh
     skip_cleanup: true
     on:
       condition: $OS = osx
