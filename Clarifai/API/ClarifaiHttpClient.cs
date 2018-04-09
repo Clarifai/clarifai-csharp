@@ -15,7 +15,7 @@ namespace Clarifai.API
 
         private readonly string _baseUrl;
 
-        public string CurrentVersion => "1.0.1";
+        public string CurrentVersion => "1.1.0";
 
         /// <summary>
         /// Ctor.
