@@ -107,8 +107,7 @@ namespace Clarifai.DTOs.Models
 
         public override bool Equals(object obj)
         {
-            var status = obj as ModelMetricsStatus;
-            return status != null &&
+            return obj is ModelMetricsStatus status &&
                    StatusCode == status.StatusCode;
         }
 

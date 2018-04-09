@@ -6,12 +6,15 @@ namespace Clarifai.DTOs.Predictions
     {
         public string TYPE => "faceConcepts";
 
+        public string ID { get; }
+
         public Crop Crop { get; }
 
         public List<Concept> Concepts { get; }
 
-        private FaceConcepts(Crop crop, List<Concept> concepts)
+        private FaceConcepts(string id, Crop crop, List<Concept> concepts)
         {
+            ID = id;
             Crop = crop;
             Concepts = concepts;
         }
@@ -23,7 +26,10 @@ namespace Clarifai.DTOs.Predictions
             {
                 concepts.Add(Concept.Deserialize(concept));
             }
-            return new FaceConcepts(DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box), concepts);
+            return new FaceConcepts(
+                (string)jsonObject.id,
+                DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box),
+                concepts);
         }
 
         public override bool Equals(object obj)

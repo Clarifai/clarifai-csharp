@@ -32,7 +32,7 @@ namespace Clarifai.DTOs.Inputs
             IEnumerable<Concept> negativeConcepts = null, JObject metadata = null,
             DateTime? createdAt = null, GeoPoint geo = null)
             : base(InputType.Video, InputForm.File, id, positiveConcepts, negativeConcepts,
-                  metadata, createdAt, geo)
+                  metadata, createdAt, geo, null)
         {
             _bytes = bytes;
         }

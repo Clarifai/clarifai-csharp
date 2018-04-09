@@ -38,7 +38,7 @@ namespace Clarifai.DTOs.Inputs
             IEnumerable<Concept> negativeConcepts = null, JObject metadata = null,
             DateTime? createdAt = null, GeoPoint geo = null, Crop crop = null)
             : base(InputType.Image, InputForm.File, id, positiveConcepts, negativeConcepts,
-                  metadata, createdAt, geo)
+                  metadata, createdAt, geo, null)
         {
             _bytes = bytes;
             Crop = crop;

@@ -6,6 +6,7 @@ using Clarifai.API.Requests.Models;
 using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
+using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
 using Clarifai.DTOs.Searches;
 using Clarifai.Exceptions;
@@ -112,10 +113,12 @@ namespace Clarifai.API
 
         /// <inheritdoc />
         public ModifyInputRequest ModifyInput(string inputID, ModifyAction action,
-            IEnumerable<Concept> positiveConcepts, IEnumerable<Concept> negativeConcepts = null)
+            IEnumerable<Concept> positiveConcepts = null,
+            IEnumerable<Concept> negativeConcepts = null,
+            IEnumerable<RegionFeedback> regionFeedbacks = null)
         {
             return new ModifyInputRequest(this, inputID, action, positiveConcepts,
-                negativeConcepts);
+                negativeConcepts, regionFeedbacks);
         }
 
         /// <inheritdoc />
@@ -225,6 +228,13 @@ namespace Clarifai.API
         {
             return new CreateModelRequest(this, modelID, name, concepts,
                 areConceptsMutuallyExclusive, isEnvironmentClosed, language);
+        }
+
+        /// <inheritdoc />
+        public CreateModelGenericRequest<T> CreateModelGeneric<T>(string modelID,
+            string name = null, IOutputInfo outputInfo = null) where T : IPrediction
+        {
+            return new CreateModelGenericRequest<T>(this, modelID, name, outputInfo);
         }
 
         /// <inheritdoc />

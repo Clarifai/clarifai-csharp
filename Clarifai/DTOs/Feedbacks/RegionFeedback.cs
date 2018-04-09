@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Feedbacks
@@ -12,16 +14,22 @@ namespace Clarifai.DTOs.Feedbacks
         private readonly Crop _crop;
         private readonly Feedback _feedback;
         private readonly IEnumerable<ConceptFeedback> _concepts;
+        private readonly string _regionID;
+        private readonly FaceFeedback _faceFeedback;
 
         /// <summary>
         /// Ctor.
         /// </summary>
         /// true if region is present in the input, false if not present
-        public RegionFeedback(Crop crop, Feedback feedback, IEnumerable<ConceptFeedback> concepts)
+        public RegionFeedback(Crop crop = null, Feedback feedback = null,
+            IEnumerable<ConceptFeedback> concepts = null, string regionID = null,
+            FaceFeedback faceFeedback = null)
         {
             _crop = crop;
             _feedback = feedback;
             _concepts = concepts;
+            _regionID = regionID;
+            _faceFeedback = faceFeedback;
         }
 
         /// <summary>
@@ -30,12 +38,27 @@ namespace Clarifai.DTOs.Feedbacks
         /// <returns>the JSON object</returns>
         public JObject Serialize()
         {
-            return new JObject(
+            var data = new JObject();
+            if (_concepts != null && _concepts.Any())
+            {
+                data["concepts"] = new JArray(_concepts.Select(c => c.Serialize()));
+            }
+
+            if (_faceFeedback != null)
+            {
+                data["face"] = _faceFeedback.Serialize();
+            }
+
+            var body = new JObject(
                 new JProperty("region_info", new JObject(
                     new JProperty("bounding_box", _crop.SerializeAsObject()),
                     new JProperty("feedback", _feedback.Value))),
-                new JProperty("data", new JObject(
-                    new JProperty("concepts", _concepts.Select(c => c.Serialize())))));
+                new JProperty("data", data));
+            if (_regionID != null)
+            {
+                body["id"] = _regionID;
+            }
+            return body;
         }
 
         public override bool Equals(object obj)

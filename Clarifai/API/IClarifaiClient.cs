@@ -6,6 +6,7 @@ using Clarifai.API.Requests.Models;
 using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
+using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
 using Clarifai.DTOs.Searches;
 using Newtonsoft.Json.Linq;
@@ -106,9 +107,12 @@ namespace Clarifai.API
         /// <param name="action">the action</param>
         /// <param name="positiveConcepts">the concepts associated with the input</param>
         /// <param name="negativeConcepts">the concepts not associated with the input</param>
+        /// <param name="regionFeedbacks">the regions</param>
         /// <returns>a new ModifyInputRequest instance</returns>
         ModifyInputRequest ModifyInput(string inputID, ModifyAction action,
-            IEnumerable<Concept> positiveConcepts, IEnumerable<Concept> negativeConcepts = null);
+            IEnumerable<Concept> positiveConcepts = null,
+            IEnumerable<Concept> negativeConcepts = null,
+            IEnumerable<RegionFeedback> regionFeedbacks = null);
 
         /// <summary>
         /// Adds the given metadata to this input's metadata.
@@ -162,7 +166,7 @@ namespace Clarifai.API
         GetInputsStatusRequest GetInputsStatus();
 
         /// <summary>
-        /// Runs prediction on an input using a certain <see cref="Model{T}"/>.
+        /// Runs a prediction on an input using a certain <see cref="Model{T}"/>.
         /// </summary>
         /// <typeparam name="T">the model type</typeparam>
         /// <param name="modelID">the model ID</param>
@@ -279,6 +283,16 @@ namespace Clarifai.API
         CreateModelRequest CreateModel(string modelID, string name = null,
             IEnumerable<Concept> concepts = null, bool? areConceptsMutuallyExclusive = null,
             bool? isEnvironmentClosed = null, string language = null);
+
+        /// <summary>
+        /// Creates a new model that is not (necessarily) a model for Concepts = ConceptModel).
+        /// </summary>
+        /// <param name="modelID">the model ID</param>
+        /// <param name="name">the model name</param>
+        /// <param name="outputInfo">the output info</param>
+        /// <returns>a new model creation request</returns>
+        CreateModelGenericRequest<T> CreateModelGeneric<T>(string modelID,
+            string name = null, IOutputInfo outputInfo = null) where T : IPrediction;
 
         /// <summary>
         /// Modifies a model.

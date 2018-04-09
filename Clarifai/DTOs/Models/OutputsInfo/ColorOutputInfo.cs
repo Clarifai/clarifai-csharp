@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Clarifai.DTOs.Predictions;
+using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
 {
@@ -47,8 +48,8 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         /// <param name="areConceptsMutuallyExclusive">are concepts exclusive</param>
         /// <param name="isEnvironmentClosed">is environment closed</param>
         /// <param name="language">the language</param>
-        private ColorOutputInfo(string type, string typeExt, string message, 
-            IEnumerable<Concept> concepts, bool areConceptsMutuallyExclusive = false, 
+        private ColorOutputInfo(string type, string typeExt, string message,
+            IEnumerable<Concept> concepts, bool areConceptsMutuallyExclusive = false,
             bool isEnvironmentClosed = false, string language = null)
         {
             Type = type;
@@ -58,6 +59,11 @@ namespace Clarifai.DTOs.Models.OutputsInfo
             AreConceptsMutuallyExclusive = areConceptsMutuallyExclusive;
             IsEnvironmentClosed = isEnvironmentClosed;
             Language = language;
+        }
+
+        public JObject Serialize()
+        {
+            return new JObject();
         }
 
         /// <summary>

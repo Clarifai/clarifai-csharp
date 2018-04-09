@@ -1,4 +1,6 @@
-﻿namespace Clarifai.DTOs.Models.OutputsInfo
+﻿using Newtonsoft.Json.Linq;
+
+namespace Clarifai.DTOs.Models.OutputsInfo
 {
     public interface IOutputInfo
     {
@@ -16,5 +18,7 @@
         /// The message.
         /// </summary>
         string Message { get; }
+
+        JObject Serialize();
     }
 }

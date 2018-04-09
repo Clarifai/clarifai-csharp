@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Clarifai.API.Requests.Models;
+using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Predictions;
 using Newtonsoft.Json.Linq;
@@ -19,16 +20,19 @@ namespace Clarifai.API.Requests.Inputs
         private readonly ModifyAction _action;
         private readonly IEnumerable<Concept> _positiveConcepts;
         private readonly IEnumerable<Concept> _negativeConcepts;
+        private readonly IEnumerable<RegionFeedback> _regionFeedbacks;
 
         /// <inheritdoc />
         public ModifyInputRequest(IClarifaiClient client, string inputID, ModifyAction action,
-            IEnumerable<Concept> positiveConcepts, IEnumerable<Concept> negativeConcepts)
+            IEnumerable<Concept> positiveConcepts, IEnumerable<Concept> negativeConcepts,
+            IEnumerable<RegionFeedback> regionFeedbacks = null)
             : base(client)
         {
             _inputID = inputID;
             _action = action;
             _positiveConcepts = positiveConcepts;
             _negativeConcepts = negativeConcepts;
+            _regionFeedbacks = regionFeedbacks;
         }
 
         /// <inheritdoc />

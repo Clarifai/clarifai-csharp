@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Clarifai.DTOs.Predictions;
+using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
 {
@@ -37,6 +39,12 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         /// </summary>
         public string Language { get; }
 
+        public ConceptOutputInfo(IEnumerable<Concept> concepts,
+            bool areConceptsMutuallyExclusive = false, bool isEnvironmentClosed = false,
+            string language = null) : this("concept", "concept", "", concepts,
+                areConceptsMutuallyExclusive, isEnvironmentClosed, language)
+        { }
+
         /// <summary>
         /// Ctor.
         /// </summary>
@@ -49,8 +57,7 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         /// <param name="language">the lanugage</param>
         private ConceptOutputInfo(string type, string typeExt, string message,
             IEnumerable<Concept> concepts, bool areConceptsMutuallyExclusive = false,
-            bool isEnvironmentClosed = false,
-            string language = null)
+            bool isEnvironmentClosed = false, string language = null)
         {
             Type = type;
             TypeExt = typeExt;
@@ -59,6 +66,21 @@ namespace Clarifai.DTOs.Models.OutputsInfo
             AreConceptsMutuallyExclusive = areConceptsMutuallyExclusive;
             IsEnvironmentClosed = isEnvironmentClosed;
             Language = language;
+        }
+
+        public JObject Serialize()
+        {
+            var outputConfig = new JObject(
+                new JProperty("concepts_mutually_exclusive", AreConceptsMutuallyExclusive),
+                new JProperty("closed_environment", IsEnvironmentClosed));
+            if (Language != null)
+            {
+                outputConfig["language"] = Language;
+            }
+            return new JObject(
+                new JProperty("data", new JObject(
+                    new JProperty("concepts", Concepts.Select(c => c.Serialize())))),
+                new JProperty("output_config", outputConfig));
         }
 
         /// <summary>

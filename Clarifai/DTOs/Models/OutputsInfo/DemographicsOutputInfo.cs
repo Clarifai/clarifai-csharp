@@ -1,4 +1,6 @@
-﻿namespace Clarifai.DTOs.Models.OutputsInfo
+﻿using Newtonsoft.Json.Linq;
+
+namespace Clarifai.DTOs.Models.OutputsInfo
 {
     /// <summary>
     /// Certain information regarding the Demographics model.
@@ -25,6 +27,11 @@
             Type = type;
             TypeExt = typeExt;
             Message = message;
+        }
+
+        public JObject Serialize()
+        {
+            return new JObject();
         }
 
         public static DemographicsOutputInfo Deserialize(dynamic jsonObject)

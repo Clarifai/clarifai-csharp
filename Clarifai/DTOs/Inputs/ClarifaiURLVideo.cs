@@ -27,7 +27,7 @@ namespace Clarifai.DTOs.Inputs
             IEnumerable<Concept> negativeConcepts = null, JObject metadata = null,
             DateTime? createdAt = null, GeoPoint geo = null)
             : base(InputType.Video, InputForm.URL, id, positiveConcepts, negativeConcepts, metadata,
-                createdAt, geo)
+                createdAt, geo, null)
         {
             URL = url;
         }

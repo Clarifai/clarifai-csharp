@@ -34,12 +34,14 @@ namespace Clarifai.DTOs.Inputs
         /// <param name="createdAt">the date & time of image's creation</param>
         /// <param name="geo">input's geographical point</param>
         /// <param name="crop">the crop</param>
+        /// <param name="regions">the regions</param>
         public ClarifaiURLImage(string url, string id = null, bool? allowDuplicateUrl = null,
             IEnumerable<Concept> positiveConcepts = null,
             IEnumerable<Concept> negativeConcepts = null, JObject metadata = null,
-            DateTime? createdAt = null, GeoPoint geo = null, Crop crop = null)
+            DateTime? createdAt = null, GeoPoint geo = null, Crop crop = null,
+            List<Region> regions = null)
             : base(InputType.Image, InputForm.URL, id, positiveConcepts, negativeConcepts,
-                metadata, createdAt, geo)
+                metadata, createdAt, geo, regions)
         {
             URL = url;
             AllowDuplicateUrl = allowDuplicateUrl;
@@ -110,6 +112,15 @@ namespace Clarifai.DTOs.Inputs
             {
                 createdAt = (DateTime)jsonObject.created_at;
             }
+
+            var regions = new List<Region>();
+            if (jsonObject.data != null && jsonObject.data.regions != null)
+            {
+                foreach (dynamic region in jsonObject.data.regions)
+                {
+                    regions.Add(Region.Deserialize(region));
+                }
+            }
             return new ClarifaiURLImage(
                 id: (string) jsonObject.id,
                 url: (string) jsonObject.data.image.url,
@@ -118,7 +129,8 @@ namespace Clarifai.DTOs.Inputs
                 crop: crop,
                 metadata: metadata,
                 createdAt: createdAt,
-                geo: geoPoint);
+                geo: geoPoint,
+                regions: regions);
         }
 
         public override bool Equals(object obj)

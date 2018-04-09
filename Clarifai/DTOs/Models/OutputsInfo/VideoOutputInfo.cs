@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Clarifai.DTOs.Predictions;
+using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
 {
@@ -59,6 +60,11 @@ namespace Clarifai.DTOs.Models.OutputsInfo
             AreConceptsMutuallyExclusive = areConceptsMutuallyExclusive;
             IsEnvironmentClosed = isEnvironmentClosed;
             Language = language;
+        }
+
+        public JObject Serialize()
+        {
+            return new JObject();
         }
 
         /// <summary>

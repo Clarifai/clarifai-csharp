@@ -62,7 +62,6 @@ namespace Clarifai.IntegrationTests
                 Assert.AreEqual(geoPoint, getInput1Response.Get().Geo);
                 Assert.NotNull(getInput1Response.Get().CreatedAt);
 
-
                 /*
                  * Get the input 2.
                  */

@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 namespace Clarifai.API.Requests.Models
 {
     /// <summary>
-    /// A type of a modification used with<see cref="ModifyModelRequest"/>.
+    /// A type of a modification.
     /// </summary>
     public class ModifyAction
     {

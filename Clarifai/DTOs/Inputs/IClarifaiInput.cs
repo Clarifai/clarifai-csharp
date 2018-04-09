@@ -64,9 +64,14 @@ namespace Clarifai.DTOs.Inputs
         DateTime? CreatedAt { get; }
 
         /// <summary>
-        /// Inputs geographical point.
+        /// Input's geographical point.
         /// </summary>
         GeoPoint Geo { get; }
+
+        /// <summary>
+        /// Input's regions.
+        /// </summary>
+        List<Region> Regions { get; }
 
         JObject Serialize();
     }

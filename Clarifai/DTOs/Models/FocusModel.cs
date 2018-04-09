@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Clarifai.DTOs.Models
 {
     /// <summary>
-    /// The logo model finds logos and regions where they are located.
+    /// Focus model returs overall focus and identifies in-focus regions.
     /// </summary>
     public class FocusModel : Model<Focus>
     {

@@ -16,7 +16,6 @@ namespace Clarifai.DTOs.Models
         /// </summary>
         public static ModelTrainingStatus Trained => new ModelTrainingStatus(21100);
 
-
         /// <summary>
         /// This model is currently being trained by the server.
         /// </summary>

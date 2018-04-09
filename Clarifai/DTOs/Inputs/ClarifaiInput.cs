@@ -35,11 +35,14 @@ namespace Clarifai.DTOs.Inputs
         /// <inheritdoc />
         public GeoPoint Geo { get; }
 
+        /// <inheritdoc />
+        public List<Region> Regions { get; }
+
         public abstract JObject Serialize();
 
         protected ClarifaiInput(InputType type, InputForm form, string id,
             IEnumerable<Concept> positiveConcepts, IEnumerable<Concept> negativeConcepts,
-            JObject metadata, DateTime? createdAt, GeoPoint geo)
+            JObject metadata, DateTime? createdAt, GeoPoint geo, List<Region> regions)
         {
             Type = type;
             Form = form;
@@ -49,6 +52,7 @@ namespace Clarifai.DTOs.Inputs
             Metadata = metadata;
             CreatedAt = createdAt;
             Geo = geo;
+            Regions = regions;
         }
 
         protected JObject Serialize(JProperty inputProperty)
