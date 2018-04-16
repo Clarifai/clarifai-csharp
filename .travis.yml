@@ -28,6 +28,9 @@ matrix:
       dist: trusty
       env: OS=linux
     - os: osx
+      osx_image: xcode9.3
+      env: OS=osx93
+    - os: osx
       osx_image: xcode9.2
       env: OS=osx
 
