@@ -49,14 +49,32 @@ namespace Clarifai.DTOs.Feedbacks
                 data["face"] = _faceFeedback.Serialize();
             }
 
-            var body = new JObject(
-                new JProperty("region_info", new JObject(
-                    new JProperty("bounding_box", _crop.SerializeAsObject()),
-                    new JProperty("feedback", _feedback.Value))),
-                new JProperty("data", data));
+            var regionInfo = new JObject();
+            if (_crop != null)
+            {
+                regionInfo["bounding_box"] = _crop.SerializeAsObject();
+            }
+
+            if (_feedback != null)
+            {
+                regionInfo["feedback"] = _feedback.Value;
+            }
+
+            var body = new JObject();
+
             if (_regionID != null)
             {
                 body["id"] = _regionID;
+            }
+
+            if (data.Count > 0)
+            {
+                body["data"] = data;
+            }
+
+            if (regionInfo.Count > 0)
+            {
+                body["region_info"] = regionInfo;
             }
             return body;
         }

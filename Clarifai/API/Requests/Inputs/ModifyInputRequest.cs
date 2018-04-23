@@ -54,12 +54,17 @@ namespace Clarifai.API.Requests.Inputs
             {
                 concepts.AddRange(_negativeConcepts.Select(c => c.Serialize(false)));
             }
+            var data = new JObject(
+                new JProperty("concepts", concepts));
+            if (_regionFeedbacks !=  null && _regionFeedbacks.Any())
+            {
+                data["regions"] = new JArray(_regionFeedbacks.Select(r => r.Serialize()));
+            }
             return new JObject(
                 new JProperty("action", _action.Serialize()),
                 new JProperty("inputs", new JArray(new JObject(
                     new JProperty("id", _inputID),
-                    new JProperty("data", new JObject(
-                        new JProperty("concepts", concepts)))))));
+                    new JProperty("data", data)))));
         }
     }
 }
