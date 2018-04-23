@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [[1.1.1]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.1.1) - [NuGet](https://www.nuget.org/packages/Clarifai/1.1.1) - 2018-04-23
+
+### Fixed
+- Include regions in the ModifyInputRequest
+
 ## [[1.1.0]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.1.0) - [NuGet](https://www.nuget.org/packages/Clarifai/1.1.0) - 2018-04-09
 
 ### Added
