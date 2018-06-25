@@ -44,7 +44,7 @@ namespace Clarifai.DTOs
         /// <summary>
         /// Units used in geographical radius.
         ///
-        /// Note: since latutide/longitude are angles, it's possible to express distance as
+        /// Note: since latitude/longitude are angles, it's possible to express distance as
         /// an angle in degrees or radians.
         /// </summary>
         public class RadiusUnit

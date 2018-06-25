@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
 using Clarifai.DTOs.Inputs;

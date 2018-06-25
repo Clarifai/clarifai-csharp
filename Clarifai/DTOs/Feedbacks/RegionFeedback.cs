@@ -20,7 +20,6 @@ namespace Clarifai.DTOs.Feedbacks
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// true if region is present in the input, false if not present
         public RegionFeedback(Crop crop = null, Feedback feedback = null,
             IEnumerable<ConceptFeedback> concepts = null, string regionID = null,
             FaceFeedback faceFeedback = null)

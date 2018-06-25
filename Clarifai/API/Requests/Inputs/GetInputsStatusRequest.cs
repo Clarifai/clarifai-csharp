@@ -4,7 +4,8 @@ using Newtonsoft.Json.Linq;
 namespace Clarifai.API.Requests.Inputs
 {
     /// <summary>
-    /// A request for getting input.
+    /// If you add inputs in bulk, they will process in the background. With this method you
+    /// retrieve all inputs' status.
     /// </summary>
     public class GetInputsStatusRequest : ClarifaiRequest<ClarifaiInputsStatus>
     {

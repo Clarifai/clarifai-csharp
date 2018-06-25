@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 namespace Clarifai.API.Requests.Feedbacks
 {
     /// <summary>
-    /// Used to send a feedback back the prediction success to the model.
+    /// Used to send a feedback of prediction success to the model.
     /// </summary>
     public class ModelFeedbackRequest : ClarifaiRequest<EmptyResponse>
     {

@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 namespace Clarifai.API.Requests.Models
 {
     /// <summary>
-    /// Search all the models by name and type of themodel.
+    /// Search all the models by name and type of the model.
     /// </summary>
     public class SearchModelsRequest : ClarifaiPaginatedRequest<List<IModel>>
     {
@@ -23,7 +23,7 @@ namespace Clarifai.API.Requests.Models
         /// the model name - use "*" for any name, or search by part of a name like "celeb*"
         /// </param>
         /// <param name="modelType">the model type</param>
-        public SearchModelsRequest(IClarifaiClient client, string name, ModelType modelType)
+        public SearchModelsRequest(IClarifaiClient client, string name, ModelType modelType = null)
             : base(client)
         {
             _name = name;

@@ -115,7 +115,7 @@ namespace Clarifai.API
             IEnumerable<RegionFeedback> regionFeedbacks = null);
 
         /// <summary>
-        /// Adds the given metadata to this input's metadata.
+        /// Sets the given metadata to this input's metadata.
         ///
         /// The keys in the new metadata are parsed depth-first, and the existing metadata is
         /// checked for a conflicting key at that location.
@@ -160,7 +160,8 @@ namespace Clarifai.API
         DeleteAllInputsRequest DeleteAllInputs();
 
         /// <summary>
-        /// Gets status of the inputs.
+        /// If you add inputs in bulk, they will process in the background. With this method you
+        /// retrieve all inputs' status.
         /// </summary>
         /// <returns>a new GetInputsStatusRequest instance</returns>
         GetInputsStatusRequest GetInputsStatus();
@@ -373,7 +374,7 @@ namespace Clarifai.API
             string language = null);
 
         /// <summary>
-        /// Used to send a feedback back the prediction success to the model.
+        /// Used to send a feedback of prediction success to the model.
         /// </summary>
         /// <param name="modelID">the model ID</param>
         /// <param name="imageUrl">the input URL (image or video)</param>

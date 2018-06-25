@@ -39,7 +39,7 @@ namespace Clarifai.IntegrationTests
                 Assert.True(addResponse.IsSuccessful);
 
                 /*
-                 * Get inputs status.
+                 * Get inputs' status.
                  */
                 ClarifaiResponse<ClarifaiInputsStatus> getInputsStatusResponse =
                     await Client.GetInputsStatus().ExecuteAsync();
@@ -54,7 +54,7 @@ namespace Clarifai.IntegrationTests
                 Assert.True(getResponse.IsSuccessful);
 
                 /*
-                 * Get the input 1.
+                 * Get input 1.
                  */
                 ClarifaiResponse<IClarifaiInput> getInput1Response = await Client.GetInput(inputID1)
                     .ExecuteAsync();
@@ -63,7 +63,7 @@ namespace Clarifai.IntegrationTests
                 Assert.NotNull(getInput1Response.Get().CreatedAt);
 
                 /*
-                 * Get the input 2.
+                 * Get input 2.
                  */
                 ClarifaiResponse<IClarifaiInput> getInput2Response = await Client.GetInput(inputID1)
                     .ExecuteAsync();

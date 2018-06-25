@@ -19,7 +19,7 @@ namespace Clarifai.API.Requests.Inputs
         /// </summary>
         /// <param name="client">the Clarifai client</param>
         /// <param name="inputID">the input ID</param>
-        /// <param name="metadata">the new input's metadata</param>
+        /// <param name="metadata">the input's new metadata</param>
         public ModifyInputMetadataRequest(IClarifaiClient client, string inputID, JObject metadata)
             : base(client)
         {

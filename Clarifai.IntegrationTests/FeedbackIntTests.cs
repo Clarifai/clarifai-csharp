@@ -44,7 +44,7 @@ namespace Clarifai.IntegrationTests
                 sessionID: "@sessionID",
                 concepts: new List<ConceptFeedback>
                 {
-                    new ConceptFeedback("cat", true), new ConceptFeedback("dog", false)
+                    new ConceptFeedback("freeman", true), new ConceptFeedback("eminem", false)
                 },
                 regions: new List<RegionFeedback>
                 {
@@ -53,8 +53,8 @@ namespace Clarifai.IntegrationTests
                         Feedback.NotDetected,
                         new List<ConceptFeedback>
                         {
-                            new ConceptFeedback("cat", true),
-                            new ConceptFeedback("dog", false)
+                            new ConceptFeedback("freeman", true),
+                            new ConceptFeedback("eminem", false)
                         })
                 }
             ).ExecuteAsync();

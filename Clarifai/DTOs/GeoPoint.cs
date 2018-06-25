@@ -29,7 +29,7 @@ namespace Clarifai.DTOs
         }
 
         /// <summary>
-        /// Returns a new point moved by the new coordinates
+        /// Returns a new point moved by the new coordinates.
         /// </summary>
         /// <param name="longitude">the longitude to translate by</param>
         /// <param name="latitude">the latitude to translate by</param>

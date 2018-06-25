@@ -11,7 +11,7 @@ namespace Clarifai.UnitTests
     public class ModelVersionUnitTests
     {
         [Test]
-        public async Task ModelFeedbackResponseShouldBeCorrect()
+        public async Task DeleteModelVersionShouldBeCorrect()
         {
             var httpClient = new FkClarifaiHttpClient(
                 deleteResponse: @"{""status"":{""code"":10000,""description"":""Ok""}}");

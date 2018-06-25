@@ -19,7 +19,7 @@ namespace Clarifai.API.Requests.Concepts
         /// Ctor.
         /// </summary>
         /// <param name="client">the Clarifai client</param>
-        /// <param name="query">the query to search concepts with</param>
+        /// <param name="query">the query to search concepts by</param>
         /// <param name="language">the language</param>
         public SearchConceptsRequest(IClarifaiClient client, string query, string language = null)
             : base(client)
