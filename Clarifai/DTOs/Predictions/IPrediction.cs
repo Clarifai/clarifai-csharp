@@ -1,4 +1,6 @@
-﻿namespace Clarifai.DTOs.Predictions
+﻿using System;
+
+namespace Clarifai.DTOs.Predictions
 {
     /// <summary>
     /// IPrediction type.

@@ -61,12 +61,12 @@ namespace Clarifai.DTOs.Models.Outputs
         /// <summary>
         /// Deserializes the object out of a JSON dynamic object.
         /// </summary>
-        /// <param name="typeName">name of the type</param>
+        /// <param name="modelType">the model type</param>
         /// <param name="jsonObject">the JSON object</param>
         /// <returns>the deserialized object</returns>
-        public static ClarifaiOutput Deserialize(string typeName, dynamic jsonObject)
+        public static ClarifaiOutput Deserialize(ModelType modelType, dynamic jsonObject)
         {
-            dynamic data = DeserializePredictions(typeName, jsonObject);
+            dynamic data = DeserializePredictions(modelType, jsonObject);
 
             return new ClarifaiOutput(
                 (string)jsonObject.id,
@@ -76,7 +76,7 @@ namespace Clarifai.DTOs.Models.Outputs
                 data);
         }
 
-        protected static List<IPrediction> DeserializePredictions(string typeName,
+        protected static List<IPrediction> DeserializePredictions(ModelType modelType,
             dynamic jsonObject)
         {
             var propertyValues = (JObject) jsonObject.data;
@@ -84,12 +84,12 @@ namespace Clarifai.DTOs.Models.Outputs
             var data = new List<IPrediction>();
             if (propertyValues.Count > 0)
             {
-                string name = propertyValues.Properties().First().Name;
+                string typeName = modelType.Prediction.Name;
                 switch (typeName)
                 {
                     case "Color":
                     {
-                        foreach (var color in jsonObject.data[name])
+                        foreach (dynamic color in jsonObject.data.colors)
                         {
                             data.Add(Color.Deserialize(color));
                         }
@@ -97,7 +97,7 @@ namespace Clarifai.DTOs.Models.Outputs
                     }
                     case "Concept":
                     {
-                        foreach (var concept in jsonObject.data[name])
+                        foreach (dynamic concept in jsonObject.data.concepts)
                         {
                             data.Add(Concept.Deserialize(concept));
                         }
@@ -105,7 +105,7 @@ namespace Clarifai.DTOs.Models.Outputs
                     }
                     case "Demographics":
                     {
-                        foreach (var demographics in jsonObject.data[name])
+                        foreach (dynamic demographics in jsonObject.data.regions)
                         {
                             data.Add(Demographics.Deserialize(demographics));
                         }
@@ -113,7 +113,7 @@ namespace Clarifai.DTOs.Models.Outputs
                     }
                     case "Embedding":
                     {
-                        foreach (var embedding in jsonObject.data[name])
+                        foreach (dynamic embedding in jsonObject.data.embeddings)
                         {
                             data.Add(Embedding.Deserialize(embedding));
                         }
@@ -121,7 +121,8 @@ namespace Clarifai.DTOs.Models.Outputs
                     }
                     case "FaceConcepts":
                     {
-                        foreach (var faceConcepts in jsonObject.data[name])
+                        foreach (dynamic faceConcepts in
+                            jsonObject.data.regions)
                         {
                             data.Add(FaceConcepts.Deserialize(faceConcepts));
                         }
@@ -129,7 +130,7 @@ namespace Clarifai.DTOs.Models.Outputs
                     }
                     case "FaceDetection":
                     {
-                        foreach (var faceDetection in jsonObject.data[name])
+                        foreach (dynamic faceDetection in jsonObject.data.regions)
                         {
                             data.Add(FaceDetection.Deserialize(faceDetection));
                         }
@@ -137,7 +138,7 @@ namespace Clarifai.DTOs.Models.Outputs
                     }
                     case "FaceEmbedding":
                     {
-                        foreach (var faceEmbedding in jsonObject.data[name])
+                        foreach (dynamic faceEmbedding in jsonObject.data.regions)
                         {
                             data.Add(FaceEmbedding.Deserialize(faceEmbedding));
                         }
@@ -145,7 +146,7 @@ namespace Clarifai.DTOs.Models.Outputs
                     }
                     case "Focus":
                     {
-                        foreach (var focus in jsonObject.data.regions)
+                        foreach (dynamic focus in jsonObject.data.regions)
                         {
                             data.Add(Focus.Deserialize(focus,
                                 (decimal) jsonObject.data.focus.value));
@@ -154,7 +155,7 @@ namespace Clarifai.DTOs.Models.Outputs
                     }
                     case "Frame":
                     {
-                        foreach (var frame in jsonObject.data[name])
+                        foreach (dynamic frame in jsonObject.data.frames)
                         {
                             data.Add(Frame.Deserialize(frame));
                         }
@@ -162,7 +163,7 @@ namespace Clarifai.DTOs.Models.Outputs
                     }
                     case "Logo":
                     {
-                        foreach (var logo in jsonObject.data[name])
+                        foreach (dynamic logo in jsonObject.data.regions)
                         {
                             data.Add(Logo.Deserialize(logo));
                         }
@@ -229,7 +230,9 @@ namespace Clarifai.DTOs.Models.Outputs
         public static ClarifaiOutput<T> Deserialize(dynamic jsonObject)
         {
             Type type = typeof(T);
-            dynamic data = DeserializePredictions(type.Name, jsonObject);
+            ModelType modelType = ModelType.ConstructFromName(type.Name);
+
+            dynamic data = DeserializePredictions(modelType, jsonObject);
             return new ClarifaiOutput<T>(
                 (string)jsonObject.id,
                 ClarifaiStatus.Deserialize(jsonObject.status),

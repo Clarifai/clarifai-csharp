@@ -33,7 +33,7 @@ namespace Clarifai.DTOs.Workflows
                 ModelType modelType = ModelType.DetermineModelType(
                     (string)model.output_info.type_ext);
 
-                predictions.Add(ClarifaiOutput.Deserialize(modelType.Prediction.Name, output));
+                predictions.Add(ClarifaiOutput.Deserialize(modelType, output));
             }
 
             return new WorkflowResult(status, input, predictions);

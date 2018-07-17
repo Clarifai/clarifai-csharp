@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Clarifai.DTOs.Predictions;
 
 namespace Clarifai.DTOs.Models
@@ -12,12 +13,12 @@ namespace Clarifai.DTOs.Models
         public static ModelType Concept =>
             new ModelType("concept", typeof(ConceptModel), typeof(Concept));
         public static ModelType Demographics =>
-            new ModelType("facedetect-demographics", typeof(DemographicsModel), typeof(Demographics));
+            new ModelType("facedetect-demographics", typeof(DemographicsModel),
+                typeof(Demographics));
         public static ModelType Embedding =>
             new ModelType("embed", typeof(EmbeddingModel), typeof(Embedding));
         public static ModelType FaceConcepts =>
-            new ModelType("facedetect-identity",
-            typeof(FaceConceptsModel), typeof(FaceConcepts));
+            new ModelType("facedetect-identity", typeof(FaceConceptsModel), typeof(FaceConcepts));
         public static ModelType FaceDetection =>
             new ModelType("facedetect", typeof(FaceDetectionModel), typeof(FaceDetection));
         public static ModelType FaceEmbedding =>
@@ -37,11 +38,36 @@ namespace Clarifai.DTOs.Models
         /// Ctor.
         /// </summary>
         /// <param name="typeExt">the type extension</param>
-        public ModelType(string typeExt, Type model, Type prediction)
+        private ModelType(string typeExt, Type model, Type prediction)
         {
             TypeExt = typeExt;
             Model = model;
             Prediction = prediction;
+        }
+
+        public static ModelType DetermineModelType(string typeExt)
+        {
+            // TODO(Rok) MEDIUM: This should be removed and reflection used to get all model types.
+            var modelTypes = new List<ModelType>
+            {
+                Color, Concept, Demographics, Embedding, FaceConcepts, FaceDetection, FaceEmbedding,
+                Focus, Logo, Video
+            };
+            var query = modelTypes.Where(mt => mt.TypeExt == typeExt).ToList();
+            if (!query.Any()) return null;
+            ModelType modelType = query.Single();
+            return modelType;
+        }
+
+        public static ModelType ConstructFromName(string name)
+        {
+            // Since the class name Frame differs from the ModelType's static method Video, we have
+            // to adjust the name.
+            if (name == "Frame")
+            {
+                name = "Video";
+            }
+            return (ModelType) typeof(ModelType).GetRuntimeProperty(name).GetValue(null);
         }
 
         public override bool Equals(object obj)
@@ -58,19 +84,6 @@ namespace Clarifai.DTOs.Models
         public override string ToString()
         {
             return $"[ModelType: {TypeExt}]";
-        }
-
-        public static ModelType DetermineModelType(string typeExt)
-        {
-            var modelTypes = new List<ModelType>
-            {
-                Color, Concept, Demographics, Embedding, FaceConcepts, FaceDetection, FaceEmbedding,
-                Focus, Logo, Video
-            };
-            var query = modelTypes.Where(mt => mt.TypeExt == typeExt).ToList();
-            if (!query.Any()) return null;
-            ModelType modelType = query.Single();
-            return modelType;
         }
     }
 }
