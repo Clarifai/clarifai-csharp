@@ -188,7 +188,7 @@ namespace Clarifai.API
             where T : IPrediction;
 
         /// <summary>
-        /// Runs prediction on multiple inputs using a certain <see cref="Model{T}"/>.
+        /// Runs a prediction on multiple inputs using a certain <see cref="Model{T}"/>.
         /// </summary>
         /// <typeparam name="T">the model type</typeparam>
         /// <param name="modelID">the model ID</param>
