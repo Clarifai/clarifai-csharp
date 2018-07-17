@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [[1.1.2]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.1.2) - [NuGet](https://www.nuget.org/packages/Clarifai/1.1.2) - 2018-07-17
+
+### Fixed
+- Predict response deserialization
+
 ## [[1.1.1]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.1.1) - [NuGet](https://www.nuget.org/packages/Clarifai/1.1.1) - 2018-04-23
 
 ### Fixed
