@@ -1,3 +1,5 @@
+![Clarifai logo](logo.png)
+
 # Clarifai API C# Client
 
 [![NuGet](https://img.shields.io/nuget/v/Clarifai.svg)](https://www.nuget.org/packages/Clarifai)
@@ -104,7 +106,7 @@ Not all methods can however use generics. For example, the `GetModels` is able t
 ```csharp
 if (models[0].OutputInfo.TypeExt == "concept")
 {
-	ConceptModel model = (ConceptModel) models[0];
+    ConceptModel model = (ConceptModel) models[0];
 }
 ```
 
