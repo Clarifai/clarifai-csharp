@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [[1.1.3]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.1.3) - [NuGet](https://www.nuget.org/packages/Clarifai/1.1.3) - 2018-07-18
+
+### Fixed
+- Searching by input metadata
+
 ## [[1.1.2]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.1.2) - [NuGet](https://www.nuget.org/packages/Clarifai/1.1.2) - 2018-07-17
 
 ### Fixed
