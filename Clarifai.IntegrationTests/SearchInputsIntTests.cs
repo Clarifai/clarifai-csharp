@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
 using Clarifai.DTOs;
@@ -172,9 +173,7 @@ namespace Clarifai.IntegrationTests
         [Retry(3)]
         public async Task SearchByMetadataShouldBeSuccessful()
         {
-            var metadata = new JObject(
-                new JProperty("key1", "val1"),
-                new JProperty("key2", "val2"));
+            string randomValue = GenerateRandomID();
 
             ClarifaiResponse<List<IClarifaiInput>> addInputResponse =
                 await Client.AddInputs(
@@ -182,7 +181,9 @@ namespace Clarifai.IntegrationTests
                             CAT1,
                             positiveConcepts: new List<Concept> { new Concept("cat") },
                             allowDuplicateUrl: true,
-                            metadata: metadata))
+                            metadata: new JObject(
+                                new JProperty("key1", "val1"),
+                                new JProperty("key2", randomValue))))
                     .ExecuteAsync();
 
             Assert.True(addInputResponse.IsSuccessful);
@@ -192,12 +193,15 @@ namespace Clarifai.IntegrationTests
                 ClarifaiResponse<SearchInputsResult> response =
                     await Client.SearchInputs(new List<SearchBy>
                             {
-                                SearchBy.Metadata(metadata)
+                                SearchBy.Metadata(new JObject(new JProperty("key2", randomValue)))
                             })
                         .ExecuteAsync();
+                Console.WriteLine(response.RawBody);
 
                 Assert.True(response.IsSuccessful);
                 Assert.NotNull(response.Get().SearchHits);
+                // Because the value we set is random, there should be exactly one hit.
+                Assert.AreEqual(1, response.Get().SearchHits.Count);
             }
             finally
             {

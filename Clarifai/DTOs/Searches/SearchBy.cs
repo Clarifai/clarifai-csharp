@@ -214,7 +214,7 @@ namespace Clarifai.DTOs.Searches
             public override JObject Serialize()
             {
                 return new JObject(
-                    new JProperty("output", new JObject(
+                    new JProperty("input", new JObject(
                         new JProperty("data", new JObject(
                             new JProperty("metadata", _metadata))))));
             }
