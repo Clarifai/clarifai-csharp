@@ -37,7 +37,7 @@ namespace Clarifai.IntegrationTests
             if (string.IsNullOrWhiteSpace(
                 Environment.GetEnvironmentVariable("CLARIFAI_API_KEY")))
             {
-                Assert.Inconclusive("The CLARIFAI_API_KEY environment variable must be set in order to rum the integration tests.");
+                Assert.Inconclusive("The CLARIFAI_API_KEY environment variable must be set in order to run the integration tests.");
             }
         }
 
