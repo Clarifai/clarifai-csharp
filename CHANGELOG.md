@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [[1.2.0]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.2.0) - [NuGet](https://www.nuget.org/packages/Clarifai/1.2.0) - 2018-10-19
+
+### Added
+- Moderation solution
+
 ## [[1.1.3]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.1.3) - [NuGet](https://www.nuget.org/packages/Clarifai/1.1.3) - 2018-07-18
 
 ### Fixed
