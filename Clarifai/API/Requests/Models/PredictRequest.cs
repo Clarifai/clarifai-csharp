@@ -43,23 +43,23 @@ namespace Clarifai.API.Requests.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
         /// <param name="input">the Clarifai input</param>
         /// <param name="modelVersionID">the model version ID - leave null for latest</param>
         /// <param name="language">the language</param>
         /// <param name="minValue">
-        /// only preditions with a value greater than or equal to to minValue will be returned
+        /// only predictions with a value greater than or equal to to minValue will be returned
         /// </param>
         /// <param name="maxConcepts">
         /// the maximum maxConcepts number of predictions that will be returned
         /// </param>
         /// <param name="selectConcepts">only selectConcepts will be returned</param>
-        public PredictRequest(IClarifaiClient client, string modelID,
+        public PredictRequest(IClarifaiHttpClient httpClient, string modelID,
             IClarifaiInput input, string modelVersionID = null,
             string language = null, decimal? minValue =  null, int? maxConcepts = null,
             IEnumerable<Concept> selectConcepts = null)
-            : base(client)
+            : base(httpClient)
         {
             _modelID = modelID;
             _input = input;
@@ -114,7 +114,7 @@ namespace Clarifai.API.Requests.Models
                 var jsonOutput = jsonObject.outputs[0];
                 return ClarifaiOutput<T>.Deserialize(jsonOutput);
             }
-            throw new ClarifaiException("A single output is not present in the API");
+            throw new ClarifaiException("The response does not contain exactly one output.");
         }
     }
 }

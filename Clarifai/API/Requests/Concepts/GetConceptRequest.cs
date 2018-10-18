@@ -16,9 +16,10 @@ namespace Clarifai.API.Requests.Concepts
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="conceptID">the concept ID</param>
-        public GetConceptRequest(IClarifaiClient client, string conceptID) : base(client)
+        public GetConceptRequest(IClarifaiHttpClient httpClient, string conceptID)
+            : base(httpClient)
         {
             _conceptID = conceptID;
         }

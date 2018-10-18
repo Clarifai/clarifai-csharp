@@ -18,9 +18,9 @@ namespace Clarifai.API.Requests.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
-        public GetModelRequest(IClarifaiClient client, string modelID) : base(client)
+        public GetModelRequest(IClarifaiHttpClient httpClient, string modelID) : base(httpClient)
         {
             _modelID = modelID;
         }
@@ -34,7 +34,7 @@ namespace Clarifai.API.Requests.Models
         /// <inheritdoc />
         protected override IModel<T> Unmarshaller(dynamic jsonObject)
         {
-            return Model<T>.Deserialize(Client, jsonObject.model);
+            return Model<T>.Deserialize(HttpClient, jsonObject.model);
         }
     }
 }

@@ -18,29 +18,29 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
         /// <param name="name">the model name</param>
         /// <param name="createdAt">date & time of model creation</param>
         /// <param name="appID">the application ID</param>
         /// <param name="modelVersion">the model version</param>
         /// <param name="outputInfo">the output info</param>
-        public VideoModel(IClarifaiClient client, string modelID, string name = null,
+        public VideoModel(IClarifaiHttpClient httpClient, string modelID, string name = null,
             DateTime? createdAt = null, string appID = null, ModelVersion modelVersion = null,
             VideoOutputInfo outputInfo = null)
-            : base(client, modelID, name, createdAt, appID, modelVersion, outputInfo)
+            : base(httpClient, modelID, name, createdAt, appID, modelVersion, outputInfo)
         { }
 
         /// <summary>
         /// Deserializes the JSON object to a new instance of this class.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="model">the JSON object</param>
         /// <returns>a new instance</returns>
-        public new static VideoModel Deserialize(IClarifaiClient client, dynamic model)
+        public new static VideoModel Deserialize(IClarifaiHttpClient httpClient, dynamic model)
         {
             return new VideoModel(
-                client,
+                httpClient,
                 (string)model.id,
                 name: (string)model.name,
                 createdAt: (DateTime)model.created_at,

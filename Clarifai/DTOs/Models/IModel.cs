@@ -14,7 +14,7 @@ namespace Clarifai.DTOs.Models
     public interface IModel
     {
         string AppID { get; }
-        IClarifaiClient Client { get; }
+        IClarifaiHttpClient HttpClient { get; }
         DateTime? CreatedAt { get; }
         string ModelID { get; }
         ModelVersion ModelVersion { get; }

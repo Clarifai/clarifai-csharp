@@ -10,6 +10,8 @@ namespace Clarifai.UnitTests.Fakes
     /// </summary>
     public class FkClarifaiHttpClient : IClarifaiHttpClient
     {
+        public string ApiKey { get; }
+
         /// <summary>
         /// The body of the last POST request.
         /// </summary>

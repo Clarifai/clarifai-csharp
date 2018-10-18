@@ -10,7 +10,7 @@
         private int? _perPage;
 
         /// <inheritdoc />
-        protected ClarifaiPaginatedRequest(IClarifaiClient client) : base(client)
+        protected ClarifaiPaginatedRequest(IClarifaiHttpClient httpClient) : base(httpClient)
         { }
 
         /// <summary>

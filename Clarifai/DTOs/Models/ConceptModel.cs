@@ -23,17 +23,17 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
         /// <param name="name">the model name</param>
         /// <param name="createdAt">date & time of model creation</param>
         /// <param name="appID">the application ID</param>
         /// <param name="modelVersion">the model version</param>
         /// <param name="outputInfo">the output info</param>
-        public ConceptModel(IClarifaiClient client, string modelID, string name = null,
+        public ConceptModel(IClarifaiHttpClient httpClient, string modelID, string name = null,
             DateTime? createdAt = null, string appID = null, ModelVersion modelVersion = null,
             ConceptOutputInfo outputInfo = null)
-            : base(client, modelID, name, createdAt, appID, modelVersion, outputInfo)
+            : base(httpClient, modelID, name, createdAt, appID, modelVersion, outputInfo)
         { }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Clarifai.DTOs.Models
             IEnumerable<Concept> concepts = null, bool? areConceptsMutuallyExclusive = null,
             bool? isEnvironmentClosed = null, string language = null)
         {
-            return new ModifyModelRequest(Client, ModelID, action, name, concepts,
+            return new ModifyModelRequest(HttpClient, ModelID, action, name, concepts,
                 areConceptsMutuallyExclusive, isEnvironmentClosed, language);
         }
 
@@ -112,13 +112,13 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Deserializes the JSON object to a new instance of this class.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="model">the JSON object</param>
         /// <returns>a new instance</returns>
-        public new static ConceptModel Deserialize(IClarifaiClient client, dynamic model)
+        public new static ConceptModel Deserialize(IClarifaiHttpClient httpClient, dynamic model)
         {
             return new ConceptModel(
-                client,
+                httpClient,
                 (string)model.id,
                 name: (string)model.name,
                 createdAt: (DateTime)model.created_at,

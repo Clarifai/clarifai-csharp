@@ -24,14 +24,14 @@ namespace Clarifai.API.Requests.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="workflowID">the workflow ID</param>
         /// <param name="inputs">the inputs to run predictions on</param>
         /// <param name="minValue">return only results that have at least this value</param>
         /// <param name="maxConcepts">the maximum number of concepts to return</param>
-        public WorkflowBatchPredictRequest(IClarifaiClient client, string workflowID,
+        public WorkflowBatchPredictRequest(IClarifaiHttpClient httpClient, string workflowID,
             IEnumerable<IClarifaiInput> inputs, decimal? minValue = null, int? maxConcepts = null)
-            : base(client)
+            : base(httpClient)
         {
             _workflowID = workflowID;
             _inputs = inputs;

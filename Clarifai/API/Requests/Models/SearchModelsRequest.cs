@@ -18,13 +18,14 @@ namespace Clarifai.API.Requests.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="name">
         /// the model name - use "*" for any name, or search by part of a name like "celeb*"
         /// </param>
         /// <param name="modelType">the model type</param>
-        public SearchModelsRequest(IClarifaiClient client, string name, ModelType modelType = null)
-            : base(client)
+        public SearchModelsRequest(IClarifaiHttpClient httpClient, string name,
+            ModelType modelType = null)
+            : base(httpClient)
         {
             _name = name;
             _modelType = modelType;
@@ -51,7 +52,7 @@ namespace Clarifai.API.Requests.Models
             {
                 ModelType modelType = ModelType.DetermineModelType(
                     (string)model.output_info.type_ext);
-                models.Add(Model.Deserialize(Client, modelType.Prediction, model));
+                models.Add(Model.Deserialize(HttpClient, modelType.Prediction, model));
             }
             return models;
         }

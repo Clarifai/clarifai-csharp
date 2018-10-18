@@ -1,4 +1,5 @@
 using System;
+using System.Dynamic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,16 +17,16 @@ namespace Clarifai.API.Requests
         protected abstract RequestMethod Method { get; }
         protected abstract string Url { get; }
 
-        private readonly IClarifaiClient _client;
-        protected IClarifaiClient Client => _client;
+        private readonly IClarifaiHttpClient _httpClient;
+        protected IClarifaiHttpClient HttpClient => _httpClient;
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
-        protected ClarifaiRequest(IClarifaiClient client)
+        /// <param name="httpClient">the HTTP client</param>
+        protected ClarifaiRequest(IClarifaiHttpClient httpClient)
         {
-            _client = client;
+            _httpClient = httpClient;
         }
 
         /// <inheritdoc />
@@ -61,6 +62,14 @@ namespace Clarifai.API.Requests
             }
 
             dynamic statusJsonObject = jsonObject.status;
+            // If there is no status object present, assume it's successful.
+            if (statusJsonObject == null)
+            {
+                statusJsonObject = new ExpandoObject();
+                statusJsonObject.code = 10000;
+                statusJsonObject.description = "Ok";
+            }
+
             ClarifaiStatus status = ClarifaiStatus.Deserialize(statusJsonObject,
                 response.StatusCode);
 
@@ -97,19 +106,19 @@ namespace Clarifai.API.Requests
             {
                 case RequestMethod.GET:
                 {
-                    return await _client.HttpClient.GetAsync(BuildUrl());
+                    return await HttpClient.GetAsync(BuildUrl());
                 }
                 case RequestMethod.POST:
                 {
-                    return await _client.HttpClient.PostAsync(BuildUrl(), HttpRequestBody());
+                    return await HttpClient.PostAsync(BuildUrl(), HttpRequestBody());
                 }
                 case RequestMethod.PATCH:
                 {
-                    return await _client.HttpClient.PatchAsync(BuildUrl(), HttpRequestBody());
+                    return await HttpClient.PatchAsync(BuildUrl(), HttpRequestBody());
                 }
                 case RequestMethod.DELETE:
                 {
-                    return await _client.HttpClient.DeleteAsync(BuildUrl(), HttpRequestBody());
+                    return await HttpClient.DeleteAsync(BuildUrl(), HttpRequestBody());
                 }
                 default:
                 {

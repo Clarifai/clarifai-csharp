@@ -114,41 +114,47 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        public PublicModels(IClarifaiClient client)
+        public PublicModels(IClarifaiHttpClient httpClient)
         {
-            ColorModel = new ColorModel(client, "eeed0b6733a644cea07cf4c60f87ebb7");
+            ColorModel = new ColorModel(httpClient, "eeed0b6733a644cea07cf4c60f87ebb7");
 
-            ApparelModel = new ConceptModel(client, "e0be3b9d6a454f0493ac3a30784001ff");
-            FoodModel = new ConceptModel(client, "bd367be194cf45149e75f01d59f77ba7");
-            GeneralModel = new ConceptModel(client, "aaa03c23b3724a16a56b629203edc62c");
-            LandscapeQualityModel = new ConceptModel(client, "bec14810deb94c40a05f1f0eb3c91403");
-            ModerationModel = new ConceptModel(client, "d16f390eb32cad478c7ae150069bd2c6");
-            NsfwModel = new ConceptModel(client, "e9576d86d2004ed1a38ba0cf39ecb4b1");
-            PortraitQualityModel = new ConceptModel(client, "de9bd05cfdbf4534af151beb2a5d0953");
-            TexturesAndPatternsModel = new ConceptModel(client, "fbefb47f9fdb410e8ce14f24f54b47ff");
-            TravelModel = new ConceptModel(client, "eee28c313d69466f836ab83287a54ed9");
-            WeddingModel = new ConceptModel(client, "c386b7a870114f4a87477c0824499348");
+            ApparelModel = new ConceptModel(httpClient, "e0be3b9d6a454f0493ac3a30784001ff");
+            FoodModel = new ConceptModel(httpClient, "bd367be194cf45149e75f01d59f77ba7");
+            GeneralModel = new ConceptModel(httpClient, "aaa03c23b3724a16a56b629203edc62c");
+            LandscapeQualityModel = new ConceptModel(httpClient,
+                "bec14810deb94c40a05f1f0eb3c91403");
+            ModerationModel = new ConceptModel(httpClient, "d16f390eb32cad478c7ae150069bd2c6");
+            NsfwModel = new ConceptModel(httpClient, "e9576d86d2004ed1a38ba0cf39ecb4b1");
+            PortraitQualityModel = new ConceptModel(httpClient, "de9bd05cfdbf4534af151beb2a5d0953");
+            TexturesAndPatternsModel = new ConceptModel(httpClient,
+                "fbefb47f9fdb410e8ce14f24f54b47ff");
+            TravelModel = new ConceptModel(httpClient, "eee28c313d69466f836ab83287a54ed9");
+            WeddingModel = new ConceptModel(httpClient, "c386b7a870114f4a87477c0824499348");
 
-            DemographicsModel = new DemographicsModel(client, "c0c0ac362b03416da06ab3fa36fb58e3");
+            DemographicsModel = new DemographicsModel(httpClient,
+                "c0c0ac362b03416da06ab3fa36fb58e3");
 
-            GeneralEmbeddingModel = new EmbeddingModel(client, "bbb5f41425b8468d9b7a554ff10f8581");
+            GeneralEmbeddingModel = new EmbeddingModel(httpClient,
+                "bbb5f41425b8468d9b7a554ff10f8581");
 
-            CelebrityModel = new FaceConceptsModel(client, "e466caa0619f444ab97497640cefc4dc");
+            CelebrityModel = new FaceConceptsModel(httpClient, "e466caa0619f444ab97497640cefc4dc");
 
-            FaceEmbeddingModel = new FaceEmbeddingModel(client, "d02b4508df58432fbb84e800597b8959");
+            FaceEmbeddingModel = new FaceEmbeddingModel(httpClient,
+                "d02b4508df58432fbb84e800597b8959");
 
-            FaceDetectionModel = new FaceDetectionModel(client, "a403429f2ddf4b49b307e318f00e528b");
+            FaceDetectionModel = new FaceDetectionModel(httpClient,
+                "a403429f2ddf4b49b307e318f00e528b");
 
-            FocusModel = new FocusModel(client, "c2cf7cecd8a6427da375b9f35fcd2381");
+            FocusModel = new FocusModel(httpClient, "c2cf7cecd8a6427da375b9f35fcd2381");
 
-            LogoModel = new LogoModel(client, "c443119bf2ed4da98487520d01a0b1e3");
+            LogoModel = new LogoModel(httpClient, "c443119bf2ed4da98487520d01a0b1e3");
 
-            ApparelVideoModel = new VideoModel(client, "e0be3b9d6a454f0493ac3a30784001ff");
-            FoodVideoModel = new VideoModel(client, "bd367be194cf45149e75f01d59f77ba7");
-            GeneralVideoModel = new VideoModel(client, "aaa03c23b3724a16a56b629203edc62c");
-            NsfwVideoModel = new VideoModel(client, "e9576d86d2004ed1a38ba0cf39ecb4b1");
-            TravelVideoModel = new VideoModel(client, "eee28c313d69466f836ab83287a54ed9");
-            WeddingVideoModel = new VideoModel(client, "c386b7a870114f4a87477c0824499348");
+            ApparelVideoModel = new VideoModel(httpClient, "e0be3b9d6a454f0493ac3a30784001ff");
+            FoodVideoModel = new VideoModel(httpClient, "bd367be194cf45149e75f01d59f77ba7");
+            GeneralVideoModel = new VideoModel(httpClient, "aaa03c23b3724a16a56b629203edc62c");
+            NsfwVideoModel = new VideoModel(httpClient, "e9576d86d2004ed1a38ba0cf39ecb4b1");
+            TravelVideoModel = new VideoModel(httpClient, "eee28c313d69466f836ab83287a54ed9");
+            WeddingVideoModel = new VideoModel(httpClient, "c386b7a870114f4a87477c0824499348");
         }
     }
 }

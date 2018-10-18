@@ -24,6 +24,8 @@ namespace Clarifai.API
         /// </summary>
         PublicModels PublicModels { get; }
 
+        Solutions.Solutions Solutions { get; }
+
         IClarifaiHttpClient HttpClient { get; }
 
         /// <summary>

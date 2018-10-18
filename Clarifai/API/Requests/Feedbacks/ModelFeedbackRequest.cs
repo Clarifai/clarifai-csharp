@@ -40,7 +40,7 @@ namespace Clarifai.API.Requests.Feedbacks
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
         /// <param name="imageUrl">the image URL</param>
         /// <param name="inputID">the input ID</param>
@@ -50,10 +50,11 @@ namespace Clarifai.API.Requests.Feedbacks
         /// <param name="concepts">the concepts</param>
         /// <param name="regions">the regions</param>
         /// <param name="modelVersionID">the model version ID</param>
-        public ModelFeedbackRequest(IClarifaiClient client, string modelID, string imageUrl,
+        public ModelFeedbackRequest(IClarifaiHttpClient httpClient, string modelID, string imageUrl,
             string inputID, string outputID, string endUserID, string sessionID,
             IEnumerable<ConceptFeedback> concepts = null,
-            IEnumerable<RegionFeedback> regions = null, string modelVersionID = null) : base(client)
+            IEnumerable<RegionFeedback> regions = null, string modelVersionID = null)
+            : base(httpClient)
         {
             _modelID = modelID;
             _imageUrl = imageUrl;

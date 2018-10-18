@@ -14,8 +14,8 @@ namespace Clarifai.API.Requests.Inputs
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
-        public DeleteAllInputsRequest(IClarifaiClient client) : base(client)
+        /// <param name="httpClient">the HTTP client</param>
+        public DeleteAllInputsRequest(IClarifaiHttpClient httpClient) : base(httpClient)
         { }
 
         /// <inheritdoc />

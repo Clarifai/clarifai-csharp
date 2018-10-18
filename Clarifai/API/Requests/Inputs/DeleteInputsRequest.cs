@@ -18,19 +18,19 @@ namespace Clarifai.API.Requests.Inputs
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="inputIDs">the input IDs</param>
-        public DeleteInputsRequest(IClarifaiClient client, params string[] inputIDs) :
-            this(client, inputIDs.ToList())
+        public DeleteInputsRequest(IClarifaiHttpClient httpClient, params string[] inputIDs) :
+            this(httpClient, inputIDs.ToList())
         { }
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="inputIDs">the input IDs</param>
-        public DeleteInputsRequest(IClarifaiClient client, IEnumerable<string> inputIDs)
-            : base(client)
+        public DeleteInputsRequest(IClarifaiHttpClient httpClient, IEnumerable<string> inputIDs)
+            : base(httpClient)
         {
             _inputIDs = inputIDs;
         }

@@ -17,9 +17,10 @@ namespace Clarifai.API.Requests.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
-        public GetModelVersionsRequest(IClarifaiClient client, string modelID) : base(client)
+        public GetModelVersionsRequest(IClarifaiHttpClient httpClient, string modelID)
+            : base(httpClient)
         {
             _modelID = modelID;
         }

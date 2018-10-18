@@ -18,19 +18,19 @@ namespace Clarifai.API.Requests.Concepts
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="concepts">the concepts</param>
-        public ModifyConceptsRequest(IClarifaiClient client, params Concept[] concepts) :
-            this(client, concepts.ToList())
+        public ModifyConceptsRequest(IClarifaiHttpClient httpClient, params Concept[] concepts) :
+            this(httpClient, concepts.ToList())
         { }
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="concepts">the concepts</param>
-        public ModifyConceptsRequest(IClarifaiClient client, IEnumerable<Concept> concepts)
-            : base(client)
+        public ModifyConceptsRequest(IClarifaiHttpClient httpClient, IEnumerable<Concept> concepts)
+            : base(httpClient)
         {
             _concepts = concepts;
         }

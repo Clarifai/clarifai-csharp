@@ -24,7 +24,7 @@ namespace Clarifai.API.Requests.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
         /// <param name="action">the modification action</param>
         /// <param name="name">the new model name</param>
@@ -32,10 +32,10 @@ namespace Clarifai.API.Requests.Models
         /// <param name="areConceptsMutuallyExclusive">are concepts mutually exclusive</param>
         /// <param name="isEnvironmentClosed">is environment closed</param>
         /// <param name="language">the language</param>
-        public ModifyModelRequest(IClarifaiClient client, string modelID,
+        public ModifyModelRequest(IClarifaiHttpClient httpClient, string modelID,
             ModifyAction action = null, string name = null, IEnumerable<Concept> concepts = null,
             bool? areConceptsMutuallyExclusive = null, bool? isEnvironmentClosed = null,
-            string language = null) : base(client)
+            string language = null) : base(httpClient)
         {
             _modelID = modelID;
             _action = action;
@@ -50,9 +50,7 @@ namespace Clarifai.API.Requests.Models
         protected override JObject HttpRequestBody()
         {
             var model = new ConceptModel(
-                Client,
-                _modelID,
-                name: _name);
+                HttpClient, _modelID, name: _name);
             var body = new JObject(
                 new JProperty("models", new JArray(model.Serialize(_concepts,
                     _areConceptsMutuallyExclusive, _isEnvironmentClosed, _language))));
@@ -66,7 +64,7 @@ namespace Clarifai.API.Requests.Models
         /// <inheritdoc />
         protected override ConceptModel Unmarshaller(dynamic jsonObject)
         {
-            return ConceptModel.Deserialize(Client, jsonObject.models[0]);
+            return ConceptModel.Deserialize(HttpClient, jsonObject.models[0]);
         }
     }
 }

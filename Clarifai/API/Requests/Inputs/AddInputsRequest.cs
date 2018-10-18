@@ -18,19 +18,19 @@ namespace Clarifai.API.Requests.Inputs
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="inputs">the inputs</param>
-        public AddInputsRequest(IClarifaiClient client, params IClarifaiInput[] inputs) :
-            this(client, inputs.ToList())
+        public AddInputsRequest(IClarifaiHttpClient httpClient, params IClarifaiInput[] inputs) :
+            this(httpClient, inputs.ToList())
         { }
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="inputs">the inputs</param>
-        public AddInputsRequest(IClarifaiClient client, IEnumerable<IClarifaiInput> inputs)
-            : base(client)
+        public AddInputsRequest(IClarifaiHttpClient httpClient, IEnumerable<IClarifaiInput> inputs)
+            : base(httpClient)
         {
             _inputs = inputs;
         }

@@ -13,9 +13,9 @@ namespace Clarifai.DTOs.Models
     public abstract class Model : IModel
     {
         /// <summary>
-        /// The Clarifai client.
+        /// The HTTP client.
         /// </summary>
-        public IClarifaiClient Client { get; }
+        public IClarifaiHttpClient HttpClient { get; }
 
         /// <summary>
         /// The model ID.
@@ -47,17 +47,17 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
         /// <param name="name">the model name</param>
         /// <param name="createdAt">date & time of model creation</param>
         /// <param name="appID">the application ID</param>
         /// <param name="modelVersion">the model version</param>
         /// <param name="outputInfo">the output info</param>
-        protected Model(IClarifaiClient client, string modelID, string name, DateTime? createdAt,
-            string appID, ModelVersion modelVersion, IOutputInfo outputInfo)
+        protected Model(IClarifaiHttpClient httpClient, string modelID, string name,
+            DateTime? createdAt, string appID, ModelVersion modelVersion, IOutputInfo outputInfo)
         {
-            Client = client;
+            HttpClient = httpClient;
             ModelID = modelID;
             Name = name;
             CreatedAt = createdAt;
@@ -69,23 +69,23 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Deserializes the object out of a JSON dynamic object for a certain type.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="type">the type</param>
         /// <param name="model">the JSON dynamic object of a model</param>
         /// <returns>the deserialized object</returns>
-        public static Model Deserialize(IClarifaiClient client, Type type, dynamic model)
+        public static Model Deserialize(IClarifaiHttpClient httpClient, Type type, dynamic model)
         {
             var typeToDeserialization = new Dictionary<Type, Func<Model>> {
-                { typeof(Color), () => ColorModel.Deserialize(client, model)},
-                { typeof(Concept), () => ConceptModel.Deserialize(client, model)},
-                { typeof(Demographics), () => DemographicsModel.Deserialize(client, model)},
-                { typeof(Embedding), () => EmbeddingModel.Deserialize(client, model)},
-                { typeof(FaceConcepts), () => FaceConceptsModel.Deserialize(client, model)},
-                { typeof(FaceDetection), () => FaceDetectionModel.Deserialize(client, model)},
-                { typeof(FaceEmbedding), () => FaceEmbeddingModel.Deserialize(client, model)},
-                { typeof(Focus), () => FocusModel.Deserialize(client, model)},
-                { typeof(Logo), () => LogoModel.Deserialize(client, model)},
-                { typeof(Frame), () => VideoModel.Deserialize(client, model)},
+                { typeof(Color), () => ColorModel.Deserialize(httpClient, model)},
+                { typeof(Concept), () => ConceptModel.Deserialize(httpClient, model)},
+                { typeof(Demographics), () => DemographicsModel.Deserialize(httpClient, model)},
+                { typeof(Embedding), () => EmbeddingModel.Deserialize(httpClient, model)},
+                { typeof(FaceConcepts), () => FaceConceptsModel.Deserialize(httpClient, model)},
+                { typeof(FaceDetection), () => FaceDetectionModel.Deserialize(httpClient, model)},
+                { typeof(FaceEmbedding), () => FaceEmbeddingModel.Deserialize(httpClient, model)},
+                { typeof(Focus), () => FocusModel.Deserialize(httpClient, model)},
+                { typeof(Logo), () => LogoModel.Deserialize(httpClient, model)},
+                { typeof(Frame), () => VideoModel.Deserialize(httpClient, model)},
             };
 
             if (!typeToDeserialization.ContainsKey(type))
@@ -99,7 +99,7 @@ namespace Clarifai.DTOs.Models
         public override bool Equals(object obj)
         {
             return obj is Model model &&
-                   EqualityComparer<IClarifaiClient>.Default.Equals(Client, model.Client) &&
+                   EqualityComparer<IClarifaiHttpClient>.Default.Equals(HttpClient, model.HttpClient) &&
                    ModelID == model.ModelID &&
                    Name == model.Name &&
                    EqualityComparer<DateTime?>.Default.Equals(CreatedAt, model.CreatedAt) &&
@@ -111,7 +111,7 @@ namespace Clarifai.DTOs.Models
         {
             var hashCode = 208641880;
             hashCode = hashCode * -1521134295 +
-                       EqualityComparer<IClarifaiClient>.Default.GetHashCode(Client);
+                       EqualityComparer<IClarifaiHttpClient>.Default.GetHashCode(HttpClient);
             hashCode = hashCode * -1521134295 +
                        EqualityComparer<string>.Default.GetHashCode(ModelID);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
@@ -133,33 +133,33 @@ namespace Clarifai.DTOs.Models
     public class Model<T> : Model, IModel<T> where T : IPrediction
     {
         /// <inheritdoc />
-        protected Model(IClarifaiClient client, string modelID, string name, DateTime? createdAt,
-            string appID, ModelVersion modelVersion, IOutputInfo outputInfo)
-            : base(client, modelID, name, createdAt, appID, modelVersion, outputInfo)
+        protected Model(IClarifaiHttpClient httpClient, string modelID, string name,
+            DateTime? createdAt, string appID, ModelVersion modelVersion, IOutputInfo outputInfo)
+            : base(httpClient, modelID, name, createdAt, appID, modelVersion, outputInfo)
         { }
 
         /// <inheritdoc />
         public DeleteModelVersionRequest DeleteModelVersion(string modelVersionID)
         {
-            return new DeleteModelVersionRequest(Client, ModelID, modelVersionID);
+            return new DeleteModelVersionRequest(HttpClient, ModelID, modelVersionID);
         }
 
         /// <inheritdoc />
         public GetModelInputsRequest GetModelInputs()
         {
-            return new GetModelInputsRequest(Client, ModelID, ModelVersion?.ID);
+            return new GetModelInputsRequest(HttpClient, ModelID, ModelVersion?.ID);
         }
 
         /// <inheritdoc />
         public GetModelVersionRequest GetModelVersion(string modelVersionID)
         {
-            return new GetModelVersionRequest(Client, ModelID, modelVersionID);
+            return new GetModelVersionRequest(HttpClient, ModelID, modelVersionID);
         }
 
         /// <inheritdoc />
         public GetModelVersionsRequest GetModelVersions()
         {
-            return new GetModelVersionsRequest(Client, ModelID);
+            return new GetModelVersionsRequest(HttpClient, ModelID);
         }
 
         /// <inheritdoc />
@@ -167,7 +167,7 @@ namespace Clarifai.DTOs.Models
             decimal? minValue = null, int? maxConcepts = null,
             IEnumerable<Concept> selectConcepts = null)
         {
-            return new PredictRequest<T>(Client, ModelID, input, ModelVersion?.ID, language,
+            return new PredictRequest<T>(HttpClient, ModelID, input, ModelVersion?.ID, language,
                 minValue, maxConcepts, selectConcepts);
         }
 
@@ -176,26 +176,26 @@ namespace Clarifai.DTOs.Models
             string language = null, decimal? minValue =  null, int? maxConcepts = null,
             IEnumerable<Concept> selectConcepts = null)
         {
-            return new BatchPredictRequest<T>(Client, ModelID, inputs, ModelVersion?.ID, language,
+            return new BatchPredictRequest<T>(HttpClient, ModelID, inputs, ModelVersion?.ID, language,
                 minValue, maxConcepts, selectConcepts);
         }
 
         /// <inheritdoc />
         public TrainModelRequest<T> TrainModel()
         {
-            return new TrainModelRequest<T>(Client, ModelID);
+            return new TrainModelRequest<T>(HttpClient, ModelID);
         }
 
         /// <summary>
         /// Deserializes the object out of a JSON dynamic object.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="model">the JSON dynamic object of a model</param>
         /// <returns>the deserialized object</returns>
-        public static Model<T> Deserialize(IClarifaiClient client, dynamic model)
+        public static Model<T> Deserialize(IClarifaiHttpClient httpClient, dynamic model)
         {
             Type type = typeof(T);
-            return Model.Deserialize(client, type, model);
+            return Model.Deserialize(httpClient, type, model);
         }
     }
 }

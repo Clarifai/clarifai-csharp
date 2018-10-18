@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Clarifai.Exceptions;
 using Clarifai.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -11,11 +12,12 @@ namespace Clarifai.API
     /// <inheritdoc />
     public class ClarifaiHttpClient : IClarifaiHttpClient
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        public string CurrentVersion => "1.1.3";
+
+        public string ApiKey { get; }
 
         private readonly string _baseUrl;
-
-        public string CurrentVersion => "1.1.3";
+        private readonly HttpClient _httpClient = new HttpClient();
 
         /// <summary>
         /// Ctor.
@@ -24,6 +26,7 @@ namespace Clarifai.API
         /// <param name="baseUrl">Clarifai base URL</param>
         public ClarifaiHttpClient(string apiKey, string baseUrl = @"https://api.clarifai.com")
         {
+            ApiKey = apiKey;
             _baseUrl = baseUrl;
 
             _httpClient.DefaultRequestHeaders.Authorization =

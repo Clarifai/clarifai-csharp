@@ -22,11 +22,19 @@ namespace Clarifai.API.Requests.Inputs
         private readonly IEnumerable<Concept> _negativeConcepts;
         private readonly IEnumerable<RegionFeedback> _regionFeedbacks;
 
-        /// <inheritdoc />
-        public ModifyInputRequest(IClarifaiClient client, string inputID, ModifyAction action,
+        /// <summary>
+        /// Ctor.
+        /// </summary>
+        /// <param name="httpClient">the HTTP client</param>
+        /// <param name="inputID">the input ID</param>
+        /// <param name="action">the action</param>
+        /// <param name="positiveConcepts">positive concepts</param>
+        /// <param name="negativeConcepts">negative concepts</param>
+        /// <param name="regionFeedbacks">region feedbacks</param>
+        public ModifyInputRequest(IClarifaiHttpClient httpClient, string inputID, ModifyAction action,
             IEnumerable<Concept> positiveConcepts, IEnumerable<Concept> negativeConcepts,
             IEnumerable<RegionFeedback> regionFeedbacks = null)
-            : base(client)
+            : base(httpClient)
         {
             _inputID = inputID;
             _action = action;

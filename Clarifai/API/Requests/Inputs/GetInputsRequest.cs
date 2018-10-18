@@ -15,8 +15,8 @@ namespace Clarifai.API.Requests.Inputs
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
-        public GetInputsRequest(IClarifaiClient client) : base(client)
+        /// <param name="httpClient">the HTTP client</param>
+        public GetInputsRequest(IClarifaiHttpClient httpClient) : base(httpClient)
         { }
 
         /// <inheritdoc />

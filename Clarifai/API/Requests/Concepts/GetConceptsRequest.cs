@@ -15,8 +15,8 @@ namespace Clarifai.API.Requests.Concepts
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
-        public GetConceptsRequest(IClarifaiClient client) : base(client)
+        /// <param name="httpClient">the HTTP client</param>
+        public GetConceptsRequest(IClarifaiHttpClient httpClient) : base(httpClient)
         { }
 
         /// <inheritdoc />

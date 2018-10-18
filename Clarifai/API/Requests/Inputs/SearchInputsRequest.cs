@@ -19,20 +19,20 @@ namespace Clarifai.API.Requests.Inputs
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="searchBys">the search clauses</param>
-        public SearchInputsRequest(IClarifaiClient client, params SearchBy[] searchBys)
-            : this(client, searchBys.ToList())
+        public SearchInputsRequest(IClarifaiHttpClient httpClient, params SearchBy[] searchBys)
+            : this(httpClient, searchBys.ToList())
         { }
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="searchBys">the search clauses</param>
         /// <param name="language">the language</param>
-        public SearchInputsRequest(IClarifaiClient client, IEnumerable<SearchBy> searchBys,
-            string language = null) : base(client)
+        public SearchInputsRequest(IClarifaiHttpClient httpClient, IEnumerable<SearchBy> searchBys,
+            string language = null) : base(httpClient)
         {
             _searchBys = searchBys;
             _language = language;

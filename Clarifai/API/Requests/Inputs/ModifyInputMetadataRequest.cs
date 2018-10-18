@@ -17,11 +17,12 @@ namespace Clarifai.API.Requests.Inputs
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="inputID">the input ID</param>
         /// <param name="metadata">the input's new metadata</param>
-        public ModifyInputMetadataRequest(IClarifaiClient client, string inputID, JObject metadata)
-            : base(client)
+        public ModifyInputMetadataRequest(IClarifaiHttpClient httpClient, string inputID,
+            JObject metadata)
+            : base(httpClient)
         {
             _inputID = inputID;
             _metadata = metadata;

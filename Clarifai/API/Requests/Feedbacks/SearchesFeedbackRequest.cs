@@ -21,13 +21,13 @@ namespace Clarifai.API.Requests.Feedbacks
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="inputID">the input ID of a correct image (hit)</param>
         /// <param name="searchID">ID of the search from SearchInputsRequest.</param>
         /// <param name="endUserID">the ID associated with your end user</param>
         /// <param name="sessionID">the ID associated with your user's interface</param>
-        public SearchesFeedbackRequest(IClarifaiClient client, string inputID, string searchID,
-            string endUserID, string sessionID) : base(client)
+        public SearchesFeedbackRequest(IClarifaiHttpClient httpClient, string inputID, string searchID,
+            string endUserID, string sessionID) : base(httpClient)
         {
             _inputId = inputID;
             _searchId = searchID;

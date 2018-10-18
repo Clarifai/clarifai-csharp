@@ -14,8 +14,8 @@ namespace Clarifai.API.Requests.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
-        public DeleteAllModelsRequest(IClarifaiClient client) : base(client)
+        /// <param name="httpClient">the HTTP client</param>
+        public DeleteAllModelsRequest(IClarifaiHttpClient httpClient) : base(httpClient)
         { }
 
         /// <inheritdoc />

@@ -11,6 +11,8 @@ namespace Clarifai.API
     /// </summary>
     public interface IClarifaiHttpClient
     {
+        string ApiKey { get; }
+
         Task<HttpResponseMessage> GetAsync(string url);
         Task<HttpResponseMessage> PostAsync(string url, JObject body);
         Task<HttpResponseMessage> PatchAsync(string url, JObject body);

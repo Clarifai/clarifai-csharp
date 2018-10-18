@@ -65,7 +65,7 @@ namespace Clarifai.DTOs
 
         public override string ToString()
         {
-            return $"[ClarifaiStatus: {Type}";
+            return $"[ClarifaiStatus: {Type}]";
         }
     }
 }

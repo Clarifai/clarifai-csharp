@@ -15,8 +15,8 @@ namespace Clarifai.API.Requests.Models
         /// <summary>
         /// Ctor.
         /// </summary>
-        /// <param name="client">the Clarifai client</param>
-        public GetModelsRequest(IClarifaiClient client) : base(client)
+        /// <param name="httpClient">the HTTP client</param>
+        public GetModelsRequest(IClarifaiHttpClient httpClient) : base(httpClient)
         { }
 
         /// <inheritdoc />
@@ -33,7 +33,7 @@ namespace Clarifai.API.Requests.Models
             {
                 ModelType modelType = ModelType.DetermineModelType(
                     (string)model.output_info.type_ext);
-                models.Add(Model.Deserialize(Client, modelType.Prediction, model));
+                models.Add(Model.Deserialize(HttpClient, modelType.Prediction, model));
             }
             return models;
         }
