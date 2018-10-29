@@ -165,10 +165,10 @@ namespace Clarifai.DTOs.Models
         /// <inheritdoc />
         public PredictRequest<T> Predict(IClarifaiInput input, string language = null,
             decimal? minValue = null, int? maxConcepts = null,
-            IEnumerable<Concept> selectConcepts = null)
+            IEnumerable<Concept> selectConcepts = null, int? sampleMs = null)
         {
             return new PredictRequest<T>(HttpClient, ModelID, input, ModelVersion?.ID, language,
-                minValue, maxConcepts, selectConcepts);
+                minValue, maxConcepts, selectConcepts, sampleMs);
         }
 
         /// <inheritdoc />

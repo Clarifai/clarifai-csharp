@@ -39,6 +39,7 @@ namespace Clarifai.API.Requests.Models
         private readonly decimal? _minValue;
         private readonly int? _maxConcepts;
         private readonly IEnumerable<Concept> _selectConcepts;
+        private readonly int? _sampleMs;
 
         /// <summary>
         /// Ctor.
@@ -55,10 +56,11 @@ namespace Clarifai.API.Requests.Models
         /// the maximum maxConcepts number of predictions that will be returned
         /// </param>
         /// <param name="selectConcepts">only selectConcepts will be returned</param>
+        /// <param name="sampleMs">video frame prediction every [sampleMs] milliseconds</param>
         public PredictRequest(IClarifaiHttpClient httpClient, string modelID,
             IClarifaiInput input, string modelVersionID = null,
             string language = null, decimal? minValue =  null, int? maxConcepts = null,
-            IEnumerable<Concept> selectConcepts = null)
+            IEnumerable<Concept> selectConcepts = null, int? sampleMs = null)
             : base(httpClient)
         {
             _modelID = modelID;
@@ -68,6 +70,7 @@ namespace Clarifai.API.Requests.Models
             _minValue = minValue;
             _maxConcepts = maxConcepts;
             _selectConcepts = selectConcepts;
+            _sampleMs = sampleMs;
         }
 
         /// <inheritdoc />
@@ -77,7 +80,7 @@ namespace Clarifai.API.Requests.Models
                 new JProperty("inputs", new JArray(_input.Serialize())));
 
             if (_language != null || _minValue != null || _maxConcepts != null ||
-                _selectConcepts != null)
+                _selectConcepts != null || _sampleMs != null)
             {
                 var outputConfig = new JObject();
                 if (_language != null)
@@ -91,6 +94,10 @@ namespace Clarifai.API.Requests.Models
                 if (_maxConcepts != null)
                 {
                     outputConfig.Add("max_concepts", _maxConcepts);
+                }
+                if (_sampleMs != null)
+                {
+                    outputConfig.Add("sample_ms", _sampleMs);
                 }
 
                 if (_selectConcepts != null)

@@ -158,11 +158,12 @@ namespace Clarifai.API
         /// <inheritdoc />
         public PredictRequest<T> Predict<T>(string modelID, IClarifaiInput input,
             string modelVersionID = null, string language = null, decimal? minValue = null,
-            int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null)
+            int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null,
+            int? sampleMs = null)
             where T : IPrediction
         {
-            return new PredictRequest<T>(HttpClient, modelID, input, modelVersionID, language, minValue,
-                maxConcepts, selectConcepts);
+            return new PredictRequest<T>(HttpClient, modelID, input, modelVersionID, language,
+                minValue, maxConcepts, selectConcepts, sampleMs);
         }
 
         /// <inheritdoc />
@@ -171,8 +172,8 @@ namespace Clarifai.API
             int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null)
             where T : IPrediction
         {
-            return new BatchPredictRequest<T>(HttpClient, modelID, inputs, modelVersionID, language, minValue,
-                maxConcepts, selectConcepts);
+            return new BatchPredictRequest<T>(HttpClient, modelID, inputs, modelVersionID, language,
+                minValue, maxConcepts, selectConcepts);
         }
 
         /// <inheritdoc />

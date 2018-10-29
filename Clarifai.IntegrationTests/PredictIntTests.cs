@@ -155,6 +155,45 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
+        public async Task PredictForOneVideoFileWithSampleMsShouldBeSuccessful()
+        {
+            byte[] bytes = ReadResource(BEER_VIDEO_FILE);
+
+            var response = await Client.Predict<Frame>(
+                    Client.PublicModels.GeneralVideoModel.ModelID,
+                    new ClarifaiFileVideo(bytes),
+                    sampleMs: 2000)
+                .ExecuteAsync();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual(10000, response.Status.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
+            Assert.NotNull(response.RawBody);
+
+            Assert.NotNull(response.Get().Data[0].Concepts[0]);
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task ShorthandPredictForOneVideoFileWithSampleMsShouldBeSuccessful()
+        {
+            byte[] bytes = ReadResource(BEER_VIDEO_FILE);
+
+            var response = await Client.PublicModels.GeneralVideoModel.Predict(
+                    new ClarifaiFileVideo(bytes),
+                    sampleMs: 2000)
+                .ExecuteAsync();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual(10000, response.Status.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
+            Assert.NotNull(response.RawBody);
+
+            Assert.NotNull(response.Get().Data[0].Concepts[0]);
+        }
+
+        [Test]
+        [Retry(3)]
         public async Task ConceptPredictWithModelVersionForOneImageShouldBeSuccessful()
         {
             string modelID = Client.PublicModels.GeneralModel.ModelID;

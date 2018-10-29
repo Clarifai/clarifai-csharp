@@ -62,10 +62,11 @@ namespace Clarifai.DTOs.Models
         /// the maximum maxConcepts number of predictions that will be returned
         /// </param>
         /// <param name="selectConcepts">only selectConcepts will be returned</param>
+        /// <param name="sampleMs">video frame prediction every [sampleMs] milliseconds</param>
         /// <returns>a new BatchPredictRequest instance</returns>
         PredictRequest<T> Predict(IClarifaiInput input, string language = null,
             decimal? minValue =  null, int? maxConcepts = null,
-            IEnumerable<Concept> selectConcepts = null);
+            IEnumerable<Concept> selectConcepts = null, int? sampleMs = null);
 
         /// <summary>
         /// A shorthand method for executing <see cref="BatchPredictRequest{T}"/> for this model.

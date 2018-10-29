@@ -177,16 +177,18 @@ namespace Clarifai.API
         /// <param name="modelVersionID">the model version ID - leave null for latest</param>
         /// <param name="language">the language</param>
         /// <param name="minValue">
-        /// only preditions with a value greater than or equal to to minValue will be returned
+        /// only predictions with a value greater than or equal to to minValue will be returned
         /// </param>
         /// <param name="maxConcepts">
         /// the maximum maxConcepts number of predictions that will be returned
         /// </param>
         /// <param name="selectConcepts">only selectConcepts will be returned</param>
+        /// <param name="sampleMs">video frame prediction every [sampleMs] milliseconds</param>
         /// <returns>a new PredictionRequest instance</returns>
         PredictRequest<T> Predict<T>(string modelID, IClarifaiInput input,
             string modelVersionID = null, string language = null, decimal? minValue = null,
-            int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null)
+            int? maxConcepts = null, IEnumerable<Concept> selectConcepts = null,
+            int? sampleMs = null)
             where T : IPrediction;
 
         /// <summary>
@@ -198,7 +200,7 @@ namespace Clarifai.API
         /// <param name="modelVersionID">the model version ID - leave null for latest</param>
         /// <param name="language">the language</param>
         /// <param name="minValue">
-        /// only preditions with a value greater than or equal to to minValue will be returned
+        /// only predictions with a value greater than or equal to to minValue will be returned
         /// </param>
         /// <param name="maxConcepts">
         /// the maximum maxConcepts number of predictions that will be returned
