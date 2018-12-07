@@ -40,6 +40,8 @@ namespace Clarifai.DTOs.Models.Outputs
         /// </summary>
         public List<IPrediction> Data { get; }
 
+        // TODO(Rok) MEDIUM: The Model property is missing.
+
         /// <summary>
         /// Ctor.
         /// </summary>

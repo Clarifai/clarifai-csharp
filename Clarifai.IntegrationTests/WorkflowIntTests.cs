@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
 using Clarifai.DTOs.Inputs;
@@ -13,7 +12,7 @@ namespace Clarifai.IntegrationTests
     {
         [Test]
         [Retry(3)]
-        public async Task WorkflowPredictShouldBeSuccessful()
+        public async Task WorkflowPredictURLImageShouldBeSuccessful()
         {
             var response = await Client.WorkflowPredict(
                     "food-and-general",
@@ -24,6 +23,26 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(2, result.Predictions.Count);
             Assert.NotNull(result.Predictions[0].Data);
             Assert.NotNull(result.Predictions[1].Data);
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task WorkflowPredictFileImageShouldBeSuccessful()
+        {
+            var response = await Client.WorkflowPredict(
+                    "food-and-general",
+                    new ClarifaiFileImage(ReadResource(BALLOONS_IMAGE_FILE)))
+                .ExecuteAsync();
+
+            Assert.True(response.IsSuccessful);
+
+            WorkflowResult result = response.Get().WorkflowResult;
+            Assert.AreEqual(2, result.Predictions.Count);
+            Assert.NotNull(result.Predictions[0].Data);
+            Assert.NotNull(result.Predictions[1].Data);
+
+            ClarifaiFileImage fileImage = (ClarifaiFileImage) result.Input;
+            Assert.NotNull(fileImage.Bytes);
         }
 
         [Test]

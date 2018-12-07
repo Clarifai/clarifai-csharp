@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Clarifai.DTOs.Predictions;
+using Clarifai.Exceptions;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Inputs
@@ -48,6 +49,55 @@ namespace Clarifai.DTOs.Inputs
                     new JProperty("base64", Convert.ToBase64String(_bytes)))));
         }
 
+        /// <summary>
+        /// Deserializes the object out of a JSON dynamic object.
+        /// </summary>
+        /// <param name="jsonObject">the JSON dynamic object</param>
+        /// <returns>the deserialized object</returns>
+        public new static ClarifaiFileVideo Deserialize(dynamic jsonObject)
+        {
+            var positiveConcepts = new List<Concept>();
+            var negativeConcepts = new List<Concept>();
+            if (jsonObject.data.concepts != null)
+            {
+                foreach (dynamic c in jsonObject.data.concepts)
+                {
+                    var concept = Concept.Deserialize(c);
+                    if (concept.Value == 0.0M)
+                    {
+                        negativeConcepts.Add(concept);
+                    }
+                    else
+                    {
+                        positiveConcepts.Add(concept);
+                    }
+                }
+            }
+            JObject metadata = null;
+            if (jsonObject.data.metadata != null)
+            {
+                metadata = (JObject) jsonObject.data.metadata;
+            }
+            GeoPoint geoPoint = null;
+            if (jsonObject.data.geo != null)
+            {
+                geoPoint = GeoPoint.Deserialize(jsonObject.data.geo);
+            }
+            DateTime? createdAt = null;
+            if (jsonObject.created_at != null)
+            {
+                createdAt = (DateTime)jsonObject.created_at;
+            }
+            return new ClarifaiFileVideo(
+                bytes: Convert.FromBase64String((string) jsonObject.data.video.base64),
+                id: (string) jsonObject.id,
+                positiveConcepts: positiveConcepts,
+                negativeConcepts: negativeConcepts,
+                metadata: metadata,
+                createdAt: createdAt,
+                geo: geoPoint);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is ClarifaiFileVideo video &&
@@ -66,7 +116,7 @@ namespace Clarifai.DTOs.Inputs
 
         public override string ToString()
         {
-            return string.Format($"[ClarifaiFileVideo: (id: {ID})]");
+            return $"[ClarifaiFileVideo: (id: {ID})]";
         }
     }
 }
