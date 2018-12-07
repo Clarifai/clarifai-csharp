@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Clarifai.API;
 
 namespace Clarifai.DTOs.Workflows
 {
@@ -14,7 +15,8 @@ namespace Clarifai.DTOs.Workflows
             WorkflowResults = workflowResults;
         }
 
-        public static WorkflowBatchPredictResult Deserialize(dynamic jsonObject)
+        public static WorkflowBatchPredictResult Deserialize(IClarifaiHttpClient httpClient,
+            dynamic jsonObject)
         {
             Workflow workflow = null;
             if (jsonObject.workflow != null)
@@ -24,7 +26,7 @@ namespace Clarifai.DTOs.Workflows
             var workflowResults = new List<WorkflowResult>();
             foreach (dynamic result in jsonObject.results)
             {
-                workflowResults.Add(WorkflowResult.Deserialize(result));
+                workflowResults.Add(WorkflowResult.Deserialize(httpClient, result));
             }
             return new WorkflowBatchPredictResult(workflow, workflowResults);
         }

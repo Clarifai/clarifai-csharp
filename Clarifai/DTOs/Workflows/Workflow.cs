@@ -15,6 +15,11 @@ namespace Clarifai.DTOs.Workflows
             CreatedAt = createdAt;
         }
 
+        /// <summary>
+        /// Deserializes the object out of a JSON dynamic object.
+        /// </summary>
+        /// <param name="jsonObject">the JSON object</param>
+        /// <returns>the deserialized object</returns>
         public static Workflow Deserialize(dynamic jsonObject)
         {
             return new Workflow((string) jsonObject.id, (string) jsonObject.app_id,

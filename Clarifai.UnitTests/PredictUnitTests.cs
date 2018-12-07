@@ -104,6 +104,11 @@ namespace Clarifai.UnitTests
 
             Assert.AreEqual("@outputID", output.ID);
             Assert.AreEqual("@conceptID1", output.Data[0].ID);
+
+            Assert.AreEqual("@modelID", output.Model.ModelID);
+            Assert.AreEqual("@modelName", output.Model.Name);
+            Assert.AreEqual("@modelVersionID", output.Model.ModelVersion.ID);
+            Assert.AreEqual("concept", output.Model.OutputInfo.TypeExt);
         }
 
         [Test]

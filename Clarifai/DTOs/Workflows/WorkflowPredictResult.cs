@@ -1,4 +1,6 @@
-﻿namespace Clarifai.DTOs.Workflows
+﻿using Clarifai.API;
+
+namespace Clarifai.DTOs.Workflows
 {
     public class WorkflowPredictResult
     {
@@ -12,13 +14,20 @@
             WorkflowResult = workflowResult;
         }
 
-        public static WorkflowPredictResult Deserialize(dynamic jsonObject)
+        /// <summary>
+        /// Deserializes the object out of a JSON dynamic object.
+        /// </summary>
+        /// <param name="httpClient">the HTTP client</param>
+        /// <param name="jsonObject">the JSON object</param>
+        /// <returns>the deserialized object</returns>
+        public static WorkflowPredictResult Deserialize(IClarifaiHttpClient httpClient,
+            dynamic jsonObject)
         {
             return new WorkflowPredictResult(
                 jsonObject.workflow != null
                     ? Workflows.Workflow.Deserialize(jsonObject.workflow)
                     : null,
-                Workflows.WorkflowResult.Deserialize(jsonObject.results[0]));
+                Workflows.WorkflowResult.Deserialize(httpClient, jsonObject.results[0]));
         }
     }
 }

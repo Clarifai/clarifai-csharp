@@ -110,7 +110,7 @@ namespace Clarifai.API.Requests.Models
             var outputs = new List<ClarifaiOutput<T>>();
             foreach (var jsonOutput in jsonObject.outputs)
             {
-                outputs.Add(ClarifaiOutput<T>.Deserialize(jsonOutput));
+                outputs.Add(ClarifaiOutput<T>.Deserialize(HttpClient, jsonOutput));
             }
             return outputs;
         }

@@ -62,7 +62,7 @@ namespace Clarifai.API.Requests.Models
         /// <inheritdoc />
         protected override WorkflowPredictResult Unmarshaller(dynamic jsonObject)
         {
-            return WorkflowPredictResult.Deserialize(jsonObject);
+            return WorkflowPredictResult.Deserialize(HttpClient, jsonObject);
         }
     }
 }

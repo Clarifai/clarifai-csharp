@@ -119,7 +119,7 @@ namespace Clarifai.API.Requests.Models
             if (jsonObject.outputs != null && jsonObject.outputs.Count == 1)
             {
                 var jsonOutput = jsonObject.outputs[0];
-                return ClarifaiOutput<T>.Deserialize(jsonOutput);
+                return ClarifaiOutput<T>.Deserialize(HttpClient, jsonOutput);
             }
             throw new ClarifaiException("The response does not contain exactly one output.");
         }

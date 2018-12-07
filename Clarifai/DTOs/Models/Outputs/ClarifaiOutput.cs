@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Clarifai.API;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Predictions;
 using Clarifai.Exceptions;
@@ -40,7 +41,10 @@ namespace Clarifai.DTOs.Models.Outputs
         /// </summary>
         public List<IPrediction> Data { get; }
 
-        // TODO(Rok) MEDIUM: The Model property is missing.
+        /// <summary>
+        /// The model used to make this prediction.
+        /// </summary>
+        public IModel Model { get; }
 
         /// <summary>
         /// Ctor.
@@ -50,23 +54,27 @@ namespace Clarifai.DTOs.Models.Outputs
         /// <param name="createdAt">date & time of output creation</param>
         /// <param name="input">the input</param>
         /// <param name="data">the data</param>
+        /// <param name="model">the model</param>
         protected ClarifaiOutput(string id, ClarifaiStatus status, DateTime createdAt,
-            IClarifaiInput input, List<IPrediction> data)
+            IClarifaiInput input, List<IPrediction> data, IModel model)
         {
             ID = id;
             Status = status;
             CreatedAt = createdAt;
             Input = input;
             Data = data;
+            Model = model;
         }
 
         /// <summary>
         /// Deserializes the object out of a JSON dynamic object.
         /// </summary>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelType">the model type</param>
         /// <param name="jsonObject">the JSON object</param>
         /// <returns>the deserialized object</returns>
-        public static ClarifaiOutput Deserialize(ModelType modelType, dynamic jsonObject)
+        public static ClarifaiOutput Deserialize(IClarifaiHttpClient httpClient,
+            ModelType modelType, dynamic jsonObject)
         {
             dynamic data = DeserializePredictions(modelType, jsonObject);
 
@@ -75,7 +83,8 @@ namespace Clarifai.DTOs.Models.Outputs
                 ClarifaiStatus.Deserialize(jsonObject.status),
                 (DateTime) jsonObject.created_at,
                 jsonObject.input != null ? ClarifaiInput.Deserialize(jsonObject.input) : null,
-                data);
+                data,
+                Models.Model.Deserialize(httpClient, modelType.Prediction, jsonObject.model));
         }
 
         protected static List<IPrediction> DeserializePredictions(ModelType modelType,
@@ -220,16 +229,18 @@ namespace Clarifai.DTOs.Models.Outputs
 
         /// <inheritdoc />
         private ClarifaiOutput(string id, ClarifaiStatus status, DateTime createdAt,
-            IClarifaiInput input, List<IPrediction> rawData)
-            : base(id, status, createdAt, input, rawData)
+            IClarifaiInput input, List<IPrediction> rawData, IModel model)
+            : base(id, status, createdAt, input, rawData, model)
         { }
 
         /// <summary>
         /// Deserializes the object out of a JSON dynamic object.
         /// </summary>
+        /// <param name="httpClient">the HTTP client</param>
         /// <param name="jsonObject">the JSON dynamic object of an output</param>
         /// <returns>the deserialized object</returns>
-        public static ClarifaiOutput<T> Deserialize(dynamic jsonObject)
+        public static ClarifaiOutput<T> Deserialize(IClarifaiHttpClient httpClient,
+            dynamic jsonObject)
         {
             Type type = typeof(T);
             ModelType modelType = ModelType.ConstructFromName(type.Name);
@@ -240,7 +251,8 @@ namespace Clarifai.DTOs.Models.Outputs
                 ClarifaiStatus.Deserialize(jsonObject.status),
                 (DateTime) jsonObject.created_at,
                 jsonObject.input != null ? ClarifaiInput.Deserialize(jsonObject.input) : null,
-                data);
+                data,
+                Models.Model.Deserialize(httpClient, modelType.Prediction, jsonObject.model));
         }
     }
 }
