@@ -14,7 +14,7 @@ before_install:
 
 script:
   - wget https://dot.net/v1/dotnet-install.sh && chmod +x dotnet-install.sh
-  - ./dotnet-install.sh --channel 2.0 --version latest --install-dir $HOME/.dotnet
+  - ./dotnet-install.sh --channel $DOTNET_CORE_VERSION --version latest --install-dir $HOME/.dotnet
   - $HOME/.dotnet/dotnet restore
   - $HOME/.dotnet/dotnet test Clarifai.IntegrationTests/Clarifai.IntegrationTests.csproj
   - $HOME/.dotnet/dotnet test Clarifai.UnitTests/Clarifai.UnitTests.csproj
@@ -26,13 +26,39 @@ matrix:
   include:
     - os: linux
       dist: trusty
-      env: OS=linux
+      env:
+        - OS=linux
+        - DOTNET_CORE_VERSION=2.0
+    - os: linux
+      dist: trusty
+      env:
+        - OS=linux
+        - DOTNET_CORE_VERSION=LTS
+    - os: linux
+      dist: trusty
+      env:
+        - OS=linux
+        - DOTNET_CORE_VERSION=Current
     - os: osx
       osx_image: xcode9.3
-      env: OS=osx93
+      env:
+        - OS=osx93
+        - DOTNET_CORE_VERSION=LTS
+    - os: osx
+      osx_image: xcode9.3
+      env:
+        - OS=osx93
+        - DOTNET_CORE_VERSION=Current
     - os: osx
       osx_image: xcode9.2
-      env: OS=osx
+      env:
+        - OS=osx
+        - DOTNET_CORE_VERSION=LTS
+    - os: osx
+      osx_image: xcode9.2
+      env:
+        - OS=osx
+        - DOTNET_CORE_VERSION=Current
 
 deploy:
   - provider: script
