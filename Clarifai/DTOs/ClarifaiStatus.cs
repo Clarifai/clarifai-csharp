@@ -60,7 +60,14 @@ namespace Clarifai.DTOs
             {
                 statusType = StatusType.Failure;
             }
-            return new ClarifaiStatus(statusType, statusCode, (string)status.description, null);
+
+            string errorDetails = null;
+            if (status.details != null)
+            {
+                errorDetails = status.details;
+            }
+            return new ClarifaiStatus(statusType, statusCode, (string)status.description,
+                errorDetails);
         }
 
         public override string ToString()
