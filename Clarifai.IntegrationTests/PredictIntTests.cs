@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -132,6 +131,41 @@ namespace Clarifai.IntegrationTests
             Assert.NotNull(response.RawBody);
 
             Assert.NotNull(response.Get().Data[0]);
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task ConceptPredictForOneURLVideoShouldBeSuccessful()
+        {
+            var response = await Client.Predict<Frame>(
+                    Client.PublicModels.GeneralVideoModel.ModelID,
+                    new ClarifaiURLVideo(GIF1))
+                .ExecuteAsync();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual(10000, response.Status.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
+            Assert.NotNull(response.RawBody);
+
+            Assert.NotNull(response.Get().Data[0].Concepts[0]);
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task ConceptPredictForOneURLVideoWithSampleMsShouldBeSuccessful()
+        {
+            var response = await Client.Predict<Frame>(
+                    Client.PublicModels.GeneralVideoModel.ModelID,
+                    new ClarifaiURLVideo(GIF1),
+                    sampleMs: 2000)
+                .ExecuteAsync();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual(10000, response.Status.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
+            Assert.NotNull(response.RawBody);
+
+            Assert.NotNull(response.Get().Data[0].Concepts[0]);
         }
 
         [Test]
