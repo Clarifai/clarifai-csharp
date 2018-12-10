@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [[1.3.0]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.3.0) - [NuGet](https://www.nuget.org/packages/Clarifai/1.3.0) - 2018-12-10
+
+### Added
+- Sample milliseconds parameter for video prediction
+- Support for workflow image file prediction
+- Expose the Model property in the prediction response object
+
+### Fixed
+- On error response, set the ErrorDetails property of ClarifaiStatus
+
 ## [[1.2.0]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.2.0) - [NuGet](https://www.nuget.org/packages/Clarifai/1.2.0) - 2018-10-19
 
 ### Added
