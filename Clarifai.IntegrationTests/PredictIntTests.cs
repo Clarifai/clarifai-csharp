@@ -164,8 +164,12 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
-
             Assert.NotNull(response.Get().Data[0].Concepts[0]);
+
+            foreach (Frame frame in response.Get().Data)
+            {
+                Assert.AreEqual(0, frame.Time % 2000);
+            }
         }
 
         [Test]
@@ -203,8 +207,12 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
-
             Assert.NotNull(response.Get().Data[0].Concepts[0]);
+
+            foreach (Frame frame in response.Get().Data)
+            {
+                Assert.AreEqual(0, frame.Time % 2000);
+            }
         }
 
         [Test]
@@ -222,8 +230,12 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
-
             Assert.NotNull(response.Get().Data[0].Concepts[0]);
+
+            foreach (Frame frame in response.Get().Data)
+            {
+                Assert.AreEqual(0, frame.Time % 2000);
+            }
         }
 
         [Test]
