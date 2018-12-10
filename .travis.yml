@@ -66,7 +66,7 @@ deploy:
       - chmod +x ./deploy.sh && ./deploy.sh
     skip_cleanup: true
     on:
-      condition: $OS = osx
+      condition: "$OS == osx && $DOTNET_CORE_VERSION == Current"
       tags: true
       repo: Clarifai/clarifai-csharp
   - provider: releases
@@ -77,6 +77,6 @@ deploy:
       - Clarifai/bin/Release/Clarifai.*.nupkg
       - Clarifai/bin/Release/netstandard1.3/Clarifai.dll
     on:
-      condition: $OS = osx
+      condition: "$OS == osx && $DOTNET_CORE_VERSION == Current"
       tags: true
       repo: Clarifai/clarifai-csharp
