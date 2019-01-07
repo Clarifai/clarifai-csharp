@@ -225,6 +225,7 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
+        [Ignore("Temporarily disabled until a backend GET /model/../inputs issue fixed")]
         public async Task ShorthandGetModelInputsShouldBeSuccessful()
         {
             /*
