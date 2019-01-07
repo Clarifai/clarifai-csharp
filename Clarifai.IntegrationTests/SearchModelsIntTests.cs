@@ -16,6 +16,7 @@ namespace Clarifai.IntegrationTests
             ClarifaiResponse<List<IModel>> response = await Client.SearchModels("celeb*")
                 .ExecuteAsync();
 
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get());
             Assert.True(response.Get().Count > 0);
         }
@@ -28,6 +29,7 @@ namespace Clarifai.IntegrationTests
                     ModelType.Focus)
                 .ExecuteAsync();
 
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get());
             Assert.True(response.Get().Count > 0);
         }

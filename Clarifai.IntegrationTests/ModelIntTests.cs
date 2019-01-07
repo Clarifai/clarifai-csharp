@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -25,7 +27,7 @@ namespace Clarifai.IntegrationTests
                 await Client.GetModel<Concept>(Client.PublicModels.ModerationModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -67,7 +69,7 @@ namespace Clarifai.IntegrationTests
                         isEnvironmentClosed: false)
                     .ExecuteAsync();
 
-                Assert.True(createResponse.IsSuccessful);
+                AssertResponseSuccess(createResponse);
                 ConceptModel createdModel = createResponse.Get();
                 Assert.AreEqual(modelID, createdModel.ModelID);
                 Assert.AreEqual(originalName, createdModel.Name);
@@ -88,7 +90,7 @@ namespace Clarifai.IntegrationTests
                         isEnvironmentClosed: true)
                     .ExecuteAsync();
 
-                Assert.True(modifyResponse.IsSuccessful);
+                AssertResponseSuccess(modifyResponse);
                 ConceptModel modifiedModel = modifyResponse.Get();
                 Assert.AreEqual(modelID, modifiedModel.ModelID);
                 Assert.AreEqual(newName, modifiedModel.Name);
@@ -102,7 +104,7 @@ namespace Clarifai.IntegrationTests
                 ClarifaiResponse<IModel<Concept>> getResponse =
                     await Client.GetModel<Concept>(modelID)
                     .ExecuteAsync();
-                Assert.True(getResponse.IsSuccessful);
+                AssertResponseSuccess(getResponse);
                 IModel<Concept> retrievedModel = getResponse.Get();
                 Assert.AreEqual(modelID, retrievedModel.ModelID);
                 Assert.AreEqual(newName, retrievedModel.Name);
@@ -118,7 +120,7 @@ namespace Clarifai.IntegrationTests
                  */
                 ClarifaiResponse<EmptyResponse> deleteResponse =
                     await Client.DeleteModel(modelID).ExecuteAsync();
-                Assert.True(deleteResponse.IsSuccessful);
+                AssertResponseSuccess(deleteResponse);
                 Assert.AreEqual(HttpStatusCode.OK, deleteResponse.HttpCode);
             }
         }
@@ -234,7 +236,7 @@ namespace Clarifai.IntegrationTests
                 concepts: new List<Concept> { new Concept("cat") })
             .ExecuteAsync();
 
-            Assert.True(createModelResponse.IsSuccessful);
+            AssertResponseSuccess(createModelResponse);
 
             try
             {
@@ -262,7 +264,7 @@ namespace Clarifai.IntegrationTests
         {
             ClarifaiResponse<EmptyResponse> response = await Client.DeleteAllModels()
                 .ExecuteAsync();
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
         }
     }
 }

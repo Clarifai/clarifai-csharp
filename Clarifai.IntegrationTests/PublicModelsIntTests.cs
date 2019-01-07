@@ -36,7 +36,7 @@ namespace Clarifai.IntegrationTests
                             model.ModelID,
                             new List<IClarifaiInput> {new ClarifaiURLImage(CAT1)})
                         .ExecuteAsync();
-                Assert.True(response.IsSuccessful, $"Predict on {model.Name} not successful.");
+                AssertResponseSuccess(response, $"Predict on {model.Name} not successful.");
             }
         }
 
@@ -60,7 +60,7 @@ namespace Clarifai.IntegrationTests
                             model.ModelID,
                             new List<IClarifaiInput> {new ClarifaiURLVideo(GIF1)})
                         .ExecuteAsync();
-                Assert.True(response.IsSuccessful, $"Predict on {model.Name} not successful.");
+                AssertResponseSuccess(response, $"Predict on {model.Name} not successful.");
             }
         }
     }

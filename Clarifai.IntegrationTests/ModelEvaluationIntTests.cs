@@ -31,7 +31,7 @@ namespace Clarifai.IntegrationTests
                         new Concept("cat"),
                     })
                 .ExecuteAsync();
-            Assert.True(createModelResponse.IsSuccessful);
+            AssertResponseSuccess(createModelResponse);
 
             /*
              * Add inputs associated with concepts.
@@ -42,7 +42,7 @@ namespace Clarifai.IntegrationTests
                 new ClarifaiURLImage(CAT1, positiveConcepts: new List<Concept>{new Concept("cat")},
                     allowDuplicateUrl: true)
             ).ExecuteAsync();
-            Assert.True(addInputsResponse.IsSuccessful);
+            AssertResponseSuccess(addInputsResponse);
 
             /*
              * Train the model.
@@ -84,7 +84,7 @@ namespace Clarifai.IntegrationTests
             ClarifaiResponse<ModelVersion> evalResponse = await Client.ModelEvaluation(
                     modelID, modelVersionID)
                 .ExecuteAsync();
-            Assert.True(evalResponse.IsSuccessful);
+            AssertResponseSuccess(evalResponse);
             Assert.NotNull(evalResponse.Get().ModelMetricsStatus);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
 using Clarifai.DTOs;
@@ -23,7 +24,7 @@ namespace Clarifai.IntegrationTests
                 await Client.SearchInputs(SearchBy.ConceptID("ai_mFqxrph2"))
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get().SearchHits);
         }
 
@@ -35,7 +36,7 @@ namespace Clarifai.IntegrationTests
                 await Client.SearchInputs(SearchBy.UserTaggedConceptID("cat"))
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get().SearchHits);
         }
 
@@ -68,7 +69,7 @@ namespace Clarifai.IntegrationTests
                             allowDuplicateUrl: true))
                     .ExecuteAsync();
 
-            Assert.True(addInputResponse.IsSuccessful);
+            AssertResponseSuccess(addInputResponse);
 
             try
             {
@@ -80,7 +81,7 @@ namespace Clarifai.IntegrationTests
                             language: "jp")
                         .ExecuteAsync();
 
-                Assert.True(response.IsSuccessful);
+                AssertResponseSuccess(response);
                 Assert.NotNull(response.Get().SearchHits);
             }
             finally
@@ -88,7 +89,7 @@ namespace Clarifai.IntegrationTests
                 string id = addInputResponse.Get()[0].ID;
                 ClarifaiResponse<EmptyResponse> deleteInputResponse =
                     await Client.DeleteInputs(id).ExecuteAsync();
-                Assert.True(deleteInputResponse.IsSuccessful);
+                AssertResponseSuccess(deleteInputResponse);
             }
         }
 
@@ -100,7 +101,7 @@ namespace Clarifai.IntegrationTests
                 await Client.SearchInputs(SearchBy.ImageURL(CELEB1))
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get().SearchHits);
         }
 
@@ -112,7 +113,7 @@ namespace Clarifai.IntegrationTests
                 await Client.SearchInputs(SearchBy.ImageVisually(CELEB1))
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get().SearchHits);
         }
 
@@ -124,7 +125,7 @@ namespace Clarifai.IntegrationTests
                 await Client.SearchInputs(SearchBy.ImageVisually(new ClarifaiURLImage(CELEB1)))
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get().SearchHits);
         }
 
@@ -138,7 +139,7 @@ namespace Clarifai.IntegrationTests
                         new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get().SearchHits);
         }
 
@@ -151,7 +152,7 @@ namespace Clarifai.IntegrationTests
                         new ClarifaiFileImage(ReadResource(BALLOONS_IMAGE_FILE))))
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get().SearchHits);
         }
 
@@ -165,7 +166,7 @@ namespace Clarifai.IntegrationTests
                         new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get().SearchHits);
         }
 
@@ -186,7 +187,7 @@ namespace Clarifai.IntegrationTests
                                 new JProperty("key2", randomValue))))
                     .ExecuteAsync();
 
-            Assert.True(addInputResponse.IsSuccessful);
+            AssertResponseSuccess(addInputResponse);
 
             try
             {
@@ -198,7 +199,7 @@ namespace Clarifai.IntegrationTests
                         .ExecuteAsync();
                 Console.WriteLine(response.RawBody);
 
-                Assert.True(response.IsSuccessful);
+                AssertResponseSuccess(response);
                 Assert.NotNull(response.Get().SearchHits);
                 // Because the value we set is random, there should be exactly one hit.
                 Assert.AreEqual(1, response.Get().SearchHits.Count);
@@ -208,7 +209,7 @@ namespace Clarifai.IntegrationTests
                 string id = addInputResponse.Get()[0].ID;
                 ClarifaiResponse<EmptyResponse> deleteInputResponse =
                     await Client.DeleteInputs(id).ExecuteAsync();
-                Assert.True(deleteInputResponse.IsSuccessful);
+                AssertResponseSuccess(deleteInputResponse);
             }
         }
 
@@ -225,7 +226,7 @@ namespace Clarifai.IntegrationTests
                             geo: new GeoPoint(30, 40)))
                     .ExecuteAsync();
 
-            Assert.True(addInputResponse.IsSuccessful);
+            AssertResponseSuccess(addInputResponse);
 
             try
             {
@@ -237,7 +238,7 @@ namespace Clarifai.IntegrationTests
                         })
                         .ExecuteAsync();
 
-                Assert.True(response.IsSuccessful);
+                AssertResponseSuccess(response);
                 Assert.NotNull(response.Get().SearchHits);
             }
             finally
@@ -245,7 +246,7 @@ namespace Clarifai.IntegrationTests
                 string id = addInputResponse.Get()[0].ID;
                 ClarifaiResponse<EmptyResponse> deleteInputResponse =
                     await Client.DeleteInputs(id).ExecuteAsync();
-                Assert.True(deleteInputResponse.IsSuccessful);
+                AssertResponseSuccess(deleteInputResponse);
             }
         }
 
@@ -262,7 +263,7 @@ namespace Clarifai.IntegrationTests
                             geo: new GeoPoint(30, 40)))
                     .ExecuteAsync();
 
-            Assert.True(addInputResponse.IsSuccessful);
+            AssertResponseSuccess(addInputResponse);
 
             try
             {
@@ -273,7 +274,7 @@ namespace Clarifai.IntegrationTests
                         })
                         .ExecuteAsync();
 
-                Assert.True(response.IsSuccessful);
+                AssertResponseSuccess(response);
                 Assert.NotNull(response.Get().SearchHits);
             }
             finally
@@ -281,7 +282,7 @@ namespace Clarifai.IntegrationTests
                 string id = addInputResponse.Get()[0].ID;
                 ClarifaiResponse<EmptyResponse> deleteInputResponse =
                     await Client.DeleteInputs(id).ExecuteAsync();
-                Assert.True(deleteInputResponse.IsSuccessful);
+                AssertResponseSuccess(deleteInputResponse);
             }
         }
     }

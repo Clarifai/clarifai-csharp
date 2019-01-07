@@ -36,7 +36,7 @@ namespace Clarifai.IntegrationTests
                             geo: geoPoint),
                         new ClarifaiURLImage(APPAREL1, id: inputID2, allowDuplicateUrl: true))
                     .ExecuteAsync();
-                Assert.True(addResponse.IsSuccessful);
+                AssertResponseSuccess(addResponse);
 
                 /*
                  * Get inputs' status.
@@ -51,14 +51,14 @@ namespace Clarifai.IntegrationTests
                  */
                 ClarifaiResponse<List<IClarifaiInput>> getResponse = await Client.GetInputs()
                     .ExecuteAsync();
-                Assert.True(getResponse.IsSuccessful);
+                AssertResponseSuccess(getResponse);
 
                 /*
                  * Get input 1.
                  */
                 ClarifaiResponse<IClarifaiInput> getInput1Response = await Client.GetInput(inputID1)
                     .ExecuteAsync();
-                Assert.True(getInput1Response.IsSuccessful);
+                AssertResponseSuccess(getInput1Response);
                 Assert.AreEqual(geoPoint, getInput1Response.Get().Geo);
                 Assert.NotNull(getInput1Response.Get().CreatedAt);
 
@@ -67,7 +67,7 @@ namespace Clarifai.IntegrationTests
                  */
                 ClarifaiResponse<IClarifaiInput> getInput2Response = await Client.GetInput(inputID1)
                     .ExecuteAsync();
-                Assert.True(getInput2Response.IsSuccessful);
+                AssertResponseSuccess(getInput2Response);
             }
             finally
             {
@@ -76,7 +76,7 @@ namespace Clarifai.IntegrationTests
                  */
                 var deleteResponse = await Client.DeleteInputs(inputID1, inputID2)
                     .ExecuteAsync();
-                Assert.True(deleteResponse.IsSuccessful);
+                AssertResponseSuccess(deleteResponse);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Clarifai.IntegrationTests
                             },
                             allowDuplicateUrl: true))
                     .ExecuteAsync();
-                Assert.True(addResponse.IsSuccessful);
+                AssertResponseSuccess(addResponse);
             }
             finally
             {
@@ -118,7 +118,7 @@ namespace Clarifai.IntegrationTests
             string inputID = GenerateRandomID();
             ClarifaiResponse<List<IClarifaiInput>> addResponse =
                 await AddInputWithConcept1AndConcept2(inputID);
-            Assert.True(addResponse.IsSuccessful);
+            AssertResponseSuccess(addResponse);
 
 
             try
@@ -128,7 +128,7 @@ namespace Clarifai.IntegrationTests
                         ModifyAction.Overwrite,
                         positiveConcepts: new List<Concept> {new Concept("concept3")})
                     .ExecuteAsync();
-                Assert.True(modifyResponse.IsSuccessful);
+                AssertResponseSuccess(modifyResponse);
 
                 List<Concept> concepts = await GetConcepts(inputID);
                 Assert.AreEqual(1, concepts.Count);
@@ -150,7 +150,7 @@ namespace Clarifai.IntegrationTests
             string inputID = GenerateRandomID();
             ClarifaiResponse<List<IClarifaiInput>> addResponse =
                 await AddInputWithConcept1AndConcept2(inputID);
-            Assert.True(addResponse.IsSuccessful);
+            AssertResponseSuccess(addResponse);
 
             try
             {
@@ -159,7 +159,7 @@ namespace Clarifai.IntegrationTests
                         ModifyAction.Merge,
                         new List<Concept> {new Concept("concept2"), new Concept("concept3")})
                     .ExecuteAsync();
-                Assert.True(modifyResponse.IsSuccessful);
+                AssertResponseSuccess(modifyResponse);
 
                 List<Concept> concepts = await GetConcepts(inputID);
                 Assert.AreEqual(3, concepts.Count);
@@ -184,7 +184,7 @@ namespace Clarifai.IntegrationTests
             string inputID = GenerateRandomID();
             ClarifaiResponse<List<IClarifaiInput>> addResponse =
                 await AddInputWithConcept1AndConcept2(inputID);
-            Assert.True(addResponse.IsSuccessful);
+            AssertResponseSuccess(addResponse);
 
             try
             {
@@ -193,7 +193,7 @@ namespace Clarifai.IntegrationTests
                         ModifyAction.Remove,
                         new List<Concept> {new Concept("concept2")})
                     .ExecuteAsync();
-                Assert.True(modifyResponse.IsSuccessful);
+                AssertResponseSuccess(modifyResponse);
 
                 List<Concept> concepts = await GetConcepts(inputID);
                 Assert.AreEqual(1, concepts.Count);
@@ -223,7 +223,7 @@ namespace Clarifai.IntegrationTests
                         metadata: new JObject(new JProperty("key1", "val1"),
                             new JProperty("key2", "val2"))))
                 .ExecuteAsync();
-            Assert.True(addResponse.IsSuccessful);
+            AssertResponseSuccess(addResponse);
 
             try
             {
@@ -231,11 +231,11 @@ namespace Clarifai.IntegrationTests
                         inputID,
                         new JObject(new JProperty("key3", "val3")))
                     .ExecuteAsync();
-                Assert.True(modifyResponse.IsSuccessful);
+                AssertResponseSuccess(modifyResponse);
 
                 ClarifaiResponse<IClarifaiInput> getResponse = await Client.GetInput(inputID)
                     .ExecuteAsync();
-                Assert.True(getResponse.IsSuccessful);
+                AssertResponseSuccess(getResponse);
 
                 Assert.AreEqual("val3", getResponse.Get().Metadata["key3"].Value<string>());
             }
@@ -254,7 +254,7 @@ namespace Clarifai.IntegrationTests
         {
             ClarifaiResponse<EmptyResponse> response = await Client.DeleteAllInputs()
                 .ExecuteAsync();
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
         }
 
         [Test]
@@ -276,7 +276,7 @@ namespace Clarifai.IntegrationTests
                     ))
                 .ExecuteAsync();
 
-            Assert.True(addResponse.IsSuccessful);
+            AssertResponseSuccess(addResponse);
 
             try
             {
@@ -323,7 +323,7 @@ namespace Clarifai.IntegrationTests
                             crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M),
                             allowDuplicateUrl: true))
                     .ExecuteAsync();
-                Assert.True(addResponse.IsSuccessful);
+                AssertResponseSuccess(addResponse);
                 var input = (ClarifaiURLImage) addResponse.Get()[0];
                 Assert.AreEqual(new Crop(0.1M, 0.2M, 0.3M, 0.4M), input.Crop);
             }
@@ -352,7 +352,7 @@ namespace Clarifai.IntegrationTests
                             id: inputID,
                             crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
                     .ExecuteAsync();
-                Assert.True(addResponse.IsSuccessful);
+                AssertResponseSuccess(addResponse);
 
                 ClarifaiURLImage input = (ClarifaiURLImage) addResponse.Get()[0];
                 Assert.AreEqual(new Crop(0.1M, 0.2M, 0.3M, 0.4M), input.Crop);
@@ -370,7 +370,7 @@ namespace Clarifai.IntegrationTests
         {
             var response = await Client.DeleteInputs(inputID)
                 .ExecuteAsync();
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
         }
 
         private async Task<ClarifaiResponse<List<IClarifaiInput>>> AddInputWithConcept1AndConcept2(
@@ -387,7 +387,7 @@ namespace Clarifai.IntegrationTests
                         },
                         allowDuplicateUrl: true))
                 .ExecuteAsync();
-            Assert.True(addResponse.IsSuccessful);
+            AssertResponseSuccess(addResponse);
             return addResponse;
         }
 
@@ -395,7 +395,7 @@ namespace Clarifai.IntegrationTests
         {
             ClarifaiResponse<IClarifaiInput> getResponse = await Client.GetInput(inputID)
                 .ExecuteAsync();
-            Assert.True(getResponse.IsSuccessful);
+            AssertResponseSuccess(getResponse);
             List<Concept> concepts = getResponse.Get().PositiveConcepts.ToList();
             return concepts;
         }

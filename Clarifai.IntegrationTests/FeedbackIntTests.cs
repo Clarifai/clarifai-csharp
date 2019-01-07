@@ -28,7 +28,7 @@ namespace Clarifai.IntegrationTests
                 }
             ).ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace Clarifai.IntegrationTests
                 }
             ).ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace Clarifai.IntegrationTests
                     "@searchID", "@endUserID", "@sessionID")
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
         }
     }
 }

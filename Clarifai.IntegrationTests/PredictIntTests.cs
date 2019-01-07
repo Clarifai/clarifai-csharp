@@ -23,7 +23,7 @@ namespace Clarifai.IntegrationTests
                     new ClarifaiURLImage(CELEB1))
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -40,7 +40,7 @@ namespace Clarifai.IntegrationTests
                     new ClarifaiURLImage(CELEB1))
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -59,7 +59,7 @@ namespace Clarifai.IntegrationTests
                         crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -80,7 +80,7 @@ namespace Clarifai.IntegrationTests
                     })
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -104,7 +104,7 @@ namespace Clarifai.IntegrationTests
                 })
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -125,7 +125,7 @@ namespace Clarifai.IntegrationTests
                     new ClarifaiFileImage(bytes))
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -142,7 +142,7 @@ namespace Clarifai.IntegrationTests
                     new ClarifaiURLVideo(GIF1))
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -160,7 +160,7 @@ namespace Clarifai.IntegrationTests
                     sampleMs: 2000)
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -183,7 +183,7 @@ namespace Clarifai.IntegrationTests
                     new ClarifaiFileVideo(bytes))
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -203,7 +203,7 @@ namespace Clarifai.IntegrationTests
                     sampleMs: 2000)
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -226,7 +226,7 @@ namespace Clarifai.IntegrationTests
                     sampleMs: 2000)
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -252,7 +252,7 @@ namespace Clarifai.IntegrationTests
                     modelVersionID: modelVersionID)
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -268,7 +268,7 @@ namespace Clarifai.IntegrationTests
                 await Client.PublicModels.GeneralModel.Predict(new ClarifaiURLImage(CELEB1))
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -285,7 +285,7 @@ namespace Clarifai.IntegrationTests
                         new ClarifaiURLImage(CELEB1), minValue: 0.95M)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -303,7 +303,7 @@ namespace Clarifai.IntegrationTests
                         new ClarifaiURLImage(CELEB1), maxConcepts: 3)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -327,7 +327,7 @@ namespace Clarifai.IntegrationTests
                         })
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);

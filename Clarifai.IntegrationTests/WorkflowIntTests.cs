@@ -19,6 +19,8 @@ namespace Clarifai.IntegrationTests
                     new ClarifaiURLImage(CELEB1))
                 .ExecuteAsync();
 
+            AssertResponseSuccess(response);
+
             WorkflowResult result = response.Get().WorkflowResult;
             Assert.AreEqual(2, result.Predictions.Count);
             Assert.NotNull(result.Predictions[0].Data);
@@ -34,7 +36,7 @@ namespace Clarifai.IntegrationTests
                     new ClarifaiFileImage(ReadResource(BALLOONS_IMAGE_FILE)))
                 .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
 
             WorkflowResult result = response.Get().WorkflowResult;
             Assert.AreEqual(2, result.Predictions.Count);
@@ -57,6 +59,8 @@ namespace Clarifai.IntegrationTests
                             new ClarifaiURLImage(CELEB1),
                         })
                     .ExecuteAsync();
+
+            AssertResponseSuccess(response);
 
             List<WorkflowResult> workflowResults = response.Get().WorkflowResults;
             Assert.AreEqual(1, workflowResults.Count);

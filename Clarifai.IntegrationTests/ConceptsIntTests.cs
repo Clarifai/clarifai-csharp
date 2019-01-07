@@ -28,7 +28,7 @@ namespace Clarifai.IntegrationTests
                         new Concept(conceptID, newConceptName))
                     .ExecuteAsync();
 
-                Assert.True(modifyResponse.IsSuccessful);
+                AssertResponseSuccess(modifyResponse);
                 Assert.AreEqual(newConceptName, modifyResponse.Get()[0].Name);
 
                 // Get the modified concept again to make sure the name was really updated.
@@ -49,7 +49,7 @@ namespace Clarifai.IntegrationTests
         public async Task GetConceptsShouldBeSuccessful()
         {
             ClarifaiResponse<List<Concept>> response = await Client.GetConcepts().ExecuteAsync();
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.NotNull(response.Get());
         }
 
@@ -59,7 +59,7 @@ namespace Clarifai.IntegrationTests
         {
             ClarifaiResponse<List<Concept>> response = await Client.SearchConcepts("conc*")
                 .ExecuteAsync();
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.IsNotNull(response.Get());
         }
 
@@ -70,7 +70,7 @@ namespace Clarifai.IntegrationTests
             ClarifaiResponse<List<Concept>> response = await Client.SearchConcepts("狗*",
                     language: "zh") // "zh" = Chinese
                 .ExecuteAsync();
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.IsNotNull(response.Get());
         }
     }

@@ -22,7 +22,7 @@ namespace Clarifai.IntegrationTests
                 await Client.GetModel<Color>(Client.PublicModels.ColorModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -43,7 +43,7 @@ namespace Clarifai.IntegrationTests
                         modelID,
                         new ClarifaiURLImage(APPAREL1))
                     .ExecuteAsync();
-            Assert.True(predictResponse.IsSuccessful);
+            AssertResponseSuccess(predictResponse);
             Color color = predictResponse.Get().Data[0];
             Assert.NotNull(color.Name);
         }
@@ -57,7 +57,7 @@ namespace Clarifai.IntegrationTests
                         Client.PublicModels.DemographicsModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -77,7 +77,7 @@ namespace Clarifai.IntegrationTests
                         modelID,
                         new ClarifaiURLImage(CELEB1))
                     .ExecuteAsync();
-            Assert.True(predictResponse.IsSuccessful);
+            AssertResponseSuccess(predictResponse);
 
             Demographics demographics = predictResponse.Get().Data[0];
             Assert.NotNull(demographics.Crop);
@@ -95,7 +95,7 @@ namespace Clarifai.IntegrationTests
                         Client.PublicModels.GeneralEmbeddingModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -115,7 +115,7 @@ namespace Clarifai.IntegrationTests
                         modelID,
                         new ClarifaiURLImage(CELEB1))
                     .ExecuteAsync();
-            Assert.True(predictResponse.IsSuccessful);
+            AssertResponseSuccess(predictResponse);
             Embedding embedding = predictResponse.Get().Data[0];
             Assert.NotNull(embedding.Vector);
         }
@@ -129,7 +129,7 @@ namespace Clarifai.IntegrationTests
                         Client.PublicModels.CelebrityModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -149,7 +149,7 @@ namespace Clarifai.IntegrationTests
                         modelID,
                         new ClarifaiURLImage(FACE1))
                     .ExecuteAsync();
-            Assert.True(predictResponse.IsSuccessful);
+            AssertResponseSuccess(predictResponse);
             FaceConcepts faceConcepts = predictResponse.Get().Data[0];
             Assert.NotNull(faceConcepts.Crop);
             Assert.NotNull(faceConcepts.Concepts);
@@ -164,7 +164,7 @@ namespace Clarifai.IntegrationTests
                         Client.PublicModels.FaceDetectionModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -184,7 +184,7 @@ namespace Clarifai.IntegrationTests
                         modelID,
                         new ClarifaiURLImage(FACE1))
                     .ExecuteAsync();
-            Assert.True(predictResponse.IsSuccessful);
+            AssertResponseSuccess(predictResponse);
             FaceDetection faceDetection = predictResponse.Get().Data[0];
             Assert.NotNull(faceDetection.Crop);
         }
@@ -198,7 +198,7 @@ namespace Clarifai.IntegrationTests
                         Client.PublicModels.FaceEmbeddingModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -219,7 +219,7 @@ namespace Clarifai.IntegrationTests
                         new ClarifaiURLImage(CELEB1))
                     .ExecuteAsync();
 
-            Assert.True(predictResponse.IsSuccessful);
+            AssertResponseSuccess(predictResponse);
 
             FaceEmbedding faceEmbedding = predictResponse.Get().Data[0];
             Assert.NotNull(faceEmbedding.Crop);
@@ -234,7 +234,7 @@ namespace Clarifai.IntegrationTests
                 await Client.GetModel<Focus>(Client.PublicModels.FocusModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -254,7 +254,7 @@ namespace Clarifai.IntegrationTests
                         modelID,
                         new ClarifaiURLImage(APPAREL1))
                     .ExecuteAsync();
-            Assert.True(predictResponse.IsSuccessful);
+            AssertResponseSuccess(predictResponse);
             Focus focus = predictResponse.Get().Data[0];
             Assert.NotNull(focus.Crop);
         }
@@ -267,7 +267,7 @@ namespace Clarifai.IntegrationTests
                 await Client.GetModel<Logo>(Client.PublicModels.LogoModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -287,7 +287,7 @@ namespace Clarifai.IntegrationTests
                 await Client.Predict<Logo>(
                         modelID, new ClarifaiURLImage(APPAREL1))
                     .ExecuteAsync();
-            Assert.True(predictResponse.IsSuccessful);
+            AssertResponseSuccess(predictResponse);
             Logo logo = predictResponse.Get().Data[0];
             Assert.NotNull(logo.Crop);
             Assert.NotNull(logo.Concepts);
@@ -302,7 +302,7 @@ namespace Clarifai.IntegrationTests
                         Client.PublicModels.NsfwVideoModel.ModelID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
@@ -323,7 +323,7 @@ namespace Clarifai.IntegrationTests
                         modelID, new ClarifaiURLVideo(GIF1))
                     .ExecuteAsync();
 
-            Assert.True(predictResponse.IsSuccessful);
+            AssertResponseSuccess(predictResponse);
 
             Frame video = predictResponse.Get().Data[0];
             Assert.NotNull(video.Concepts);

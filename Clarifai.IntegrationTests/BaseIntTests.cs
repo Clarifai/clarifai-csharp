@@ -3,7 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Clarifai.API;
+using Clarifai.API.Responses;
 using NUnit.Framework;
+using NUnit.Framework.Internal.Execution;
 
 namespace Clarifai.IntegrationTests
 {
@@ -64,6 +66,22 @@ namespace Clarifai.IntegrationTests
                 bytes = ms.ToArray();
             }
             return bytes;
+        }
+
+        protected void AssertResponseSuccess(dynamic response, string message = null)
+        {
+            if (!response.IsSuccessful)
+            {
+                Console.WriteLine(response.Status.StatusCode);
+                Console.WriteLine(response.Status.Description);
+                Console.WriteLine(response.Status.ErrorDetails);
+
+                if (message != null)
+                {
+                    Console.WriteLine(message);
+                }
+                Assert.Fail("Failed response");
+            }
         }
     }
 }

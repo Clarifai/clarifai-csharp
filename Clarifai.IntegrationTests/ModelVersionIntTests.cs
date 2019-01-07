@@ -25,7 +25,7 @@ namespace Clarifai.IntegrationTests
                 await model.GetModelVersion(model.ModelVersion.ID)
                     .ExecuteAsync();
 
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.AreEqual(model.ModelVersion.ID, response.Get().ID);
@@ -42,7 +42,7 @@ namespace Clarifai.IntegrationTests
 
             ClarifaiResponse<List<ModelVersion>> response =
                 await model.GetModelVersions().ExecuteAsync();
-            Assert.True(response.IsSuccessful);
+            AssertResponseSuccess(response);
             Assert.AreEqual(10000, response.Status.StatusCode);
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
 
@@ -63,7 +63,7 @@ namespace Clarifai.IntegrationTests
                         name: modelID,
                         concepts: new List<Concept> {new Concept("dog"), new Concept("cat")})
                     .ExecuteAsync();
-            Assert.True(createResponse.IsSuccessful);
+            AssertResponseSuccess(createResponse);
 
             ConceptModel model = createResponse.Get();
 
@@ -73,7 +73,7 @@ namespace Clarifai.IntegrationTests
 
             ClarifaiResponse<EmptyResponse> deleteVersionResponse =
                 await model.DeleteModelVersion(modelVersionID).ExecuteAsync();
-            Assert.True(deleteVersionResponse.IsSuccessful);
+            AssertResponseSuccess(deleteVersionResponse);
 
             /*
              * The model version should not exist anymore.
