@@ -27,6 +27,20 @@ namespace Clarifai.DTOs.Predictions
                 value);
         }
 
+        /// <summary>
+        /// Deserializes this object from a gRPC object.
+        /// </summary>
+        /// <param name="region">the gRPC object</param>
+        /// <param name="focusValue">the focus value</param>
+        /// <returns>a new instance of this class</returns>
+        public static Focus GrpcDeserialize(Internal.GRPC.Region region, decimal focusValue)
+        {
+            return new Focus(
+                Crop.GrpcDeserialize(region.RegionInfo.BoundingBox),
+                (decimal)region.Data.Focus.Density,
+                focusValue);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is Focus focus &&

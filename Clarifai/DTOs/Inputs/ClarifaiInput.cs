@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Clarifai.DTOs.Predictions;
+using Clarifai.API.Requests;
 using Clarifai.Exceptions;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Google.Protobuf.Collections;
+using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json.Linq;
+using Concept = Clarifai.DTOs.Predictions.Concept;
+using Region = Clarifai.DTOs.Predictions.Region;
 
 namespace Clarifai.DTOs.Inputs
 {
@@ -38,8 +44,6 @@ namespace Clarifai.DTOs.Inputs
         /// <inheritdoc />
         public List<Region> Regions { get; }
 
-        public abstract JObject Serialize();
-
         protected ClarifaiInput(InputType type, InputForm form, string id,
             IEnumerable<Concept> positiveConcepts, IEnumerable<Concept> negativeConcepts,
             JObject metadata, DateTime? createdAt, GeoPoint geo, List<Region> regions)
@@ -54,6 +58,8 @@ namespace Clarifai.DTOs.Inputs
             Geo = geo;
             Regions = regions;
         }
+
+        public abstract JObject Serialize();
 
         protected JObject Serialize(JProperty inputProperty)
         {
@@ -87,6 +93,85 @@ namespace Clarifai.DTOs.Inputs
             if (CreatedAt != null)
             {
                 obj["created_at"] = CreatedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            }
+            return obj;
+        }
+
+        public abstract Input GrpcSerialize();
+
+        protected Input GrpcSerialize(string inputType, IMessage imageOrVideo)
+        {
+            var concepts = new List<Internal.GRPC.Concept>();
+            if (PositiveConcepts != null)
+            {
+                concepts.AddRange(PositiveConcepts.Select(c => c.GrpcSerialize(true)));
+            }
+            if (NegativeConcepts != null)
+            {
+                concepts.AddRange(NegativeConcepts.Select(c => c.GrpcSerialize(false)));
+            }
+
+            var geo = new Geo
+            {
+                GeoPoint = Geo != null ? Geo.GrpcSerialize() : new Internal.GRPC.GeoPoint(),
+            };
+
+            var data = new Data
+            {
+                Concepts = {concepts},
+            };
+            if (Geo != null)
+            {
+                data = new Data(data)
+                {
+                    Geo = geo
+                };
+            }
+            if (Metadata != null)
+            {
+                data = new Data(data)
+                {
+                    Metadata = StructHelper.JObjectToStruct(Metadata)
+                };
+            }
+
+            switch (inputType)
+            {
+                case "image":
+                    data = new Data(data)
+                    {
+                        Image = (Image)imageOrVideo,
+                    };
+                    break;
+                case "video":
+                    data = new Data(data)
+                    {
+                        Video = (Video)imageOrVideo,
+                    };
+                    break;
+                default:
+                    throw new ClarifaiException($"Unknown inputType {inputType}");
+            }
+
+            var obj = new Input
+            {
+                Data = data,
+            };
+
+            if (ID != null)
+            {
+                obj = new Input(obj)
+                {
+                    Id = ID,
+                };
+            }
+
+            if (CreatedAt.HasValue)
+            {
+                obj = new Input(obj)
+                {
+                    CreatedAt = Timestamp.FromDateTime(CreatedAt.Value),
+                };
             }
             return obj;
         }
@@ -125,6 +210,37 @@ namespace Clarifai.DTOs.Inputs
             {
                 throw new ClarifaiException(
                     string.Format("Unknown ClarifaiInput json response: {0}", jsonObject));
+            }
+        }
+
+        public static ClarifaiInput GrpcDeserialize(Input input)
+        {
+            if (input.Data.Image != null)
+            {
+                if (input.Data.Image.Url != "")
+                {
+                    return ClarifaiURLImage.GrpcDeserialize(input);
+                }
+                else
+                {
+                    return ClarifaiFileImage.GrpcDeserialize(input);
+                }
+            }
+            else if (input.Data.Video != null)
+            {
+                if (input.Data.Video.Url != "")
+                {
+                    return ClarifaiURLVideo.GrpcDeserialize(input);
+                }
+                else
+                {
+                    return ClarifaiFileVideo.GrpcDeserialize(input);
+                }
+            }
+            else
+            {
+                throw new ClarifaiException(
+                    string.Format("Unknown ClarifaiInput response: {0}", input));
             }
         }
 

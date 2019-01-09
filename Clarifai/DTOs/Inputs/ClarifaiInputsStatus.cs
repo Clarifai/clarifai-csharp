@@ -1,4 +1,7 @@
-﻿namespace Clarifai.DTOs.Inputs
+﻿using System;
+using Clarifai.Internal.GRPC;
+
+namespace Clarifai.DTOs.Inputs
 {
     /// <summary>
     /// Returns the status of inputs processing.
@@ -45,6 +48,15 @@
         {
             return new ClarifaiInputsStatus((int)jsonObject.processed, (int)jsonObject.to_process,
                 (int)jsonObject.errors, (int)jsonObject.processing);
+        }
+
+        public static ClarifaiInputsStatus GrpcDeserialize(InputCount inputCount)
+        {
+            return new ClarifaiInputsStatus(
+                processed: Convert.ToInt32(inputCount.Processed),
+                toProcess: Convert.ToInt32(inputCount.ToProcess),
+                errors: Convert.ToInt32(inputCount.Errors),
+                processing: Convert.ToInt32(inputCount.Processing));
         }
 
         public override bool Equals(object obj)

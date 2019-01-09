@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Clarifai.Internal.GRPC;
+using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs
 {
@@ -46,10 +47,25 @@ namespace Clarifai.DTOs
                 new JProperty("latitude", Latitude));
         }
 
+        public Internal.GRPC.GeoPoint GrpcSerialize()
+        {
+            return new Internal.GRPC.GeoPoint
+            {
+                Longitude = (float) Longitude,
+                Latitude = (float) Latitude,
+            };
+        }
+
         public static GeoPoint Deserialize(dynamic jsonObject)
         {
             dynamic point = jsonObject.geo_point;
             return new GeoPoint((decimal)point.longitude, (decimal)point.latitude);
+        }
+
+        public static GeoPoint GrpcDeserialize(Geo dataGeo)
+        {
+            Internal.GRPC.GeoPoint geoPoint = dataGeo.GeoPoint;
+            return new GeoPoint((decimal) geoPoint.Longitude, (decimal) geoPoint.Latitude);
         }
 
         public override bool Equals(object obj)

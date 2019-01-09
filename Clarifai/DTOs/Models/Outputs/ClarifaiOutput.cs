@@ -5,7 +5,14 @@ using Clarifai.API;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Predictions;
 using Clarifai.Exceptions;
+using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
+using Color = Clarifai.DTOs.Predictions.Color;
+using Concept = Clarifai.DTOs.Predictions.Concept;
+using Embedding = Clarifai.DTOs.Predictions.Embedding;
+using Focus = Clarifai.DTOs.Predictions.Focus;
+using Frame = Clarifai.DTOs.Predictions.Frame;
+using Region = Clarifai.Internal.GRPC.Region;
 
 namespace Clarifai.DTOs.Models.Outputs
 {
@@ -85,6 +92,19 @@ namespace Clarifai.DTOs.Models.Outputs
                 jsonObject.input != null ? ClarifaiInput.Deserialize(jsonObject.input) : null,
                 data,
                 Models.Model.Deserialize(httpClient, modelType.Prediction, jsonObject.model));
+        }
+
+        public static ClarifaiOutput GrpcDeserialize(IClarifaiHttpClient httpClient,
+            ModelType modelType, Output output)
+        {
+            dynamic data = GrpcDeserializePredictions(modelType, output);
+            return new ClarifaiOutput(
+                output.Id,
+                ClarifaiStatus.GrpcDeserialize(output.Status),
+                output.CreatedAt.ToDateTime(),
+                output.Input != null ? ClarifaiInput.GrpcDeserialize(output.Input) : null,
+                data,
+                Models.Model.GrpcDeserialize(httpClient, modelType.Prediction, output.Model));
         }
 
         protected static List<IPrediction> DeserializePredictions(ModelType modelType,
@@ -190,6 +210,102 @@ namespace Clarifai.DTOs.Models.Outputs
             return data;
         }
 
+        protected static List<IPrediction> GrpcDeserializePredictions(ModelType modelType,
+            Output output)
+        {
+            var data = new List<IPrediction>();
+            string typeName = modelType.Prediction.Name;
+            switch (typeName)
+            {
+                case "Color":
+                {
+                    foreach (Internal.GRPC.Color color in output.Data.Colors)
+                    {
+                        data.Add(Color.GrpcDeserialize(color));
+                    }
+                    break;
+                }
+                case "Concept":
+                {
+                    foreach (Internal.GRPC.Concept concept in output.Data.Concepts)
+                    {
+                        data.Add(Concept.GrpcDeserialize(concept));
+                    }
+                    break;
+                }
+                case "Demographics":
+                {
+                    foreach (Region demographics in output.Data.Regions)
+                    {
+                        data.Add(Demographics.GrpcDeserialize(demographics));
+                    }
+                    break;
+                }
+                case "Embedding":
+                {
+                    foreach (Internal.GRPC.Embedding embedding in output.Data.Embeddings)
+                    {
+                        data.Add(Embedding.GrpcDeserialize(embedding));
+                    }
+                    break;
+                }
+                case "FaceConcepts":
+                {
+                    foreach (Region faceConcepts in output.Data.Regions)
+                    {
+                        data.Add(FaceConcepts.GrpcDeserialize(faceConcepts));
+                    }
+                    break;
+                }
+                case "FaceDetection":
+                {
+                    foreach (Region faceDetection in output.Data.Regions)
+                    {
+                        data.Add(FaceDetection.GrpcDeserialize(faceDetection));
+                    }
+                    break;
+                }
+                case "FaceEmbedding":
+                {
+                    foreach (Region faceEmbedding in output.Data.Regions)
+                    {
+                        data.Add(FaceEmbedding.GrpcDeserialize(faceEmbedding));
+                    }
+                    break;
+                }
+                case "Focus":
+                {
+                    foreach (Region focus in output.Data.Regions)
+                    {
+                        data.Add(Focus.GrpcDeserialize(focus, (decimal) output.Data.Focus.Value));
+                    }
+                    break;
+                }
+                case "Frame":
+                {
+                    foreach (Internal.GRPC.Frame frame in output.Data.Frames)
+                    {
+                        data.Add(Frame.GrpcDeserialize(frame));
+                    }
+                    break;
+                }
+                case "Logo":
+                {
+                    foreach (Region logo in output.Data.Regions)
+                    {
+                        data.Add(Logo.GrpcDeserialize(logo));
+                    }
+                    break;
+                }
+                default:
+                {
+                    throw new ClarifaiException(
+                        string.Format("Unknown output type `{0}`", typeName));
+                }
+            }
+            return data;
+        }
+
         public override bool Equals(object obj)
         {
             return obj is ClarifaiOutput output &&
@@ -253,6 +369,22 @@ namespace Clarifai.DTOs.Models.Outputs
                 jsonObject.input != null ? ClarifaiInput.Deserialize(jsonObject.input) : null,
                 data,
                 Models.Model.Deserialize(httpClient, modelType.Prediction, jsonObject.model));
+        }
+
+        public static ClarifaiOutput<T> GrpcDeserialize(IClarifaiHttpClient httpClient,
+            Output output)
+        {
+            Type type = typeof(T);
+            ModelType modelType = ModelType.ConstructFromName(type.Name);
+
+            List<IPrediction> data = GrpcDeserializePredictions(modelType, output);
+            return new ClarifaiOutput<T>(
+                output.Id,
+                ClarifaiStatus.GrpcDeserialize(output.Status),
+                output.CreatedAt.ToDateTime(),
+                output.Input != null ? ClarifaiInput.GrpcDeserialize(output.Input) : null,
+                data,
+                Models.Model.GrpcDeserialize(httpClient, modelType.Prediction, output.Model));
         }
     }
 }

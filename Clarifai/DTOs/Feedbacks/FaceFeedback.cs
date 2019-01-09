@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Feedbacks
@@ -18,6 +19,17 @@ namespace Clarifai.DTOs.Feedbacks
             return new JObject(new JProperty("identity",
                 new JObject(new JProperty("concepts",
                     _identityConceptFeedbacks.Select(cf => cf.Serialize())))));
+        }
+
+        public Face GrpcSerialize()
+        {
+            return new Face
+            {
+                Identity = new FaceIdentity
+                {
+                    Concepts = { _identityConceptFeedbacks.Select(cf => cf.GrpcSerialize()) }
+                }
+            };
         }
     }
 }

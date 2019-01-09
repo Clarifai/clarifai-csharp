@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -12,10 +13,12 @@ namespace Clarifai.API
     public interface IClarifaiHttpClient
     {
         string ApiKey { get; }
+        HttpStatusCode LastResponseHttpStatusCode { get; }
+        string LastResponseRawBody { get; }
 
-        Task<HttpResponseMessage> GetAsync(string url);
-        Task<HttpResponseMessage> PostAsync(string url, JObject body);
-        Task<HttpResponseMessage> PatchAsync(string url, JObject body);
-        Task<HttpResponseMessage> DeleteAsync(string url, JObject body = null);
+        Task<string> GetAsync(string url);
+        Task<string> PostAsync(string url, JObject body);
+        Task<string> PatchAsync(string url, JObject body);
+        Task<string> DeleteAsync(string url, JObject body = null);
     }
 }

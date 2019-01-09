@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Models;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Model = Clarifai.DTOs.Models.Model;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -20,22 +23,23 @@ namespace Clarifai.API.Requests.Models
         { }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override List<IModel> Unmarshaller(dynamic responseD)
         {
-            return new JObject();
+            MultiModelResponse response = responseD;
+
+            var models = new List<IModel>();
+            foreach (Internal.GRPC.Model model in response.Models)
+            {
+                ModelType modelType = ModelType.DetermineModelType(model.OutputInfo.TypeExt);
+                models.Add(Model.GrpcDeserialize(HttpClient, modelType.Prediction, model));
+            }
+            return models;
         }
 
         /// <inheritdoc />
-        protected override List<IModel> Unmarshaller(dynamic jsonObject)
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            var models = new List<IModel>();
-            foreach (dynamic model in jsonObject.models)
-            {
-                ModelType modelType = ModelType.DetermineModelType(
-                    (string)model.output_info.type_ext);
-                models.Add(Model.Deserialize(HttpClient, modelType.Prediction, model));
-            }
-            return models;
+            return await grpcClient.ListModelsAsync(new ListModelsRequest());
         }
     }
 }

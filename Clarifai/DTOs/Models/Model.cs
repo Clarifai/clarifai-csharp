@@ -90,7 +90,31 @@ namespace Clarifai.DTOs.Models
 
             if (!typeToDeserialization.ContainsKey(type))
             {
-                throw new ClarifaiException(string.Format("Unknown model type: {}", type));
+                throw new ClarifaiException(string.Format("Unknown model type: {0}", type));
+            }
+
+            return typeToDeserialization[type]();
+        }
+
+        public static Model GrpcDeserialize(IClarifaiHttpClient httpClient, Type type,
+            Internal.GRPC.Model model)
+        {
+            var typeToDeserialization = new Dictionary<Type, Func<Model>> {
+                { typeof(Color), () => ColorModel.GrpcDeserialize(httpClient, model)},
+                { typeof(Concept), () => ConceptModel.GrpcDeserialize(httpClient, model)},
+                { typeof(Demographics), () => DemographicsModel.GrpcDeserialize(httpClient, model)},
+                { typeof(Embedding), () => EmbeddingModel.GrpcDeserialize(httpClient, model)},
+                { typeof(FaceConcepts), () => FaceConceptsModel.GrpcDeserialize(httpClient, model)},
+                { typeof(FaceDetection), () => FaceDetectionModel.GrpcDeserialize(httpClient, model)},
+                { typeof(FaceEmbedding), () => FaceEmbeddingModel.GrpcDeserialize(httpClient, model)},
+                { typeof(Focus), () => FocusModel.GrpcDeserialize(httpClient, model)},
+                { typeof(Logo), () => LogoModel.GrpcDeserialize(httpClient, model)},
+                { typeof(Frame), () => VideoModel.GrpcDeserialize(httpClient, model)},
+            };
+
+            if (!typeToDeserialization.ContainsKey(type))
+            {
+                throw new ClarifaiException(string.Format("Unknown model type: {0}", type));
             }
 
             return typeToDeserialization[type]();
@@ -196,6 +220,19 @@ namespace Clarifai.DTOs.Models
         {
             Type type = typeof(T);
             return Model.Deserialize(httpClient, type, model);
+        }
+
+        /// <summary>
+        /// Deserializes the object out of a gRPC object.
+        /// </summary>
+        /// <param name="httpClient">the HTTP client</param>
+        /// <param name="model">the JSON dynamic object of a model</param>
+        /// <returns>the deserialized object</returns>
+        public static Model<T> GrpcDeserialize(IClarifaiHttpClient httpClient,
+            Internal.GRPC.Model model)
+        {
+            Type type = typeof(T);
+            return (Model<T>) Model.GrpcDeserialize(httpClient, type, model);
         }
     }
 }

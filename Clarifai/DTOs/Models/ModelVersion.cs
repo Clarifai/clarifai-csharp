@@ -94,6 +94,33 @@ namespace Clarifai.DTOs.Models
                 modelMetricsStatus);
         }
 
+        /// <summary>
+        /// Deserializes the object out of a gRPC object.
+        /// </summary>
+        /// <param name="modelVersion">the gRPC model version object</param>
+        /// <returns>the deserialized object</returns>
+        public static ModelVersion GrpcDeserialize(Internal.GRPC.ModelVersion modelVersion)
+        {
+            int activeConceptCount = Convert.ToInt32(modelVersion.ActiveConceptCount);
+
+            int totalInputCount = Convert.ToInt32(modelVersion.TotalInputCount);
+
+            ModelMetricsStatus modelMetricsStatus = null;
+            if (modelVersion.Metrics != null)
+            {
+                modelMetricsStatus = Models.ModelMetricsStatus.GrpcDeserialize(
+                    modelVersion.Metrics.Status);
+            }
+
+            return new ModelVersion(
+                modelVersion.Id,
+                modelVersion.CreatedAt.ToDateTime(),
+                ModelTrainingStatus.GrpcDeserialize(modelVersion.Status),
+                activeConceptCount,
+                totalInputCount,
+                modelMetricsStatus);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is ModelVersion version &&

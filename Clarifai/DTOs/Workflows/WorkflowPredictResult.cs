@@ -1,4 +1,5 @@
 ﻿using Clarifai.API;
+using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Workflows
 {
@@ -28,6 +29,16 @@ namespace Clarifai.DTOs.Workflows
                     ? Workflows.Workflow.Deserialize(jsonObject.workflow)
                     : null,
                 Workflows.WorkflowResult.Deserialize(httpClient, jsonObject.results[0]));
+        }
+
+        public static WorkflowPredictResult GrpcDeserialize(IClarifaiHttpClient httpClient,
+            PostWorkflowResultsResponse response)
+        {
+            return new WorkflowPredictResult(
+                response.Workflow != null
+                    ? Workflows.Workflow.GrpcDeserialize(response.Workflow)
+                    : null,
+                Workflows.WorkflowResult.GrpcDeserialize(httpClient, response.Results[0]));
         }
     }
 }

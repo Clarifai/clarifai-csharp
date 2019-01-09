@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Searches
 {
@@ -21,6 +23,12 @@ namespace Clarifai.DTOs.Searches
                 searchHits.Add(SearchHit.Deserialize(hit));
             }
             return new SearchInputsResult((string)jsonObject.id, searchHits);
+        }
+
+        public static SearchInputsResult GrpcDeserialize(MultiSearchResponse response)
+        {
+            return new SearchInputsResult(
+                response.Id, response.Hits.Select(SearchHit.GrpcDeserialize).ToList());
         }
     }
 }

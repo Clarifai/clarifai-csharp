@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Models;
-using Clarifai.DTOs.Models.OutputsInfo;
-using Clarifai.DTOs.Predictions;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -45,18 +46,23 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override ConceptModel Unmarshaller(dynamic jsonObject)
+        protected override ConceptModel Unmarshaller(dynamic responseD)
         {
-            return ConceptModel.Deserialize(HttpClient, jsonObject.model);
+            SingleModelResponse response = responseD;
+
+            return ConceptModel.GrpcDeserialize(HttpClient, response.Model);
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
             var model = new ConceptModel(HttpClient, _modelId, name: _name);
-            return new JObject(
-                new JProperty("model", model.Serialize(_concepts, _areConceptsMutuallyExclusive,
-                    _isEnvironmentClosed, _language)));
+
+            return await grpcClient.PostModelsAsync(new PostModelsRequest
+            {
+                Model = model.GrpcSerialize(
+                    _concepts, _areConceptsMutuallyExclusive, _isEnvironmentClosed, _language)
+            });
         }
     }
 }

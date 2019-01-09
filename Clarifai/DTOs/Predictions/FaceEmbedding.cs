@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Clarifai.DTOs.Predictions
 {
@@ -25,6 +26,21 @@ namespace Clarifai.DTOs.Predictions
             }
             return new FaceEmbedding(
                 DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box),
+                embeddings);
+        }
+
+        /// <summary>
+        /// Deserializes this object from a gRPC object.
+        /// </summary>
+        /// <param name="faceEmbedding">the gRPC object</param>
+        /// <returns>a new instance of this class</returns>
+        public static FaceEmbedding GrpcDeserialize(Internal.GRPC.Region faceEmbedding)
+        {
+            List<Embedding> embeddings = faceEmbedding.Data.Embeddings
+                .Select(Embedding.GrpcDeserialize)
+                .ToList();
+            return new FaceEmbedding(
+                DTOs.Crop.GrpcDeserialize(faceEmbedding.RegionInfo.BoundingBox),
                 embeddings);
         }
 

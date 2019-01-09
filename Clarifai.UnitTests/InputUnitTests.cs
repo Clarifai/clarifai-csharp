@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Clarifai.API;
 using Clarifai.API.Requests.Models;
 using Clarifai.API.Responses;
+using Clarifai.DTOs;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
@@ -16,6 +18,115 @@ namespace Clarifai.UnitTests
     [TestFixture]
     public class InputUnitTests
     {
+        [Test]
+        public async Task AddInputsRequestAndResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                postResponse: @"
+{
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""inputs"": [
+    {
+      ""id"": ""@inputID1"",
+      ""data"": {
+        ""image"": {
+          ""url"": ""https://some.image.url1""
+        },
+        ""geo"": {
+          ""geo_point"": {
+            ""longitude"": 55,
+            ""latitude"": 66
+          }
+        }
+      },
+      ""created_at"": ""2019-01-17T12:43:04.895006174Z"",
+      ""modified_at"": ""2019-01-17T12:43:04.895006174Z"",
+      ""status"": {
+        ""code"": 30001,
+        ""description"": ""Download pending""
+      }
+    },
+    {
+      ""id"": ""@inputID2"",
+      ""data"": {
+        ""image"": {
+          ""url"": ""https://some.image.url2""
+        }
+      },
+      ""created_at"": ""2019-01-17T12:43:04.895006174Z"",
+      ""modified_at"": ""2019-01-17T12:43:04.895006174Z"",
+      ""status"": {
+        ""code"": 30001,
+        ""description"": ""Download pending""
+      }
+    }
+  ]
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<List<IClarifaiInput>> response = await client.AddInputs(
+                    new ClarifaiURLImage(
+                        "https://some.image.url1",
+                        id: "@inputID1",
+                        allowDuplicateUrl: true,
+                        geo: new GeoPoint(55, 66)),
+                    new ClarifaiURLImage(
+                        "https://some.image.url2",
+                        id: "@inputID2",
+                        allowDuplicateUrl: true))
+                    .ExecuteAsync();
+
+
+            var expectedRequestBody = JObject.Parse(@"
+{
+  ""inputs"": [
+    {
+      ""id"": ""@inputID1"",
+      ""data"": {
+        ""image"": {
+          ""url"": ""https://some.image.url1"",
+          ""allow_duplicate_url"": true
+        },
+        ""geo"": {
+          ""geo_point"": {
+            ""longitude"": 55,
+            ""latitude"": 66
+          }
+        }
+      }
+    },
+    {
+      ""id"": ""@inputID2"",
+      ""data"": {
+        ""image"": {
+          ""url"": ""https://some.image.url2"",
+          ""allow_duplicate_url"": true
+        }
+      }
+    }
+  ]
+}
+");
+            Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual("Ok", response.Status.Description);
+
+            ClarifaiURLImage input1 = (ClarifaiURLImage) response.Get()[0];
+            ClarifaiURLImage input2 = (ClarifaiURLImage) response.Get()[1];
+
+            Assert.AreEqual("@inputID1", input1.ID);
+            Assert.AreEqual("https://some.image.url1", input1.URL);
+            Assert.AreEqual(new GeoPoint(55, 66), input1.Geo);
+
+            Assert.AreEqual("@inputID2", input2.ID);
+            Assert.AreEqual("https://some.image.url2", input2.URL);
+            Assert.IsNull(input2.Geo);
+        }
+
         [Test]
         public async Task ModifyInputRequestAndResponseShouldBeCorrect()
         {
@@ -87,21 +198,19 @@ namespace Clarifai.UnitTests
           ""concepts"": [
             {
               ""id"": ""@positiveConcept1"",
-              ""name"": ""@positiveConceptName1"",
-              ""value"": true
+              ""name"": ""@positiveConceptName1""
             },
             {
-              ""id"": ""@positiveConcept2"",
-              ""value"": true
+              ""id"": ""@positiveConcept2""
             },
             {
               ""id"": ""@negativeConcept1"",
               ""name"": ""@negativeConceptName1"",
-              ""value"": false
+              ""value"": 0
             },
             {
               ""id"": ""@negativeConcept2"",
-              ""value"": false
+              ""value"": 0
             },
           ]
         }
@@ -110,6 +219,7 @@ namespace Clarifai.UnitTests
     ""action"":""merge""
 }
 ");
+            Console.WriteLine(httpClient.PatchedBody);
             Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PatchedBody));
 
             Assert.True(response.IsSuccessful);
@@ -198,6 +308,123 @@ namespace Clarifai.UnitTests
         }
 
         [Test]
+        public async Task GetInputsRequestAndResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                getResponse: @"
+{
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""inputs"": [
+    {
+      ""id"": ""@inputID1"",
+      ""data"": {
+        ""image"": {
+          ""url"": ""https://some.image.url1""
+        },
+        ""geo"": {
+          ""geo_point"": {
+            ""longitude"": 55,
+            ""latitude"": 66
+          }
+        }
+      },
+      ""created_at"": ""2019-01-17T14:02:21.216473Z"",
+      ""modified_at"": ""2019-01-17T14:02:21.800792Z"",
+      ""status"": {
+        ""code"": 30000,
+        ""description"": ""Download complete""
+      }
+    },
+    {
+      ""id"": ""@inputID2"",
+      ""data"": {
+        ""image"": {
+          ""url"": ""https://some.image.url2""
+        }
+      },
+      ""created_at"": ""2019-01-17T14:02:21.216473Z"",
+      ""modified_at"": ""2019-01-17T14:02:21.800792Z"",
+      ""status"": {
+        ""code"": 30000,
+        ""description"": ""Download complete""
+      }
+    }
+  ]
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<List<IClarifaiInput>> response = await client.GetInputs()
+                .ExecuteAsync();
+
+            Assert.AreEqual("/v2/inputs", httpClient.RequestedUrl);
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual("Ok", response.Status.Description);
+
+            ClarifaiURLImage input1 = (ClarifaiURLImage) response.Get()[0];
+            ClarifaiURLImage input2 = (ClarifaiURLImage) response.Get()[1];
+
+            Assert.AreEqual("@inputID1", input1.ID);
+            Assert.AreEqual("https://some.image.url1", input1.URL);
+            Assert.AreEqual(new GeoPoint(55, 66), input1.Geo);
+
+            Assert.AreEqual("@inputID2", input2.ID);
+            Assert.AreEqual("https://some.image.url2", input2.URL);
+            Assert.IsNull(input2.Geo);
+        }
+
+        [Test]
+        public async Task GetInputRequestAndResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                getResponse: @"
+{
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""input"": {
+    ""id"": ""@inputID"",
+    ""data"": {
+      ""image"": {
+        ""url"": ""https://some.image.url""
+      },
+      ""geo"": {
+        ""geo_point"": {
+          ""longitude"": 55,
+          ""latitude"": 66
+        }
+      }
+    },
+    ""created_at"": ""2019-01-17T14:02:21.216473Z"",
+    ""modified_at"": ""2019-01-17T14:02:21.800792Z"",
+    ""status"": {
+      ""code"": 30000,
+      ""description"": ""Download complete""
+    }
+  }
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<IClarifaiInput> response = await client.GetInput("@inputID")
+                .ExecuteAsync();
+
+            Assert.AreEqual("/v2/inputs/@inputID", httpClient.RequestedUrl);
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual("Ok", response.Status.Description);
+
+            ClarifaiURLImage input = (ClarifaiURLImage) response.Get();
+
+            Assert.AreEqual("@inputID", input.ID);
+            Assert.AreEqual("https://some.image.url", input.URL);
+            Assert.AreEqual(new GeoPoint(55, 66), input.Geo);
+        }
+
+        [Test]
         public async Task DeleteAllInputsResponseShouldBeCorrect()
         {
             var httpClient = new FkClarifaiHttpClient(
@@ -205,6 +432,32 @@ namespace Clarifai.UnitTests
             var client = new ClarifaiClient(httpClient);
             ClarifaiResponse<EmptyResponse> response = await client.DeleteAllInputs()
                 .ExecuteAsync();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual("Ok", response.Status.Description);
+        }
+
+        [Test]
+        public async Task DeleteInputsResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                deleteResponse: @"{""status"":{""code"":10000,""description"":""Ok""}}");
+
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<EmptyResponse> response = await client.DeleteInputs(
+                    "@inputID1", "@inputID2")
+                .ExecuteAsync();
+
+            var expectedRequestBody = JObject.Parse(@"
+{
+  ""ids"": [
+    ""@inputID1"",
+    ""@inputID2""
+  ]
+}
+");
+            Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.DeletedBody));
+
 
             Assert.True(response.IsSuccessful);
             Assert.AreEqual("Ok", response.Status.Description);

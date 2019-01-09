@@ -1,5 +1,7 @@
-﻿using Clarifai.DTOs.Models.Outputs;
-using Newtonsoft.Json.Linq;
+﻿using System.Threading.Tasks;
+using Clarifai.DTOs.Models.Outputs;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -28,15 +30,16 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override EmptyResponse Unmarshaller(dynamic responseD)
         {
-            return new JObject();
+            return new EmptyResponse();
         }
 
         /// <inheritdoc />
-        protected override EmptyResponse Unmarshaller(dynamic jsonObject)
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return new EmptyResponse();
+            return await grpcClient.DeleteModelVersionAsync(
+                new Internal.GRPC.DeleteModelVersionRequest());
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Clarifai.DTOs.Inputs;
+using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Searches
 {
@@ -17,6 +18,11 @@ namespace Clarifai.DTOs.Searches
         {
             return new SearchHit((decimal)jsonObject.score,
                 ClarifaiInput.Deserialize(jsonObject.input));
+        }
+
+        public static SearchHit GrpcDeserialize(Hit hit)
+        {
+            return new SearchHit((decimal) hit.Score, ClarifaiInput.GrpcDeserialize(hit.Input));
         }
     }
 }

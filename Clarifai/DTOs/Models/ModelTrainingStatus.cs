@@ -1,5 +1,7 @@
-﻿using Clarifai.Exceptions;
+﻿using System;
+using Clarifai.Exceptions;
 using System.Collections.Generic;
+using Clarifai.Internal.GRPC.Status;
 
 namespace Clarifai.DTOs.Models
 {
@@ -107,6 +109,27 @@ namespace Clarifai.DTOs.Models
                 21110 <= statusCode && statusCode <= 21115)
             {
                 return new ModelTrainingStatus(statusCode, (string)jsonObject.description);
+            }
+            else
+            {
+                throw new ClarifaiException(
+                    "This version of the API client does not recognize the model training status: "
+                    + statusCode);
+            }
+        }
+
+        /// <summary>
+        /// Deserializes the object out of a gRPC object.
+        /// </summary>
+        /// <param name="status">the gRPC status object</param>
+        /// <returns>the deserialized object</returns>
+        public static ModelTrainingStatus GrpcDeserialize(Status status)
+        {
+            int statusCode = Convert.ToInt32(status.Code);
+            if (21100 <= statusCode && statusCode <= 21103 ||
+                21110 <= statusCode && statusCode <= 21115)
+            {
+                return new ModelTrainingStatus(statusCode, status.Description);
             }
             else
             {

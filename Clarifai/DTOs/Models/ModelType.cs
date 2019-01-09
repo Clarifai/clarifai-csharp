@@ -38,6 +38,8 @@ namespace Clarifai.DTOs.Models
         /// Ctor.
         /// </summary>
         /// <param name="typeExt">the type extension</param>
+        /// <param name="model">the model type</param>
+        /// <param name="prediction">the prediction type</param>
         private ModelType(string typeExt, Type model, Type prediction)
         {
             TypeExt = typeExt;

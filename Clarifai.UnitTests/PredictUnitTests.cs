@@ -86,7 +86,6 @@ namespace Clarifai.UnitTests
 {
   ""inputs"": [
     {
-      ""id"": null,
       ""data"": {
         ""image"": {
           ""url"": ""@url""
@@ -237,7 +236,6 @@ namespace Clarifai.UnitTests
 {
   ""inputs"": [
     {
-      ""id"": null,
       ""data"": {
         ""image"": {
           ""url"": ""@url1""
@@ -245,7 +243,6 @@ namespace Clarifai.UnitTests
       }
     },
     {
-      ""id"": null,
       ""data"": {
         ""image"": {
           ""url"": ""@url2""
@@ -255,6 +252,7 @@ namespace Clarifai.UnitTests
   ]
 }
 ");
+
             Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));
 
             Assert.True(response.IsSuccessful);
@@ -270,6 +268,116 @@ namespace Clarifai.UnitTests
             Assert.AreEqual("@outputID2", output2.ID);
             Assert.AreEqual("@conceptID21", output2.Data[0].ID);
             Assert.AreEqual("@conceptID22", output2.Data[1].ID);
+        }
+
+
+        // To be future-proof against expansion, response objects with unknown fields should be
+        // parsed correctly and unknown fields ignored.
+        [Test]
+        public async Task ConceptPredictWithUnknownResponseFieldsShouldSucceed()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                postResponse: @"
+{
+    ""status"": {
+        ""code"": 10000,
+        ""description"": ""Ok"",
+        ""unknown_field"": ""val""
+    },
+    ""outputs"": [{
+        ""id"": ""@outputID"",
+        ""status"": {
+            ""code"": 10000,
+            ""description"": ""Ok""
+        },
+        ""created_at"": ""2017-11-17T19:32:58.760477937Z"",
+        ""model"": {
+            ""id"": ""@modelID"",
+            ""name"": ""@modelName"",
+            ""created_at"": ""2016-03-09T17:11:39.608845Z"",
+            ""app_id"": ""main"",
+            ""output_info"": {
+                ""message"": ""Show output_info with: GET /models/{model_id}/output_info"",
+                ""type"": ""concept"",
+                ""type_ext"": ""concept"",
+                ""unknown_field"": ""val""
+            },
+            ""model_version"": {
+                ""id"": ""@modelVersionID"",
+                ""created_at"": ""2016-07-13T01:19:12.147644Z"",
+                ""status"": {
+                    ""code"": 21100,
+                    ""description"": ""Model trained successfully""
+                },
+                ""unknown_field"": ""val""
+            },
+            ""display_name"": ""@modelDisplayName"",
+            ""unknown_field"": ""val""
+        },
+        ""input"": {
+            ""id"": ""@inputID"",
+            ""data"": {
+                ""image"": {
+                    ""url"": ""@imageUrl"",
+                    ""unknown_field"": ""val""
+                },
+                ""unknown_field"": ""val""
+            },
+            ""unknown_field"": ""val""
+        },
+        ""data"": {
+            ""concepts"": [{
+                ""id"": ""@conceptID1"",
+                ""name"": ""@conceptName1"",
+                ""value"": 0.99,
+                ""app_id"": ""main"",
+                ""unknown_field"": ""val""
+            }, {
+                ""id"": ""@conceptID2"",
+                ""name"": ""@conceptName2"",
+                ""value"": 0.98,
+                ""app_id"": ""main"",
+                ""unknown_field"": ""val""
+            }],
+            ""unknown_field"": ""val""
+        },
+        ""unknown_field"": ""val""
+    }]
+}
+");
+
+            var client = new ClarifaiClient(httpClient);
+            var response = await client.Predict<Concept>(
+                    "", new ClarifaiURLImage("@url"))
+                .ExecuteAsync();
+            ClarifaiOutput<Concept> output = response.Get();
+
+            var expectedRequestBody = JObject.Parse(@"
+{
+  ""inputs"": [
+    {
+      ""data"": {
+        ""image"": {
+          ""url"": ""@url""
+        }
+      }
+    }
+  ]
+}
+");
+            Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));
+
+            Assert.True(response.IsSuccessful);
+
+            Assert.AreEqual("@inputID", output.Input.ID);
+
+            Assert.AreEqual("@outputID", output.ID);
+            Assert.AreEqual("@conceptID1", output.Data[0].ID);
+
+            Assert.AreEqual("@modelID", output.Model.ModelID);
+            Assert.AreEqual("@modelName", output.Model.Name);
+            Assert.AreEqual("@modelVersionID", output.Model.ModelVersion.ID);
+            Assert.AreEqual("concept", output.Model.OutputInfo.TypeExt);
         }
     }
 }

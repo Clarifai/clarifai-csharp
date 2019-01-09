@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Clarifai.DTOs.Predictions
 {
@@ -24,6 +25,17 @@ namespace Clarifai.DTOs.Predictions
                 concepts.Add(Concept.Deserialize(concept));
             }
             return new Logo(DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box), concepts);
+        }
+
+        /// <summary>
+        /// Deserializes this object from a gRPC object.
+        /// </summary>
+        /// <param name="logo">the gRPC object</param>
+        /// <returns>a new instance of this class</returns>
+        public static Logo GrpcDeserialize(Internal.GRPC.Region logo)
+        {
+            List<Concept> concepts = logo.Data.Concepts.Select(Concept.GrpcDeserialize).ToList();
+            return new Logo(Crop.GrpcDeserialize(logo.RegionInfo.BoundingBox), concepts);
         }
 
         public override bool Equals(object obj)

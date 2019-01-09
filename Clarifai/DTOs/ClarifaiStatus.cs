@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using Clarifai.Internal.GRPC.Status;
 
 namespace Clarifai.DTOs
 {
@@ -45,6 +47,7 @@ namespace Clarifai.DTOs
             int statusCode = (int)status.code;
             bool success = 200 <= (int)httpStatusCode && (int)httpStatusCode < 300;
             StatusType statusType;
+            Console.WriteLine((int)httpStatusCode);
             if (success)
             {
                 if (statusCode == 10010)
@@ -68,6 +71,37 @@ namespace Clarifai.DTOs
             }
             return new ClarifaiStatus(statusType, statusCode, (string)status.description,
                 errorDetails);
+        }
+
+        public static ClarifaiStatus GrpcDeserialize(Status status,
+            HttpStatusCode httpStatusCode = HttpStatusCode.OK)
+        {
+            int statusCode = (int)status.Code;
+            bool success = 200 <= (int)httpStatusCode && (int)httpStatusCode < 300;
+            StatusType statusType;
+
+            if (success)
+            {
+                if (statusCode == 10010)
+                {
+                    statusType = StatusType.MixedSuccess;
+                }
+                else
+                {
+                    statusType = StatusType.Successful;
+                }
+            }
+            else
+            {
+                statusType = StatusType.Failure;
+            }
+
+            string errorDetails = null;
+            if (status.Details != null)
+            {
+                errorDetails = status.Details;
+            }
+            return new ClarifaiStatus(statusType, statusCode, status.Description, errorDetails);
         }
 
         public override string ToString()

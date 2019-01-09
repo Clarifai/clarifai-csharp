@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Clarifai.Solutions.Moderation.API.Requests.Inputs
 {
-    public class GetModerationStatusRequest: ClarifaiRequest<ModerationStatus>
+    public class GetModerationStatusRequest: ClarifaiJsonRequest<ModerationStatus>
     {
         protected override RequestMethod Method => RequestMethod.GET;
         protected override string Url => $"/v2/inputs/{_inputID}/outputs";

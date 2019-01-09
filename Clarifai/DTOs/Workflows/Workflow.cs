@@ -25,5 +25,10 @@ namespace Clarifai.DTOs.Workflows
             return new Workflow((string) jsonObject.id, (string) jsonObject.app_id,
                 (DateTime) jsonObject.created_at);
         }
+
+        public static Workflow GrpcDeserialize(Internal.GRPC.Workflow workflow)
+        {
+            return new Workflow(workflow.Id, workflow.AppId, workflow.CreatedAt.ToDateTime());
+        }
     }
 }

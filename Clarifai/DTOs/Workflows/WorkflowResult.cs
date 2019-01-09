@@ -3,6 +3,8 @@ using Clarifai.API;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Models.Outputs;
+using Clarifai.Internal.GRPC;
+using Model = Clarifai.Internal.GRPC.Model;
 
 namespace Clarifai.DTOs.Workflows
 {
@@ -41,6 +43,24 @@ namespace Clarifai.DTOs.Workflows
                     (string)model.output_info.type_ext);
 
                 predictions.Add(ClarifaiOutput.Deserialize(httpClient, modelType, output));
+            }
+
+            return new WorkflowResult(status, input, predictions);
+        }
+
+        public static WorkflowResult GrpcDeserialize(IClarifaiHttpClient httpClient,
+            Internal.GRPC.WorkflowResult result)
+        {
+            var status = ClarifaiStatus.GrpcDeserialize(result.Status);
+            var input = ClarifaiInput.GrpcDeserialize(result.Input);
+
+            var predictions = new List<ClarifaiOutput>();
+            foreach (Output output in result.Outputs)
+            {
+                Model model = output.Model;
+                ModelType modelType = ModelType.DetermineModelType(model.OutputInfo.TypeExt);
+
+                predictions.Add(ClarifaiOutput.GrpcDeserialize(httpClient, modelType, output));
             }
 
             return new WorkflowResult(status, input, predictions);

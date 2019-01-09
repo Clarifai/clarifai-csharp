@@ -102,7 +102,43 @@ namespace Clarifai.DTOs.Predictions
             };
         }
 
+        public Internal.GRPC.Concept GrpcSerialize(bool? value = null)
+        {
+            var concept = new Internal.GRPC.Concept
+            {
+                Id = ID
+            };
+            if (Name != null)
+            {
+                concept.Name = Name;
+            }
+            if (Language != null)
+            {
+                concept.Language = Language;
+            }
+            if (value != null)
+            {
+                concept.Value = value.Value ? 1 : 0;
+            }
+            else
+            {
+                concept.Value = 1;
+            }
+            return concept;
+        }
 
+        public static Concept GrpcDeserialize(Internal.GRPC.Concept grpcConcept)
+        {
+            return new Concept(
+                grpcConcept.Id,
+                grpcConcept.Name,
+                grpcConcept.Language)
+            {
+                CreatedAt = grpcConcept.CreatedAt?.ToDateTime(),
+                AppID = grpcConcept.AppId,
+                Value = (decimal) grpcConcept.Value,
+            };
+        }
 
         public override string ToString()
         {

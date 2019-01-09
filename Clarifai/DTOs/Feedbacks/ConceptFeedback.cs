@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Feedbacks
 {
@@ -33,6 +34,15 @@ namespace Clarifai.DTOs.Feedbacks
             return new JObject(
                 new JProperty("id", _conceptID),
                 new JProperty("value", _value));
+        }
+
+        public Concept GrpcSerialize()
+        {
+            return new Concept
+            {
+                Id = _conceptID,
+                Value = _value ? 1.0f : 0.0f,
+            };
         }
 
         public override bool Equals(object obj)

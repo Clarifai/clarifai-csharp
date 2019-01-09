@@ -1,6 +1,7 @@
 ﻿using System;
 using Clarifai.Exceptions;
 using System.Collections.Generic;
+using Clarifai.Internal.GRPC.Status;
 
 namespace Clarifai.DTOs.Models
 {
@@ -96,6 +97,27 @@ namespace Clarifai.DTOs.Models
                 21310 <= statusCode && statusCode <= 21319)
             {
                 return new ModelMetricsStatus(statusCode, (string) jsonObject.description);
+            }
+            else
+            {
+                throw new ClarifaiException(
+                    "This version of the API client does not recognize the model metrics status: "
+                    + statusCode);
+            }
+        }
+
+        /// <summary>
+        /// Deserializes the object out of a gRPC object.
+        /// </summary>
+        /// <param name="status">the gRPC status object</param>
+        /// <returns>the deserialized object</returns>
+        public static ModelMetricsStatus GrpcDeserialize(Status status)
+        {
+            int statusCode = Convert.ToInt32(status.Code);
+            if (21300 <= statusCode && statusCode <= 21303 ||
+                21310 <= statusCode && statusCode <= 21319)
+            {
+                return new ModelMetricsStatus(statusCode, status.Description);
             }
             else
             {

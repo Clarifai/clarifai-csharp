@@ -1,6 +1,8 @@
-﻿using Clarifai.DTOs.Models;
+﻿using System.Threading.Tasks;
+using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Predictions;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -26,15 +28,16 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override IModel<T> Unmarshaller(dynamic responseD)
         {
-            return new JObject();
+            SingleModelResponse response = responseD;
+            return Model<T>.GrpcDeserialize(HttpClient, response.Model);
         }
 
         /// <inheritdoc />
-        protected override IModel<T> Unmarshaller(dynamic jsonObject)
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return Model<T>.Deserialize(HttpClient, jsonObject.model);
+            return await grpcClient.GetModelOutputInfoAsync(new GetModelRequest());
         }
     }
 }

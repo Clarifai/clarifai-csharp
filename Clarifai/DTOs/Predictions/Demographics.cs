@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Predictions
 {
@@ -45,6 +47,31 @@ namespace Clarifai.DTOs.Predictions
                 multiculturalAppearanceConcepts.Add(Concept.Deserialize(concept));
             }
             return new Demographics(DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box),
+                ageAppearanceConcepts, genderAppearanceConcepts, multiculturalAppearanceConcepts);
+        }
+
+        /// <summary>
+        /// Deserializes this object from a gRPC object.
+        /// </summary>
+        /// <param name="demographics">the gRPC object</param>
+        /// <returns>a new instance of this class</returns>
+        public static Demographics GrpcDeserialize(Internal.GRPC.Region demographics)
+        {
+            Face face = demographics.Data.Face;
+
+            List<Concept> ageAppearanceConcepts = face.AgeAppearance.Concepts
+                .Select(Concept.GrpcDeserialize)
+                .ToList();
+
+            List<Concept> genderAppearanceConcepts = face.GenderAppearance.Concepts
+                .Select(Concept.GrpcDeserialize)
+                .ToList();
+
+            List<Concept> multiculturalAppearanceConcepts = face.MulticulturalAppearance.Concepts
+                .Select(Concept.GrpcDeserialize)
+                .ToList();
+
+            return new Demographics(Crop.GrpcDeserialize(demographics.RegionInfo.BoundingBox),
                 ageAppearanceConcepts, genderAppearanceConcepts, multiculturalAppearanceConcepts);
         }
 

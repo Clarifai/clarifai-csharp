@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Models;
-using Clarifai.DTOs.Predictions;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -47,24 +49,26 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override ConceptModel Unmarshaller(dynamic responseD)
         {
-            var model = new ConceptModel(
-                HttpClient, _modelID, name: _name);
-            var body = new JObject(
-                new JProperty("models", new JArray(model.Serialize(_concepts,
-                    _areConceptsMutuallyExclusive, _isEnvironmentClosed, _language))));
+            MultiModelResponse response = responseD;
 
-            ModifyAction action = _action ?? ModifyAction.Merge;
-            body.Add("action", action.Serialize());
-
-            return body;
+            return ConceptModel.GrpcDeserialize(HttpClient, response.Models[0]);
         }
 
         /// <inheritdoc />
-        protected override ConceptModel Unmarshaller(dynamic jsonObject)
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return ConceptModel.Deserialize(HttpClient, jsonObject.models[0]);
+            var model = new ConceptModel(HttpClient, _modelID, name: _name);
+
+            return await grpcClient.PatchModelsAsync(new PatchModelsRequest
+            {
+                Models = {
+                    model.GrpcSerialize(_concepts, _areConceptsMutuallyExclusive,
+                        _isEnvironmentClosed, _language)
+                },
+                Action = (_action ?? ModifyAction.Merge).GrpcSerialize()
+            });
         }
     }
 }

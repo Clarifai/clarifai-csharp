@@ -5,12 +5,14 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Clarifai.API;
 using Clarifai.API.Requests.Models;
 using Clarifai.API.Responses;
 using Clarifai.DTOs;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Models.Outputs;
+using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
 using NUnit.Framework;
 

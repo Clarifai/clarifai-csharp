@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Clarifai.API.Requests;
 using Clarifai.DTOs.Predictions;
+using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
+using Concept = Clarifai.DTOs.Predictions.Concept;
+using Region = Clarifai.DTOs.Predictions.Region;
 
 namespace Clarifai.DTOs.Inputs
 {
@@ -41,6 +45,19 @@ namespace Clarifai.DTOs.Inputs
             return Serialize(
                 new JProperty("video", new JObject(
                     new JProperty("url", URL))));
+        }
+
+        /// <summary>
+        /// Serializes this object into a new GRPC object.
+        /// </summary>
+        /// <returns>a new JSON object</returns>
+        public override Input GrpcSerialize()
+        {
+            var video = new Video
+            {
+                Url = URL,
+            };
+            return GrpcSerialize("video", video);
         }
 
         /// <summary>
@@ -85,6 +102,61 @@ namespace Clarifai.DTOs.Inputs
             return new ClarifaiURLVideo(
                 id: (string) jsonObject.id,
                 url: (string) jsonObject.data.video.url,
+                positiveConcepts: positiveConcepts,
+                negativeConcepts: negativeConcepts,
+                metadata: metadata,
+                createdAt: createdAt,
+                geo: geoPoint);
+        }
+
+        /// <summary>
+        /// Deserializes the object out of a gRPC object.
+        /// </summary>
+        /// <param name="input">the input gRPC object</param>
+        /// <returns>the deserialized object</returns>
+        public new static ClarifaiURLVideo GrpcDeserialize(Input input)
+        {
+            var positiveConcepts = new List<Concept>();
+            var negativeConcepts = new List<Concept>();
+            foreach (Internal.GRPC.Concept c in input.Data.Concepts)
+            {
+                Concept concept = Concept.GrpcDeserialize(c);
+                if (concept.Value == 0.0M)
+                {
+                    negativeConcepts.Add(concept);
+                }
+                else
+                {
+                    positiveConcepts.Add(concept);
+                }
+            }
+            JObject metadata = null;
+            if (input.Data.Metadata != null)
+            {
+                metadata = StructHelper.StructToJObject(input.Data.Metadata);
+            }
+            GeoPoint geoPoint = null;
+            if (input.Data.Geo != null)
+            {
+                geoPoint = GeoPoint.GrpcDeserialize(input.Data.Geo);
+            }
+            DateTime? createdAt = null;
+            if (input.CreatedAt != null)
+            {
+                createdAt = input.CreatedAt.ToDateTime();
+            }
+
+            var regions = new List<Region>();
+            if (input.Data?.Regions != null)
+            {
+                foreach (Internal.GRPC.Region region in input.Data.Regions)
+                {
+                    regions.Add(Region.GrpcDeserialize(region));
+                }
+            }
+            return new ClarifaiURLVideo(
+                id: input.Id,
+                url: input.Data.Video.Url,
                 positiveConcepts: positiveConcepts,
                 negativeConcepts: negativeConcepts,
                 metadata: metadata,

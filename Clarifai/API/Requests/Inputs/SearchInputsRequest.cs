@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Searches;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests.Inputs
 {
@@ -39,21 +41,30 @@ namespace Clarifai.API.Requests.Inputs
         }
 
         /// <inheritdoc />
-        protected override SearchInputsResult Unmarshaller(dynamic jsonObject)
+        protected override SearchInputsResult Unmarshaller(dynamic responseD)
         {
-            return SearchInputsResult.Deserialize(jsonObject);
+            MultiSearchResponse response = responseD;
+            return SearchInputsResult.GrpcDeserialize(response);
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            var query = new JObject(
-                new JProperty("ands", _searchBys.Select(c => c.Serialize())));
+            var query = new Query
+            {
+                Ands = { _searchBys.Select(sb => sb.GrpcSerialize()) }
+            };
             if (_language != null)
             {
-                query["language"] = _language;
+                query = new Query(query)
+                {
+                    Language = _language
+                };
             }
-            return new JObject(new JProperty("query", query));
+            return await grpcClient.PostSearchesAsync(new PostSearchesRequest
+            {
+                Query = query
+            });
         }
     }
 }

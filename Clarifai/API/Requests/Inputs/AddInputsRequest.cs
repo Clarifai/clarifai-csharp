@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Inputs;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests.Inputs
 {
@@ -36,22 +39,25 @@ namespace Clarifai.API.Requests.Inputs
         }
 
         /// <inheritdoc />
-        protected override List<IClarifaiInput> Unmarshaller(dynamic jsonObject)
+        protected override List<IClarifaiInput> Unmarshaller(dynamic responseD)
         {
+            MultiInputResponse response = responseD;
+
             var inputs = new List<IClarifaiInput>();
-            foreach (var input in jsonObject.inputs)
+            foreach (Input input in response.Inputs)
             {
-                inputs.Add(ClarifaiURLImage.Deserialize(input));
+                inputs.Add(ClarifaiInput.GrpcDeserialize(input));
             }
             return inputs;
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return new JObject(
-                new JProperty("inputs",
-                    new JArray(_inputs.Select(i => i.Serialize()))));
+            return await grpcClient.PostInputsAsync(new PostInputsRequest
+            {
+                Inputs = {_inputs.Select(i => i.GrpcSerialize())}
+            });
         }
     }
 }

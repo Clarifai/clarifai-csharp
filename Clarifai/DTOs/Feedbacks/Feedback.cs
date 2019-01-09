@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Feedbacks
 {
@@ -39,6 +41,23 @@ namespace Clarifai.DTOs.Feedbacks
         private Feedback(string value)
         {
             Value = value;
+        }
+
+        public RegionInfoFeedback GrpcSerialize()
+        {
+            switch (Value)
+            {
+                case "accurate":
+                    return RegionInfoFeedback.Accurate;
+                case "misplaced":
+                    return RegionInfoFeedback.Misplaced;
+                case "not_detected":
+                    return RegionInfoFeedback.NotDetected;
+                case "false_positive":
+                    return RegionInfoFeedback.FalsePositive;
+                default:
+                    throw new NotImplementedException("Not implemented");
+            }
         }
 
         public override bool Equals(object obj)

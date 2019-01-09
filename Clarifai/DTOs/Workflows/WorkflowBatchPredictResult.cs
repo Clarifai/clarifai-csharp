@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Clarifai.API;
+using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Workflows
 {
@@ -27,6 +28,22 @@ namespace Clarifai.DTOs.Workflows
             foreach (dynamic result in jsonObject.results)
             {
                 workflowResults.Add(WorkflowResult.Deserialize(httpClient, result));
+            }
+            return new WorkflowBatchPredictResult(workflow, workflowResults);
+        }
+
+        public static WorkflowBatchPredictResult GrpcDeserialize(IClarifaiHttpClient httpClient,
+            PostWorkflowResultsResponse response)
+        {
+            Workflow workflow = null;
+            if (response.Workflow != null)
+            {
+                workflow = Workflows.Workflow.GrpcDeserialize(response.Workflow);
+            }
+            var workflowResults = new List<WorkflowResult>();
+            foreach (Internal.GRPC.WorkflowResult result in response.Results)
+            {
+                workflowResults.Add(WorkflowResult.GrpcDeserialize(httpClient, result));
             }
             return new WorkflowBatchPredictResult(workflow, workflowResults);
         }

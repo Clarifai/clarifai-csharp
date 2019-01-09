@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
-using Clarifai.DTOs.Models;
-using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Threading.Tasks;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using ModelVersion = Clarifai.DTOs.Models.ModelVersion;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -26,19 +29,16 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override List<ModelVersion> Unmarshaller(dynamic responseD)
         {
-            return new JObject();
+            MultiModelVersionResponse response = responseD;
+            return response.ModelVersions.Select(ModelVersion.GrpcDeserialize).ToList();
         }
 
         /// <inheritdoc />
-        protected override List<ModelVersion> Unmarshaller(dynamic jsonObject)
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            var result = new List<ModelVersion>();
-            foreach (dynamic modelVersion in jsonObject.model_versions) {
-                result.Add(ModelVersion.Deserialize(modelVersion));
-            }
-            return result;
+            return await grpcClient.ListModelVersionsAsync(new ListModelVersionsRequest());
         }
     }
 }

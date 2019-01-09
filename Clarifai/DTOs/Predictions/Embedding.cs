@@ -31,6 +31,22 @@ namespace Clarifai.DTOs.Predictions
             return new Embedding(numDimensions, vector);
         }
 
+        /// <summary>
+        /// Deserializes this object from a gRPC object.
+        /// </summary>
+        /// <param name="embedding">the gRPC object</param>
+        /// <returns>a new instance of this class</returns>
+        public static Embedding GrpcDeserialize(Internal.GRPC.Embedding embedding)
+        {
+            int numDimensions = (int) embedding.NumDimensions;
+            var vector = new decimal[numDimensions];
+            for (int i = 0; i < embedding.Vector.Count; i++)
+            {
+                vector[i] = (decimal) embedding.Vector[i];
+            }
+            return new Embedding(numDimensions, vector);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is Embedding embedding &&

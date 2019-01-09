@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Model = Clarifai.Internal.GRPC.Model;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -34,26 +36,41 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override IModel<T> Unmarshaller(dynamic jsonObject)
+        protected override IModel<T> Unmarshaller(dynamic responseD)
         {
-            return Model<T>.Deserialize(HttpClient, jsonObject.model);
+            SingleModelResponse response = responseD;
+
+            return Model<T>.GrpcDeserialize(HttpClient, response.Model);
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            var body = new JObject(new JProperty("id", _modelID));
+            Model model = new Model
+            {
+                Id = _modelID
+            };
+
             if (_name != null)
             {
-                body.Add("name", _name);
+                model = new Model(model)
+                {
+                    Name = _name
+                };
             }
 
             if (_outputInfo != null)
             {
-                body.Add("output_info", _outputInfo.Serialize());
+                model = new Model(model)
+                {
+                    OutputInfo = _outputInfo.GrpcSerialize()
+                };
             }
-            return new JObject(
-                new JProperty("model", body));
+
+            return await grpcClient.PostModelsAsync(new PostModelsRequest
+            {
+                Model = model
+            });
         }
     }
 }

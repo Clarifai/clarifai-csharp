@@ -61,6 +61,20 @@ namespace Clarifai.DTOs.Predictions
                 (decimal)colorJsonObject.value);
         }
 
+        /// <summary>
+        /// Deserializes this object from a gRPC object.
+        /// </summary>
+        /// <param name="color">the gRPC color object</param>
+        /// <returns>a new instance of this class</returns>
+        public static Color GrpcDeserialize(Internal.GRPC.Color color)
+        {
+            return new Color(
+                color.RawHex,
+                color.W3C.Hex,
+                color.W3C.Name,
+                (decimal) color.Value);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is Color color &&

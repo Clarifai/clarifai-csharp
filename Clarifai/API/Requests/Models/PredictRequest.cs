@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
-using Clarifai.Exceptions;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -74,54 +75,72 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            JObject body = new JObject(
-                new JProperty("inputs", new JArray(_input.Serialize())));
 
+            var request = new PostModelOutputsRequest
+            {
+                Inputs = { _input.GrpcSerialize() }
+            };
             if (_language != null || _minValue != null || _maxConcepts != null ||
                 _selectConcepts != null || _sampleMs != null)
             {
-                var outputConfig = new JObject();
+                var outputConfig = new OutputConfig();
                 if (_language != null)
                 {
-                    outputConfig.Add("language", _language);
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        Language = _language
+                    };
                 }
                 if (_minValue != null)
                 {
-                    outputConfig.Add("min_value", _minValue);
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        MinValue = (float) _minValue
+                    };
                 }
                 if (_maxConcepts != null)
                 {
-                    outputConfig.Add("max_concepts", _maxConcepts);
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        MaxConcepts = (uint) _maxConcepts
+                    };
                 }
                 if (_sampleMs != null)
                 {
-                    outputConfig.Add("sample_ms", _sampleMs);
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        SampleMs = (uint) _sampleMs
+                    };
                 }
 
                 if (_selectConcepts != null)
                 {
-                    outputConfig.Add("select_concepts",
-                        new JArray(_selectConcepts.Select(c => c.Serialize())));
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        SelectConcepts = {_selectConcepts.Select(c => c.GrpcSerialize())}
+                    };
                 }
 
-                body.Add(new JProperty("model", new JObject(
-                    new JProperty("output_info", new JObject(
-                        new JProperty("output_config", outputConfig))))));
+                request = new PostModelOutputsRequest(request)
+                {
+                    Model = new Model
+                    {
+                        OutputInfo =  new OutputInfo
+                        {
+                            OutputConfig = outputConfig
+                        }
+                    }
+                };
             }
-            return body;
+            return await grpcClient.PostModelOutputsAsync(request);
         }
 
-        /// <inheritdoc />
-        protected override ClarifaiOutput<T> Unmarshaller(dynamic jsonObject)
+        protected override ClarifaiOutput<T> Unmarshaller(dynamic responseD)
         {
-            if (jsonObject.outputs != null && jsonObject.outputs.Count == 1)
-            {
-                var jsonOutput = jsonObject.outputs[0];
-                return ClarifaiOutput<T>.Deserialize(HttpClient, jsonOutput);
-            }
-            throw new ClarifaiException("The response does not contain exactly one output.");
+            MultiOutputResponse response = responseD;
+            return ClarifaiOutput<T>.GrpcDeserialize(HttpClient, response.Outputs[0]);
         }
     }
 }

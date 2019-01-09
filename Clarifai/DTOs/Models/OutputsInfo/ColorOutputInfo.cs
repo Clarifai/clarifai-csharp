@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
-using Clarifai.DTOs.Predictions;
+using System.Linq;
+using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
 {
@@ -66,6 +68,11 @@ namespace Clarifai.DTOs.Models.OutputsInfo
             return new JObject();
         }
 
+        public OutputInfo GrpcSerialize()
+        {
+            return new OutputInfo();
+        }
+
         /// <summary>
         /// Deserializes the object out of a JSON dynamic object.
         /// </summary>
@@ -96,6 +103,35 @@ namespace Clarifai.DTOs.Models.OutputsInfo
                 areConceptsMutuallyExclusive,
                 isEnvironmentClosed,
                 (string)jsonObject.language);
+        }
+
+        /// <summary>
+        /// Deserializes the object out of a gRPC object.
+        /// </summary>
+        /// <param name="outputInfo">the gRPC object</param>
+        /// <returns>the deserialized object</returns>
+        public static ColorOutputInfo GrpcDeserialize(OutputInfo outputInfo)
+        {
+            List<Concept> concepts = null;
+            if (outputInfo.Data != null)
+            {
+                concepts = outputInfo.Data.Concepts.Select(Concept.GrpcDeserialize).ToList();
+            }
+            bool areConceptsMutuallyExclusive = false;
+            bool isEnvironmentClosed = false;
+            if (outputInfo.OutputConfig != null)
+            {
+                areConceptsMutuallyExclusive = outputInfo.OutputConfig.ConceptsMutuallyExclusive;
+                isEnvironmentClosed = outputInfo.OutputConfig.ClosedEnvironment;
+            }
+            return new ColorOutputInfo(
+                outputInfo.Type,
+                outputInfo.TypeExt,
+                outputInfo.Message,
+                concepts,
+                areConceptsMutuallyExclusive,
+                isEnvironmentClosed,
+                outputInfo.OutputConfig?.Language);
         }
 
         public override bool Equals(object obj)

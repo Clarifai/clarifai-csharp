@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Workflows;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -40,30 +43,42 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            var body = new JObject(
-                new JProperty("inputs", new JArray(_inputs.Select(i => i.Serialize()))));
-            var outputConfig = new JObject();
-            if (_minValue != null)
+            var request = new PostWorkflowResultsRequest
             {
-                outputConfig["min_value"] = _minValue;
-            }
-            if (_maxConcepts != null)
+                Inputs = {_inputs.Select(i => i.GrpcSerialize())}
+            };
+            if (_minValue != null || _maxConcepts != null)
             {
-                outputConfig["max_concepts"] = _maxConcepts;
+                var outputConfig = new OutputConfig();
+                if (_minValue != null)
+                {
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        MinValue = (float) _minValue
+                    };
+                }
+                if (_maxConcepts != null)
+                {
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        MaxConcepts = Convert.ToUInt32(_maxConcepts)
+                    };
+                }
+
+                request = new PostWorkflowResultsRequest(request)
+                {
+                    OutputConfig = outputConfig
+                };
             }
-            if (outputConfig.Count > 0)
-            {
-                body.Add("output_config", outputConfig);
-            }
-            return body;
+            return await grpcClient.PostWorkflowResultsAsync(request);
         }
 
-        /// <inheritdoc />
-        protected override WorkflowBatchPredictResult Unmarshaller(dynamic jsonObject)
+        protected override WorkflowBatchPredictResult Unmarshaller(dynamic responseD)
         {
-            return WorkflowBatchPredictResult.Deserialize(HttpClient, jsonObject);
+            PostWorkflowResultsResponse response = responseD;
+            return WorkflowBatchPredictResult.GrpcDeserialize(HttpClient, response);
         }
     }
 }

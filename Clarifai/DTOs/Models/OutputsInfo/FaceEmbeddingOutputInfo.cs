@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Clarifai.Internal.GRPC;
+using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
 {
@@ -34,6 +35,11 @@ namespace Clarifai.DTOs.Models.OutputsInfo
             return new JObject();
         }
 
+        public OutputInfo GrpcSerialize()
+        {
+            return new OutputInfo();
+        }
+
         public static FaceEmbeddingOutputInfo Deserialize(dynamic jsonObject)
         {
             return new FaceEmbeddingOutputInfo(
@@ -46,6 +52,12 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         public override string ToString()
         {
             return "[FaceEmbeddingOutputInfo]";
+        }
+
+        public static FaceEmbeddingOutputInfo GrpcDeserialize(OutputInfo outputInfo)
+        {
+            return new FaceEmbeddingOutputInfo(
+                outputInfo.Type, outputInfo.TypeExt, outputInfo.Message);
         }
     }
 }

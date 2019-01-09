@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Clarifai.DTOs.Predictions;
+using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
 {
@@ -54,7 +55,7 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         /// <param name="concepts">the concepts</param>
         /// <param name="areConceptsMutuallyExclusive">are concepts exclusive</param>
         /// <param name="isEnvironmentClosed">is environment closed</param>
-        /// <param name="language">the lanugage</param>
+        /// <param name="language">the language</param>
         private ConceptOutputInfo(string type, string typeExt, string message,
             IEnumerable<Concept> concepts, bool areConceptsMutuallyExclusive = false,
             bool isEnvironmentClosed = false, string language = null)
@@ -81,6 +82,30 @@ namespace Clarifai.DTOs.Models.OutputsInfo
                 new JProperty("data", new JObject(
                     new JProperty("concepts", Concepts.Select(c => c.Serialize())))),
                 new JProperty("output_config", outputConfig));
+        }
+
+        public OutputInfo GrpcSerialize()
+        {
+            var outputConfig = new OutputConfig
+            {
+                ConceptsMutuallyExclusive = AreConceptsMutuallyExclusive,
+                ClosedEnvironment = IsEnvironmentClosed,
+            };
+            if (Language != null)
+            {
+                outputConfig = new OutputConfig(outputConfig)
+                {
+                    Language = Language
+                };
+            }
+            return new OutputInfo
+            {
+                OutputConfig = outputConfig,
+                Data = new Data
+                {
+                    Concepts = { Concepts.Select(c => c.GrpcSerialize()) }
+                },
+            };
         }
 
         /// <summary>
@@ -117,6 +142,41 @@ namespace Clarifai.DTOs.Models.OutputsInfo
                 areConceptsMutuallyExclusive,
                 isEnvironmentClosed,
                 (string) jsonObject.language);
+        }
+
+        /// <summary>
+        /// Deserializes the object out of a gRPC object.
+        /// </summary>
+        /// <param name="outputInfo">the gRPC object</param>
+        /// <returns>the deserialized object</returns>
+        public static ConceptOutputInfo GrpcDeserialize(OutputInfo outputInfo)
+        {
+            List<Concept> concepts = null;
+            if (outputInfo.Data?.Concepts != null)
+            {
+                concepts = new List<Concept>();
+                foreach (var concept in outputInfo.Data.Concepts)
+                {
+                    concepts.Add(Concept.GrpcDeserialize(concept));
+                }
+            }
+            bool areConceptsMutuallyExclusive = false;
+            bool isEnvironmentClosed = false;
+            string language = null;
+            if (outputInfo.OutputConfig != null)
+            {
+                areConceptsMutuallyExclusive = outputInfo.OutputConfig.ConceptsMutuallyExclusive;
+                isEnvironmentClosed = outputInfo.OutputConfig.ClosedEnvironment;
+                language = outputInfo.OutputConfig.Language;
+            }
+            return new ConceptOutputInfo(
+                outputInfo.Type,
+                outputInfo.TypeExt,
+                outputInfo.Message,
+                concepts,
+                areConceptsMutuallyExclusive,
+                isEnvironmentClosed,
+                language);
         }
 
         public override bool Equals(object obj)

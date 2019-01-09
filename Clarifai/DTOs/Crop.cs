@@ -1,4 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf.Collections;
+using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs
 {
@@ -42,6 +47,22 @@ namespace Clarifai.DTOs
                 new JProperty("right_col", Right));
         }
 
+        public List<float> GrpcSerializeAsArray()
+        {
+            return new List<float>{(float) Top, (float) Left, (float) Bottom, (float) Right};
+        }
+
+        public BoundingBox GrpcSerializeAsObject()
+        {
+            return new BoundingBox
+            {
+                TopRow = (float) Top,
+                LeftCol = (float) Left,
+                BottomRow = (float) Bottom,
+                RightCol = (float) Right,
+            };
+        }
+
         public static Crop Deserialize(dynamic jsonObject)
         {
             if (jsonObject is JArray)
@@ -60,6 +81,26 @@ namespace Clarifai.DTOs
                     (decimal) jsonObject.bottom_row,
                     (decimal) jsonObject.right_col);
             }
+        }
+
+        public static Crop GrpcDeserialize(RepeatedField<float> imageCrop)
+        {
+            Console.WriteLine("imageCrop:");
+            Console.WriteLine(imageCrop);
+            return new Crop(
+                top: (decimal) imageCrop[0],
+                left: (decimal) imageCrop[1],
+                bottom: (decimal) imageCrop[2],
+                right: (decimal) imageCrop[3]);
+        }
+
+        public static Crop GrpcDeserialize(BoundingBox box)
+        {
+            return new Crop(
+                (decimal) box.TopRow,
+                (decimal) box.LeftCol,
+                (decimal) box.BottomRow,
+                (decimal) box.RightCol);
         }
 
         public override bool Equals(object obj)

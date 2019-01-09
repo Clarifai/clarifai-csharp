@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Clarifai.DTOs.Predictions;
+using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
+using Concept = Clarifai.DTOs.Predictions.Concept;
+using Region = Clarifai.DTOs.Predictions.Region;
 
 namespace Clarifai.DTOs.Inputs
 {
@@ -74,5 +76,7 @@ namespace Clarifai.DTOs.Inputs
         List<Region> Regions { get; }
 
         JObject Serialize();
+
+        Input GrpcSerialize();
     }
 }

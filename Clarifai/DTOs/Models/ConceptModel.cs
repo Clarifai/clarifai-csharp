@@ -4,8 +4,10 @@ using System.Linq;
 using Clarifai.API;
 using Clarifai.API.Requests.Models;
 using Clarifai.DTOs.Models.OutputsInfo;
-using Clarifai.DTOs.Predictions;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json.Linq;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.DTOs.Models
 {
@@ -109,6 +111,79 @@ namespace Clarifai.DTOs.Models
             return body;
         }
 
+        public Internal.GRPC.Model GrpcSerialize(IEnumerable<Concept> concepts,
+            bool? areConceptsMutuallyExclusive, bool? isEnvironmentClosed, string language)
+        {
+            var model = new Internal.GRPC.Model
+            {
+                Id = ModelID,
+            };
+            if (Name != null)
+            {
+                model = new Internal.GRPC.Model(model)
+                {
+                    Name = Name
+                };
+            }
+            if (AppID != null)
+            {
+                model = new Internal.GRPC.Model(model)
+                {
+                    AppId = AppID
+                };
+            }
+            if (CreatedAt != null)
+            {
+                model = new Internal.GRPC.Model(model)
+                {
+                    CreatedAt = Timestamp.FromDateTime(CreatedAt.Value)
+                };
+            }
+
+            var outputInfo = new OutputInfo
+            {
+                Data = new Data
+                {
+                    Concepts = { concepts.Select(c => c.GrpcSerialize()) }
+                }
+            };
+
+            var outputConfig = new OutputConfig();
+
+            if (areConceptsMutuallyExclusive != null)
+            {
+                outputConfig = new OutputConfig(outputConfig)
+                {
+                    ConceptsMutuallyExclusive = areConceptsMutuallyExclusive.Value
+                };
+            }
+            if (isEnvironmentClosed != null)
+            {
+                outputConfig = new OutputConfig(outputConfig)
+                {
+                    ClosedEnvironment = isEnvironmentClosed.Value
+                };
+            }
+            if (language != null)
+            {
+                outputConfig = new OutputConfig(outputConfig)
+                {
+                    Language = language
+                };
+            }
+
+            outputInfo = new OutputInfo(outputInfo)
+            {
+                OutputConfig = outputConfig
+            };
+
+            model = new Internal.GRPC.Model(model)
+            {
+                OutputInfo = outputInfo
+            };
+            return model;
+        }
+
         /// <summary>
         /// Deserializes the JSON object to a new instance of this class.
         /// </summary>
@@ -125,6 +200,25 @@ namespace Clarifai.DTOs.Models
                 appID: (string)model.app_id,
                 outputInfo: ConceptOutputInfo.Deserialize(model.output_info),
                 modelVersion: Models.ModelVersion.Deserialize(model.model_version));
+        }
+
+        /// <summary>
+        /// Deserializes the gRPC object to a new instance of this class.
+        /// </summary>
+        /// <param name="httpClient">the HTTP client</param>
+        /// <param name="model">the gRPC model object</param>
+        /// <returns>a new instance</returns>
+        public new static ConceptModel GrpcDeserialize(IClarifaiHttpClient httpClient,
+            Internal.GRPC.Model model)
+        {
+            return new ConceptModel(
+                httpClient,
+                model.Id,
+                name: model.Name,
+                createdAt: model.CreatedAt?.ToDateTime(),
+                appID: model.AppId,
+                outputInfo: ConceptOutputInfo.GrpcDeserialize(model.OutputInfo),
+                modelVersion: ModelVersion.GrpcDeserialize(model.ModelVersion));
         }
 
         public override string ToString()

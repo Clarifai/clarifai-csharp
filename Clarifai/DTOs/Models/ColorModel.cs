@@ -51,6 +51,26 @@ namespace Clarifai.DTOs.Models
                 modelVersion: Models.ModelVersion.Deserialize(model.model_version));
         }
 
+
+        /// <summary>
+        /// Deserializes the gRPC object to a new instance of this class.
+        /// </summary>
+        /// <param name="httpClient">the HTTP client</param>
+        /// <param name="model">the gRPC model object</param>
+        /// <returns>a new instance</returns>
+        public new static ColorModel GrpcDeserialize(IClarifaiHttpClient httpClient,
+            Internal.GRPC.Model model)
+        {
+            return new ColorModel(
+                httpClient,
+                model.Id,
+                name: model.Name,
+                createdAt: model.CreatedAt?.ToDateTime(),
+                appID: model.AppId,
+                outputInfo: ColorOutputInfo.GrpcDeserialize(model.OutputInfo),
+                modelVersion: ModelVersion.GrpcDeserialize(model.ModelVersion));
+        }
+
         public override bool Equals(object obj)
         {
             return obj is ColorModel model &&

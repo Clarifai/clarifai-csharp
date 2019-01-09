@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Clarifai.Solutions.Moderation.API.Requests.Models
 {
-    public class ModerationPredictRequest: ClarifaiRequest<ModerationOutput>
+    public class ModerationPredictRequest: ClarifaiJsonRequest<ModerationOutput>
     {
         protected override RequestMethod Method => RequestMethod.POST;
         protected override string Url => $"/v2/models/{_modelID}/outputs";

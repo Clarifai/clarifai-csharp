@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Workflows;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -40,29 +41,42 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            var body = new JObject(new JProperty("inputs", new JArray(_input.Serialize())));
+            var request = new PostWorkflowResultsRequest
+            {
+                Inputs = {_input.GrpcSerialize()}
+            };
             if (_minValue != null || _maxConcepts != null)
             {
-                var outputConfig = new JObject();
+                var outputConfig = new OutputConfig();
                 if (_minValue != null)
                 {
-                    outputConfig["min_value"] = _minValue;
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        MinValue = (float) _minValue
+                    };
                 }
                 if (_maxConcepts != null)
                 {
-                    outputConfig["max_concepts"] = _maxConcepts;
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        MaxConcepts = Convert.ToUInt32(_maxConcepts)
+                    };
                 }
-                body.Add(outputConfig);
+
+                request = new PostWorkflowResultsRequest(request)
+                {
+                    OutputConfig = outputConfig
+                };
             }
-            return body;
+            return await grpcClient.PostWorkflowResultsAsync(request);
         }
 
-        /// <inheritdoc />
-        protected override WorkflowPredictResult Unmarshaller(dynamic jsonObject)
+        protected override WorkflowPredictResult Unmarshaller(dynamic responseD)
         {
-            return WorkflowPredictResult.Deserialize(HttpClient, jsonObject);
+            PostWorkflowResultsResponse response = responseD;
+            return WorkflowPredictResult.GrpcDeserialize(HttpClient, response);
         }
     }
 }

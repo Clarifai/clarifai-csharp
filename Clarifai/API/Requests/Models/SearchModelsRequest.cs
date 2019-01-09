@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Models;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Model = Clarifai.DTOs.Models.Model;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -32,29 +35,37 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override List<IModel> Unmarshaller(dynamic responseD)
         {
-            var query = new JObject(
-                new JProperty("name", _name));
-            if (_modelType != null)
+            MultiModelResponse response = responseD;
+
+            var models = new List<IModel>();
+            foreach (Internal.GRPC.Model model in response.Models)
             {
-                query["type"] = _modelType.TypeExt;
+                ModelType modelType = ModelType.DetermineModelType(model.OutputInfo.TypeExt);
+                models.Add(Model.GrpcDeserialize(HttpClient, modelType.Prediction, model));
             }
-            return new JObject(
-                new JProperty("model_query", query));
+            return models;
         }
 
         /// <inheritdoc />
-        protected override List<IModel> Unmarshaller(dynamic jsonObject)
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            var models = new List<IModel>();
-            foreach (dynamic model in jsonObject.models)
+            var modelQuery = new ModelQuery
             {
-                ModelType modelType = ModelType.DetermineModelType(
-                    (string)model.output_info.type_ext);
-                models.Add(Model.Deserialize(HttpClient, modelType.Prediction, model));
+                Name = _name
+            };
+            if (_modelType != null)
+            {
+                modelQuery = new ModelQuery(modelQuery)
+                {
+                    Type = _modelType.TypeExt
+                };
             }
-            return models;
+            return await grpcClient.PostModelsSearchesAsync(new PostModelsSearchesRequest
+            {
+                ModelQuery = modelQuery
+            });
         }
     }
 }

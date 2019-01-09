@@ -1,5 +1,7 @@
-﻿using Clarifai.DTOs.Predictions;
-using Newtonsoft.Json.Linq;
+﻿using System.Threading.Tasks;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.API.Requests.Concepts
 {
@@ -25,15 +27,17 @@ namespace Clarifai.API.Requests.Concepts
         }
 
         /// <inheritdoc />
-        protected override Concept Unmarshaller(dynamic jsonObject)
+        protected override Concept Unmarshaller(dynamic responseD)
         {
-            return Concept.Deserialize(jsonObject.concept);
+            SingleConceptResponse response = responseD;
+
+            return Concept.GrpcDeserialize(response.Concept);
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return new JObject();
+            return await grpcClient.GetConceptAsync(new Internal.GRPC.GetConceptRequest());
         }
     }
 }

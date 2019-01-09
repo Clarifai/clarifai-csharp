@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Predictions
 {
@@ -34,6 +35,28 @@ namespace Clarifai.DTOs.Predictions
             return new Region(
                 (string)jsonObject.id,
                 DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box),
+                faceConcepts);
+        }
+
+        public static Region GrpcDeserialize(Internal.GRPC.Region region)
+        {
+            var faceConcepts = new List<Concept>();
+
+            if (region.Data != null)
+            {
+                Face face = region.Data.Face;
+                if (face.Identity != null)
+                {
+                    foreach (Internal.GRPC.Concept concept in face.Identity.Concepts)
+                    {
+                        faceConcepts.Add(Concept.GrpcDeserialize(concept));
+                    }
+                }
+            }
+
+            return new Region(
+                region.Id ,
+                DTOs.Crop.GrpcDeserialize(region.RegionInfo.BoundingBox),
                 faceConcepts);
         }
     }

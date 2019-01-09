@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Clarifai.API;
 using Clarifai.DTOs;
@@ -138,6 +139,7 @@ namespace Clarifai.UnitTests
 }
 ");
 
+            Console.WriteLine(httpClient.PostedBody);
             Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));
             Assert.True(response.IsSuccessful);
 
@@ -199,11 +201,11 @@ namespace Clarifai.UnitTests
             ""geo"": {
               ""geo_point"": {
                 ""longitude"": 1.5,
-                ""latitude"": -1.0
+                ""latitude"": -1
               },
               ""geo_limit"": {
                 ""type"": ""withinKilometers"",
-                ""value"": 1.0
+                ""value"": 1
               }
             }
           }

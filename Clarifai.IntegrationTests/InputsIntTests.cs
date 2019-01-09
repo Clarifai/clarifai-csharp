@@ -113,7 +113,41 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task OverwrittingConceptsForInputShouldBeSuccessful()
+        public async Task AddingInputWithMetadataShouldBeSuccessful()
+        {
+            string inputID = GenerateRandomID();
+            try
+            {
+                /*
+                 * Add input with concepts.
+                 */
+                ClarifaiResponse<List<IClarifaiInput>> addResponse = await Client.AddInputs(
+                        new ClarifaiURLImage(
+                            CELEB1,
+                            id: inputID,
+                            metadata: new JObject()
+                            {
+                                {"key1", "value1"}
+                            },
+                            allowDuplicateUrl: true))
+                    .ExecuteAsync();
+                AssertResponseSuccess(addResponse);
+
+                Assert.AreEqual(
+                    JObject.Parse(@"{""key1"": ""value1""}"), addResponse.Get()[0].Metadata);
+            }
+            finally
+            {
+                /*
+                 * Delete the input.
+                 */
+                await DeleteInput(inputID);
+            }
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task OverwritingConceptsForInputShouldBeSuccessful()
         {
             string inputID = GenerateRandomID();
             ClarifaiResponse<List<IClarifaiInput>> addResponse =

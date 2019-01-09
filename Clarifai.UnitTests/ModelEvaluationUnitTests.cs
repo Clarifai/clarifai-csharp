@@ -40,8 +40,10 @@ namespace Clarifai.UnitTests
 ");
             var client = new ClarifaiClient(httpClient);
             ClarifaiResponse<ModelVersion> response = await client.ModelEvaluation(
-                "", "").ExecuteAsync();
+                "@modelID", "@modelVersionID").ExecuteAsync();
 
+            Assert.AreEqual(
+                "/v2/models/@modelID/versions/@modelVersionID/metrics", httpClient.RequestedUrl);
 
             Assert.True(response.IsSuccessful);
             Assert.AreEqual("Ok", response.Status.Description);

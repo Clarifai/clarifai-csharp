@@ -197,7 +197,6 @@ namespace Clarifai.IntegrationTests
                                 SearchBy.Metadata(new JObject(new JProperty("key2", randomValue)))
                             })
                         .ExecuteAsync();
-                Console.WriteLine(response.RawBody);
 
                 AssertResponseSuccess(response);
                 Assert.NotNull(response.Get().SearchHits);

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Clarifai.DTOs.Predictions;
+using Clarifai.API.Requests;
 using Clarifai.Exceptions;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 using Newtonsoft.Json.Linq;
+using Concept = Clarifai.DTOs.Predictions.Concept;
+using Region = Clarifai.DTOs.Predictions.Region;
 
 namespace Clarifai.DTOs.Inputs
 {
@@ -50,6 +54,19 @@ namespace Clarifai.DTOs.Inputs
         }
 
         /// <summary>
+        /// Serializes this object into a new GRPC object.
+        /// </summary>
+        /// <returns>a new JSON object</returns>
+        public override Input GrpcSerialize()
+        {
+            var video = new Video
+            {
+                Base64 = ByteString.CopyFrom(_bytes),
+            };
+            return GrpcSerialize("video", video);
+        }
+
+        /// <summary>
         /// Deserializes the object out of a JSON dynamic object.
         /// </summary>
         /// <param name="jsonObject">the JSON dynamic object</param>
@@ -91,6 +108,61 @@ namespace Clarifai.DTOs.Inputs
             return new ClarifaiFileVideo(
                 bytes: Convert.FromBase64String((string) jsonObject.data.video.base64),
                 id: (string) jsonObject.id,
+                positiveConcepts: positiveConcepts,
+                negativeConcepts: negativeConcepts,
+                metadata: metadata,
+                createdAt: createdAt,
+                geo: geoPoint);
+        }
+
+        /// <summary>
+        /// Deserializes the object out of a gRPC object.
+        /// </summary>
+        /// <param name="input">the input gRPC object</param>
+        /// <returns>the deserialized object</returns>
+        public new static ClarifaiFileVideo GrpcDeserialize(Input input)
+        {
+            var positiveConcepts = new List<Concept>();
+            var negativeConcepts = new List<Concept>();
+            foreach (Internal.GRPC.Concept c in input.Data.Concepts)
+            {
+                Concept concept = Concept.GrpcDeserialize(c);
+                if (concept.Value == 0.0M)
+                {
+                    negativeConcepts.Add(concept);
+                }
+                else
+                {
+                    positiveConcepts.Add(concept);
+                }
+            }
+            JObject metadata = null;
+            if (input.Data.Metadata != null)
+            {
+                metadata = StructHelper.StructToJObject(input.Data.Metadata);
+            }
+            GeoPoint geoPoint = null;
+            if (input.Data.Geo != null)
+            {
+                geoPoint = GeoPoint.GrpcDeserialize(input.Data.Geo);
+            }
+            DateTime? createdAt = null;
+            if (input.CreatedAt != null)
+            {
+                createdAt = input.CreatedAt.ToDateTime();
+            }
+
+            var regions = new List<Region>();
+            if (input.Data?.Regions != null)
+            {
+                foreach (Internal.GRPC.Region region in input.Data.Regions)
+                {
+                    regions.Add(Region.GrpcDeserialize(region));
+                }
+            }
+            return new ClarifaiFileVideo(
+                bytes: input.Data.Video.ToByteArray(),
+                id: input.Id,
                 positiveConcepts: positiveConcepts,
                 negativeConcepts: negativeConcepts,
                 metadata: metadata,

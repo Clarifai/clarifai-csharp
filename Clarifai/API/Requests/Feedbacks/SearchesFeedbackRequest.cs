@@ -1,5 +1,7 @@
-﻿using Clarifai.DTOs.Models.Outputs;
-using Newtonsoft.Json.Linq;
+﻿using System.Threading.Tasks;
+using Clarifai.DTOs.Models.Outputs;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests.Feedbacks
 {
@@ -36,22 +38,28 @@ namespace Clarifai.API.Requests.Feedbacks
         }
 
         /// <inheritdoc />
-        protected override EmptyResponse Unmarshaller(dynamic jsonObject)
+        protected override EmptyResponse Unmarshaller(dynamic responseD)
         {
             return new EmptyResponse();
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return new JObject(
-                new JProperty("input", new JObject(
-                    new JProperty("id", _inputId),
-                    new JProperty("feedback_info", new JObject(
-                        new JProperty("event_type", "search_click"),
-                        new JProperty("search_id", _searchId),
-                        new JProperty("end_user_id", _endUserId),
-                        new JProperty("session_id", _sessionId))))));
+            return await grpcClient.PostSearchFeedbackAsync(new PostSearchFeedbackRequest
+            {
+                Input = new Input
+                {
+                    Id = _inputId,
+                    FeedbackInfo = new FeedbackInfo
+                    {
+                        EventType = EventType.SearchClick,
+                        SearchId = _searchId,
+                        EndUserId = _endUserId,
+                        SessionId = _sessionId
+                    }
+                }
+            });
         }
     }
 }

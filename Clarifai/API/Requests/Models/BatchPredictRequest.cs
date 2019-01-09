@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -69,48 +72,68 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            JObject body = new JObject(
-                new JProperty("inputs", new JArray(_inputs.Select(i => i.Serialize()))));
 
+            var request = new PostModelOutputsRequest
+            {
+                Inputs = { _inputs.Select(i => i.GrpcSerialize()) }
+            };
             if (_language != null || _minValue != null || _maxConcepts != null ||
                 _selectConcepts != null)
             {
-                var outputConfig = new JObject();
+                var outputConfig = new OutputConfig();
                 if (_language != null)
                 {
-                    outputConfig.Add("language", _language);
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        Language = _language
+                    };
                 }
                 if (_minValue != null)
                 {
-                    outputConfig.Add("min_value", _minValue);
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        MinValue = (float) _minValue
+                    };
                 }
                 if (_maxConcepts != null)
                 {
-                    outputConfig.Add("max_concepts", _maxConcepts);
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        MaxConcepts = (uint) _maxConcepts
+                    };
                 }
 
                 if (_selectConcepts != null)
                 {
-                    outputConfig.Add("select_concepts",
-                        new JArray(_selectConcepts.Select(c => c.Serialize())));
+                    outputConfig = new OutputConfig(outputConfig)
+                    {
+                        SelectConcepts = {_selectConcepts.Select(c => c.GrpcSerialize())}
+                    };
                 }
 
-                body.Add(new JProperty("model", new JObject(
-                    new JProperty("output_info", new JObject(
-                        new JProperty("output_config", outputConfig))))));
+                request = new PostModelOutputsRequest(request)
+                {
+                    Model = new Model
+                    {
+                        OutputInfo =  new OutputInfo
+                        {
+                            OutputConfig = outputConfig
+                        }
+                    }
+                };
             }
-            return body;
+            return await grpcClient.PostModelOutputsAsync(request);
         }
 
-        /// <inheritdoc />
-        protected override List<ClarifaiOutput<T>> Unmarshaller(dynamic jsonObject)
+        protected override List<ClarifaiOutput<T>> Unmarshaller(dynamic responseD)
         {
+            MultiOutputResponse response = responseD;
             var outputs = new List<ClarifaiOutput<T>>();
-            foreach (var jsonOutput in jsonObject.outputs)
+            foreach (Output output in response.Outputs)
             {
-                outputs.Add(ClarifaiOutput<T>.Deserialize(HttpClient, jsonOutput));
+                outputs.Add(ClarifaiOutput<T>.GrpcDeserialize(HttpClient, output));
             }
             return outputs;
         }

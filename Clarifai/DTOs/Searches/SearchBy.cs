@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using Clarifai.API.Requests;
 using Clarifai.DTOs.Inputs;
+using Clarifai.Exceptions;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Searches
@@ -10,6 +15,8 @@ namespace Clarifai.DTOs.Searches
     public abstract class SearchBy
     {
         public abstract JObject Serialize();
+
+        public abstract And GrpcSerialize();
 
         public static SearchBy ConceptID(string id)
         {
@@ -99,6 +106,41 @@ namespace Clarifai.DTOs.Searches
                             new JProperty("concepts", new JArray(new JObject(
                                 new JProperty("id", _id)))))))));
             }
+
+            public override And GrpcSerialize()
+            {
+                var data = new Data
+                {
+                    // Since the JSON serializer removes the default value 0 at serialization,
+                    // we set here Value = 1 to later remove it, and in case of 0, explicitly set
+                    // it.
+                    Concepts = { new Concept { Id = _id, Value = 1}}
+                };
+                if (_ownerObjectKey == "input")
+                {
+                    return new And
+                    {
+                        Input = new Input
+                        {
+                            Data = data
+                        }
+                    };
+                }
+                else if (_ownerObjectKey == "output")
+                {
+                    return new And
+                    {
+                        Output = new Output
+                        {
+                            Data = data
+                        }
+                    };
+                }
+                else
+                {
+                    throw new ClarifaiException($"Unknown ownerObjectKey {_ownerObjectKey}");
+                }
+            }
         }
 
         private class SearchByConceptName : SearchBy
@@ -119,6 +161,41 @@ namespace Clarifai.DTOs.Searches
                         new JProperty("data", new JObject(
                             new JProperty("concepts", new JArray(new JObject(
                                 new JProperty("name", _name)))))))));
+            }
+
+            public override And GrpcSerialize()
+            {
+                var data = new Data
+                {
+                    // Since the JSON serializer removes the default value 0 at serialization,
+                    // we set here Value = 1 to later remove it, and in case of 0, explicitly set
+                    // it.
+                    Concepts = { new Concept { Name = _name, Value = 1}}
+                };
+                if (_ownerObjectKey == "input")
+                {
+                    return new And
+                    {
+                        Input = new Input
+                        {
+                            Data = data
+                        }
+                    };
+                }
+                else if (_ownerObjectKey == "output")
+                {
+                    return new And
+                    {
+                        Output = new Output
+                        {
+                            Data = data
+                        }
+                    };
+                }
+                else
+                {
+                    throw new ClarifaiException($"Unknown ownerObjectKey {_ownerObjectKey}");
+                }
             }
         }
 
@@ -145,6 +222,31 @@ namespace Clarifai.DTOs.Searches
                     new JProperty("input", new JObject(
                         new JProperty("data", new JObject(
                             new JProperty("image", image))))));
+            }
+
+            public override And GrpcSerialize()
+            {
+                var image = new Image
+                {
+                    Url = _imageUrl
+                };
+                if (_crop != null)
+                {
+                    image = new Image(image)
+                    {
+                        Crop = {_crop.GrpcSerializeAsArray()}
+                    };
+                }
+                return new And
+                {
+                    Input = new Input
+                    {
+                        Data = new Data
+                        {
+                            Image = image
+                        }
+                    }
+                };
             }
         }
 
@@ -173,6 +275,34 @@ namespace Clarifai.DTOs.Searches
                             new JProperty("data", new JObject(
                                 new JProperty("image", image))))))));
             }
+
+            public override And GrpcSerialize()
+            {
+                var image = new Image
+                {
+                    Url = _imageUrl
+                };
+                if (_crop != null)
+                {
+                    image = new Image(image)
+                    {
+                        Crop = {_crop.GrpcSerializeAsArray()}
+                    };
+                }
+                return new And
+                {
+                    Output = new Output
+                    {
+                        Input = new Input
+                        {
+                            Data = new Data
+                            {
+                                Image = image
+                            }
+                        }
+                    }
+                };
+            }
         }
 
         private class SearchByImageVisuallyWithBytes : SearchBy
@@ -200,6 +330,34 @@ namespace Clarifai.DTOs.Searches
                             new JProperty("data", new JObject(
                                 new JProperty("image", image))))))));
             }
+
+            public override And GrpcSerialize()
+            {
+                var image = new Image
+                {
+                    Base64 = ByteString.CopyFrom(_bytes)
+                };
+                if (_crop != null)
+                {
+                    image = new Image(image)
+                    {
+                        Crop = {_crop.GrpcSerializeAsArray()}
+                    };
+                }
+                return new And
+                {
+                    Output = new Output
+                    {
+                        Input = new Input
+                        {
+                            Data = new Data
+                            {
+                                Image = image
+                            }
+                        }
+                    }
+                };
+            }
         }
 
         private class SearchByMetadata : SearchBy
@@ -217,6 +375,20 @@ namespace Clarifai.DTOs.Searches
                     new JProperty("input", new JObject(
                         new JProperty("data", new JObject(
                             new JProperty("metadata", _metadata))))));
+            }
+
+            public override And GrpcSerialize()
+            {
+                return new And
+                {
+                    Input = new Input
+                    {
+                        Data = new Data
+                        {
+                            Metadata = StructHelper.JObjectToStruct(_metadata)
+                        }
+                    }
+                };
             }
         }
 
@@ -239,6 +411,24 @@ namespace Clarifai.DTOs.Searches
                             new JProperty("geo", new JObject(
                                 new JProperty("geo_point", _geoPoint.Serialize()),
                                 new JProperty("geo_limit", _geoRadius.Serialize()))))))));
+            }
+
+            public override And GrpcSerialize()
+            {
+                return new And
+                {
+                    Input = new Input
+                    {
+                        Data = new Data
+                        {
+                            Geo = new Geo
+                            {
+                                GeoPoint = _geoPoint.GrpcSerialize(),
+                                GeoLimit = _geoRadius.GrpcSerialize()
+                            }
+                        }
+                    }
+                };
             }
         }
 
@@ -263,6 +453,29 @@ namespace Clarifai.DTOs.Searches
                                     new JObject(new JProperty("geo_point", _geoPoint1.Serialize())),
                                     new JObject(new JProperty("geo_point", _geoPoint2.Serialize())))
                                 ))))))));
+            }
+
+            public override And GrpcSerialize()
+            {
+                return new And
+                {
+                    Input = new Input
+                    {
+                        Data = new Data
+                        {
+                            Geo = new Geo
+                            {
+                                GeoBox = {
+                                    new List<GeoBoxedPoint>
+                                    {
+                                        new GeoBoxedPoint { GeoPoint = _geoPoint1.GrpcSerialize() },
+                                        new GeoBoxedPoint { GeoPoint = _geoPoint2.GrpcSerialize() },
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
             }
         }
     }

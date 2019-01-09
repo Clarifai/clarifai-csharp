@@ -1,4 +1,8 @@
-﻿using Clarifai.DTOs.Inputs;
+﻿using System.Threading.Tasks;
+using Clarifai.API.Requests.Models;
+using Clarifai.DTOs.Inputs;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.API.Requests.Inputs
@@ -29,20 +33,27 @@ namespace Clarifai.API.Requests.Inputs
         }
 
         /// <inheritdoc />
-        protected override IClarifaiInput Unmarshaller(dynamic jsonObject)
+        protected override IClarifaiInput Unmarshaller(dynamic responseD)
         {
-            return ClarifaiInput.Deserialize(jsonObject.inputs[0]);
+            MultiInputResponse response = responseD;
+            return ClarifaiInput.GrpcDeserialize(response.Inputs[0]);
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return new JObject(
-                new JProperty("action", "overwrite"),
-                new JProperty("inputs", new JArray(new JObject(
-                    new JProperty("id", _inputID),
-                    new JProperty("data", new JObject(
-                        new JProperty("metadata", _metadata)))))));
+            return await grpcClient.PatchInputsAsync(new PatchInputsRequest
+            {
+                Action = ModifyAction.Overwrite.GrpcSerialize(),
+                Inputs = {new Input
+                {
+                    Id = _inputID,
+                    Data = new Data
+                    {
+                        Metadata = StructHelper.JObjectToStruct(_metadata)
+                    }
+                }}
+            });
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Clarifai.DTOs.Predictions
 {
@@ -29,6 +31,20 @@ namespace Clarifai.DTOs.Predictions
             return new Frame(
                 (int)jsonObject.frame_info.index,
                 (long)jsonObject.frame_info.time,
+                concepts);
+        }
+
+        /// <summary>
+        /// Deserializes this object from a gRPC object.
+        /// </summary>
+        /// <param name="frame">the gRPC object</param>
+        /// <returns>a new instance of this class</returns>
+        public static Frame GrpcDeserialize(Internal.GRPC.Frame frame)
+        {
+            List<Concept> concepts = frame.Data.Concepts.Select(Concept.GrpcDeserialize).ToList();
+            return new Frame(
+                Convert.ToInt32(frame.FrameInfo.Index),
+                frame.FrameInfo.Time,
                 concepts);
         }
 

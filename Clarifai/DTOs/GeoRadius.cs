@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs
 {
@@ -19,6 +20,15 @@ namespace Clarifai.DTOs
             return new JObject(
                 new JProperty("type", Unit.Value),
                 new JProperty("value", Value));
+        }
+
+        public GeoLimit GrpcSerialize()
+        {
+            return new GeoLimit
+            {
+                Type = Unit.Value,
+                Value = (float) Value,
+            };
         }
 
         public override bool Equals(object obj)

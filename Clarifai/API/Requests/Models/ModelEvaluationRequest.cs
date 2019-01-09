@@ -1,5 +1,7 @@
-﻿using Clarifai.DTOs.Models;
-using Newtonsoft.Json.Linq;
+﻿using System.Threading.Tasks;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using ModelVersion = Clarifai.DTOs.Models.ModelVersion;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -20,7 +22,8 @@ namespace Clarifai.API.Requests.Models
         /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
         /// <param name="versionID">the version ID of the model</param>
-        public ModelEvaluationRequest(IClarifaiHttpClient httpClient, string modelID, string versionID)
+        public ModelEvaluationRequest(IClarifaiHttpClient httpClient, string modelID,
+            string versionID)
             : base(httpClient)
         {
             _modelId = modelID;
@@ -28,15 +31,17 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override ModelVersion Unmarshaller(dynamic responseD)
         {
-            return new JObject();
+            SingleModelVersionResponse response = responseD;
+            return ModelVersion.GrpcDeserialize(response.ModelVersion);
         }
 
         /// <inheritdoc />
-        protected override ModelVersion Unmarshaller(dynamic jsonObject)
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return ModelVersion.Deserialize(jsonObject.model_version);
+            return await grpcClient.PostModelVersionMetricsAsync(
+                new PostModelVersionMetricsRequest());
         }
     }
 }

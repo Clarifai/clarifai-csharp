@@ -43,6 +43,11 @@ namespace Clarifai.API.Requests.Models
             return Value;
         }
 
+        public string GrpcSerialize()
+        {
+            return Value;
+        }
+
         public override bool Equals(object obj)
         {
             return obj is ModifyAction action &&

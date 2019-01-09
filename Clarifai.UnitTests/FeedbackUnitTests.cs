@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Clarifai.API;
 using Clarifai.API.Responses;
@@ -38,12 +39,11 @@ namespace Clarifai.UnitTests
             },
             ""concepts"": [
             {
-                ""id"": ""dog"",
-                ""value"": true
+                ""id"": ""dog""
             },
             {
                 ""id"": ""cat"",
-                ""value"": false
+                ""value"": 0
             }
             ]
         },
@@ -56,6 +56,8 @@ namespace Clarifai.UnitTests
     }
 }
 ");
+            Console.WriteLine(expectedRequestBody);
+            Console.WriteLine(httpClient.PostedBody);
             Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));
 
             Assert.True(response.IsSuccessful);

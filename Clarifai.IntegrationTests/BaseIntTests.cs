@@ -26,6 +26,10 @@ namespace Clarifai.IntegrationTests
         protected const string BALLOONS_IMAGE_FILE = "balloons.jpg";
         protected const string BEER_VIDEO_FILE = "beer.mp4";
 
+
+        protected const string TINY_PNG_IMAGE_BASE64 =
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==";
+
         protected readonly IClarifaiClient Client = new ClarifaiClient(
             Environment.GetEnvironmentVariable("CLARIFAI_API_KEY"));
 
@@ -74,7 +78,10 @@ namespace Clarifai.IntegrationTests
             {
                 Console.WriteLine(response.Status.StatusCode);
                 Console.WriteLine(response.Status.Description);
-                Console.WriteLine(response.Status.ErrorDetails);
+                if (response.Status.ErrorDetails != null)
+                {
+                    Console.WriteLine(response.Status.ErrorDetails);
+                }
 
                 if (message != null)
                 {

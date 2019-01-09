@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Models.Outputs;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests.Feedbacks
 {
@@ -68,35 +71,54 @@ namespace Clarifai.API.Requests.Feedbacks
         }
 
         /// <inheritdoc />
-        protected override EmptyResponse Unmarshaller(dynamic jsonObject)
+        protected override EmptyResponse Unmarshaller(dynamic responseD)
         {
             return new EmptyResponse();
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            var data = new JObject(
-                new JProperty("image", new JObject(
-                    new JProperty("url", _imageUrl))));
+            var data = new Data
+            {
+                Image = new Image
+                {
+                    Url = _imageUrl
+                },
+            };
+
             if (_concepts != null)
             {
-                data["concepts"] = new JArray(_concepts.Select(c => c.Serialize()));
-            }
-            if (_regions != null)
-            {
-                data["regions"] = new JArray(_regions.Select(r => r.Serialize()));
+                data = new Data(data)
+                {
+                    Concepts = {_concepts.Select(c => c.GrpcSerialize())},
+                };
             }
 
-            return new JObject(
-                new JProperty("input", new JObject(
-                    new JProperty("id", _inputID),
-                    new JProperty("data", data),
-                    new JProperty("feedback_info", new JObject(
-                        new JProperty("event_type", "annotation"),
-                        new JProperty("output_id", _outputID),
-                        new JProperty("end_user_id", _endUserID),
-                        new JProperty("session_id", _sessionID))))));
+            if (_regions != null)
+            {
+                Console.WriteLine(_regions.First());
+                data = new Data(data)
+                {
+                    Regions = {_regions.Select(r => r.GrpcSerialize())}
+                };
+            }
+
+            return await grpcClient.PostModelFeedbackAsync(new PostModelFeedbackRequest
+            {
+                Input = new Input
+                {
+                    Id = _inputID,
+                    Data = data,
+                    FeedbackInfo = new FeedbackInfo
+                    {
+                        EventType = EventType.Annotation,
+                        OutputId = _outputID,
+                        EndUserId = _endUserID,
+                        SessionId = _sessionID,
+                    }
+                }
+            });
         }
     }
 }

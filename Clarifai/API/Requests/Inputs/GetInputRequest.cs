@@ -1,5 +1,7 @@
-﻿using Clarifai.DTOs.Inputs;
-using Newtonsoft.Json.Linq;
+﻿using System.Threading.Tasks;
+using Clarifai.DTOs.Inputs;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests.Inputs
 {
@@ -24,15 +26,16 @@ namespace Clarifai.API.Requests.Inputs
         }
 
         /// <inheritdoc />
-        protected override IClarifaiInput Unmarshaller(dynamic jsonObject)
+        protected override IClarifaiInput Unmarshaller(dynamic responseD)
         {
-            return ClarifaiURLImage.Deserialize(jsonObject.input);
+            SingleInputResponse response = responseD;
+            return ClarifaiInput.GrpcDeserialize(response.Input);
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return new JObject();
+            return await grpcClient.GetInputAsync(new Internal.GRPC.GetInputRequest());
         }
     }
 }

@@ -1,13 +1,12 @@
 using System;
-using System.Dynamic;
 using System.Net;
-using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
 using Clarifai.DTOs;
-using Clarifai.Exceptions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Clarifai.Internal.GRPC;
+using Clarifai.Internal.GRPC.Status;
+using Google.Protobuf;
 
 namespace Clarifai.API.Requests
 {
@@ -17,8 +16,7 @@ namespace Clarifai.API.Requests
         protected abstract RequestMethod Method { get; }
         protected abstract string Url { get; }
 
-        private readonly IClarifaiHttpClient _httpClient;
-        protected IClarifaiHttpClient HttpClient => _httpClient;
+        protected IClarifaiHttpClient HttpClient { get; }
 
         /// <summary>
         /// Ctor.
@@ -26,20 +24,18 @@ namespace Clarifai.API.Requests
         /// <param name="httpClient">the HTTP client</param>
         protected ClarifaiRequest(IClarifaiHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            HttpClient = httpClient;
         }
 
         /// <inheritdoc />
         public async Task<ClarifaiResponse<T>> ExecuteAsync()
         {
-            HttpResponseMessage response;
-            string responseContent;
+            IMessage message;
             try
             {
-                response = await HttpRequest();
-                responseContent = await response.Content.ReadAsStringAsync();
+                message = await GrpcRequest();
             }
-            catch (HttpRequestException ex)
+            catch (InvalidJsonException ex)
             {
                 return new ClarifaiResponse<T>(
                     new ClarifaiStatus(ClarifaiStatus.StatusType.NetworkError, 404,
@@ -47,84 +43,53 @@ namespace Clarifai.API.Requests
                     HttpStatusCode.NotFound, "", default(T));
             }
 
-            dynamic jsonObject;
-            try
-            {
-                jsonObject = JsonConvert.DeserializeObject<dynamic>(responseContent);
-            }
-            catch (JsonException ex)
-            {
-                return new ClarifaiResponse<T>(
-                    new ClarifaiStatus(ClarifaiStatus.StatusType.NetworkError,
-                        (int) response.StatusCode, "Server provided a malformed JSON response.",
-                        ex.Message),
-                    response.StatusCode, responseContent, default(T));
-            }
+            PropertyInfo method = message.GetType().GetRuntimeProperty("Status");
+            object result = method.GetValue(message);
+            Status statusJsonObject = (Status) result;
 
-            dynamic statusJsonObject = jsonObject.status;
-            // If there is no status object present, assume it's successful.
-            if (statusJsonObject == null)
-            {
-                statusJsonObject = new ExpandoObject();
-                statusJsonObject.code = 10000;
-                statusJsonObject.description = "Ok";
-            }
+            ClarifaiStatus status = ClarifaiStatus.GrpcDeserialize(statusJsonObject,
+                HttpClient.LastResponseHttpStatusCode);
 
-            ClarifaiStatus status = ClarifaiStatus.Deserialize(statusJsonObject,
-                response.StatusCode);
-
+            T deserializedResponse;
             if (status.Type == ClarifaiStatus.StatusType.Successful ||
                 status.Type == ClarifaiStatus.StatusType.MixedSuccess)
             {
-                var deserializedResponse = Unmarshaller(jsonObject);
-                return new ClarifaiResponse<T>(status, response.StatusCode, responseContent,
-                    deserializedResponse);
+                deserializedResponse = Unmarshaller(message);
             }
             else
             {
-                T deserializedResponse;
+                // If response unsuccessful, try deserializing the response object anyway.
                 try
                 {
-                    deserializedResponse = Unmarshaller(jsonObject);
+                    deserializedResponse = Unmarshaller(message);
                 }
                 catch (Exception)
                 {
                     deserializedResponse = default(T);
                 }
-                return new ClarifaiResponse<T>(status, response.StatusCode, responseContent,
-                    deserializedResponse);
             }
+
+            return new ClarifaiResponse<T>(status, HttpClient.LastResponseHttpStatusCode,
+                HttpClient.LastResponseRawBody, deserializedResponse);
         }
 
         /// <summary>
-        /// Runs the right HTTP request method and returns the response.
+        /// Runs the right gRPC request method using a JSON channel, and returns the response.
         /// </summary>
         /// <returns>the message response</returns>
-        private async Task<HttpResponseMessage> HttpRequest()
+        private async Task<IMessage> GrpcRequest()
         {
-            switch (Method)
-            {
-                case RequestMethod.GET:
-                {
-                    return await HttpClient.GetAsync(BuildUrl());
-                }
-                case RequestMethod.POST:
-                {
-                    return await HttpClient.PostAsync(BuildUrl(), HttpRequestBody());
-                }
-                case RequestMethod.PATCH:
-                {
-                    return await HttpClient.PatchAsync(BuildUrl(), HttpRequestBody());
-                }
-                case RequestMethod.DELETE:
-                {
-                    return await HttpClient.DeleteAsync(BuildUrl(), HttpRequestBody());
-                }
-                default:
-                {
-                    throw new ClarifaiException("Unknown RequestMethod: " + Method);
-                }
-            }
+            JsonParser.Settings jsonParserSettings = JsonParser.Settings.Default
+                .WithIgnoreUnknownFields(true);
+            var jsonParser = new JsonParser(jsonParserSettings);
+
+            JsonFormatter.Settings jsonFormatterSettings = JsonFormatter.Settings.Default;
+            var jsonFormatter = new JsonFormatter(jsonFormatterSettings);
+
+            var jsonInvoker = new JsonCallInvoker(
+                BuildUrl(), Method, HttpClient, jsonFormatter, jsonParser);
+            var client = new V2.V2Client(jsonInvoker);
+            return await GrpcRequestBody(client);
         }
 
         /// <summary>
@@ -140,13 +105,13 @@ namespace Clarifai.API.Requests
         /// The body to be sent in the request.
         /// </summary>
         /// <returns>the request body</returns>
-        protected abstract JObject HttpRequestBody();
+        protected abstract Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient);
 
         /// <summary>
-        /// Unmarshalls (or deserializes) the JSON object into a concrete output object.
+        /// Unmarshalls (or deserializes) the Protobuf object into a concrete output object.
         /// </summary>
-        /// <param name="jsonObject">the JSON object</param>
+        /// <param name="response">the Protobuf object</param>
         /// <returns>the request output object</returns>
-        protected abstract T Unmarshaller(dynamic jsonObject);
+        protected abstract T Unmarshaller(dynamic response);
     }
 }

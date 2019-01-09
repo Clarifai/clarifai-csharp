@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Clarifai.DTOs.Predictions;
-using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+using Clarifai.Internal.GRPC;
+using Google.Protobuf;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.API.Requests.Concepts
 {
@@ -36,25 +38,26 @@ namespace Clarifai.API.Requests.Concepts
         }
 
         /// <inheritdoc />
-        protected override List<Concept> Unmarshaller(dynamic jsonObject)
+        protected override List<Concept> Unmarshaller(dynamic responseD)
         {
+            MultiConceptResponse response = responseD;
+
             var concepts = new List<Concept>();
-            foreach (var concept in jsonObject.concepts)
+            foreach (Internal.GRPC.Concept concept in response.Concepts)
             {
-                concepts.Add(Concept.Deserialize(concept));
+                concepts.Add(Concept.GrpcDeserialize(concept));
             }
             return concepts;
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return new JObject(
-                new JProperty("action", "overwrite"),
-                new JProperty("concepts",
-                    new JArray(_concepts.Select(c => new JObject(
-                        new JProperty("id", c.ID),
-                        new JProperty("name", c.Name))))));
+            return await grpcClient.PatchConceptsAsync(new PatchConceptsRequest
+            {
+                Action = "overwrite",
+                Concepts = {_concepts.Select(i => i.GrpcSerialize())}
+            });
         }
     }
 }
