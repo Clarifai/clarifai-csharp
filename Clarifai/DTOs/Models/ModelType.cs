@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Clarifai.DTOs.Predictions;
+using Grpc.Core;
 
 namespace Clarifai.DTOs.Models
 {
@@ -49,12 +50,10 @@ namespace Clarifai.DTOs.Models
 
         public static ModelType DetermineModelType(string typeExt)
         {
-            // TODO(Rok) MEDIUM: This should be removed and reflection used to get all model types.
-            var modelTypes = new List<ModelType>
-            {
-                Color, Concept, Demographics, Embedding, FaceConcepts, FaceDetection, FaceEmbedding,
-                Focus, Logo, Video
-            };
+            List<ModelType> modelTypes = typeof(ModelType).GetRuntimeProperties()
+                .Where(mt => mt.PropertyType == typeof(ModelType))
+                .Select(mt => (ModelType) mt.GetValue(null))
+                .ToList();
             var query = modelTypes.Where(mt => mt.TypeExt == typeExt).ToList();
             if (!query.Any()) return null;
             ModelType modelType = query.Single();
