@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Clarifai.API.Requests;
-using Clarifai.Exceptions;
 using Clarifai.Internal.GRPC;
 using Google.Protobuf;
 using Newtonsoft.Json.Linq;

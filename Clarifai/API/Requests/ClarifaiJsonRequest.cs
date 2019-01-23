@@ -2,16 +2,10 @@ using System;
 using System.Dynamic;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
 using Clarifai.DTOs;
-using Clarifai.DTOs.Inputs;
 using Clarifai.Exceptions;
-using Clarifai.Internal.GRPC;
-using Clarifai.Internal.GRPC.Status;
-using Google.Protobuf;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -137,7 +131,7 @@ namespace Clarifai.API.Requests
         /// The URL to run the request against. Must not include base.
         /// </summary>
         /// <returns>the URL</returns>
-        protected virtual string BuildUrl()
+        private string BuildUrl()
         {
             return Url;
         }

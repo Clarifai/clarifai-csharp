@@ -29,7 +29,7 @@ namespace Clarifai.API.Requests.Models
         /// <inheritdoc />
         protected override async Task<IMessage> GrpcRequestBody(V2.V2Client grpcClient)
         {
-            return await grpcClient.DeleteModelsAsync(new Internal.GRPC.DeleteModelsRequest
+            return await grpcClient.DeleteModelsAsync(new DeleteModelsRequest
             {
                 DeleteAll = true
             });

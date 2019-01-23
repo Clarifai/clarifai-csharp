@@ -2,13 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Threading.Tasks;
 using Clarifai.Exceptions;
-using Clarifai.Internal.GRPC;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 using Grpc.Core;
@@ -17,43 +13,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Clarifai.API.Requests
 {
-//        class JsonChannel : Channel
-//        {
-//            public JsonChannel(string target, ChannelCredentials credentials) : base(target, credentials)
-//            {
-//            }
-//
-//            public JsonChannel(string target, ChannelCredentials credentials, IEnumerable<ChannelOption> options) : base(target, credentials, options)
-//            {
-//            }
-//
-//            public JsonChannel(string host, int port, ChannelCredentials credentials) : base(host, port, credentials)
-//            {
-//            }
-//
-//            public JsonChannel(string host, int port, ChannelCredentials credentials, IEnumerable<ChannelOption> options) : base(host, port, credentials, options)
-//            {
-//            }
-//        }
-
-        class JsonDeserializationContext : DeserializationContext
-        {
-            private readonly byte[] payload;
-
-            public JsonDeserializationContext(byte[] payload)
-            {
-                this.payload = payload;
-            }
-
-            public override int PayloadLength => payload.Length;
-
-            public override byte[] PayloadAsNewBuffer()
-            {
-                return payload;
-            }
-        }
-
-        public class JsonCallInvoker : CallInvoker
+    public class JsonCallInvoker : CallInvoker
         {
             private readonly string _url;
             private readonly RequestMethod _httpMethod;
@@ -84,7 +44,8 @@ namespace Clarifai.API.Requests
                 return TestCall(method, request).Result;
             }
 
-            public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(Method<TRequest, TResponse> method, string host, CallOptions options,
+            public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(
+                Method<TRequest, TResponse> method, string host, CallOptions options,
                 TRequest request)
             {
                 Task<TResponse> requestAsync = TestCall(method, request);
@@ -119,11 +80,6 @@ namespace Clarifai.API.Requests
 
             private async Task<string> HttpRequest<TResponse>(TResponse request)
             {
-                var requestBody = HttpRequestBody(request);
-
-                Console.WriteLine("REQUEST:");
-                Console.WriteLine(requestBody);
-
                 switch (_httpMethod)
                 {
                     case RequestMethod.GET:
@@ -212,20 +168,23 @@ namespace Clarifai.API.Requests
                 }
             }
 
-            public override AsyncServerStreamingCall<TResponse> AsyncServerStreamingCall<TRequest, TResponse>(Method<TRequest, TResponse> method, string host,
-                CallOptions options, TRequest request)
+            public override AsyncServerStreamingCall<TResponse>
+                AsyncServerStreamingCall<TRequest, TResponse>(Method<TRequest, TResponse> method,
+                    string host, CallOptions options, TRequest request)
             {
                 throw new NotImplementedException();
             }
 
-            public override AsyncClientStreamingCall<TRequest, TResponse> AsyncClientStreamingCall<TRequest, TResponse>(Method<TRequest, TResponse> method, string host,
-                CallOptions options)
+            public override AsyncClientStreamingCall<TRequest, TResponse>
+                AsyncClientStreamingCall<TRequest, TResponse>(Method<TRequest, TResponse> method,
+                    string host, CallOptions options)
             {
                 throw new NotImplementedException();
             }
 
-            public override AsyncDuplexStreamingCall<TRequest, TResponse> AsyncDuplexStreamingCall<TRequest, TResponse>(Method<TRequest, TResponse> method, string host,
-                CallOptions options)
+            public override AsyncDuplexStreamingCall<TRequest, TResponse>
+                AsyncDuplexStreamingCall<TRequest, TResponse>(Method<TRequest, TResponse> method,
+                    string host, CallOptions options)
             {
                 throw new NotImplementedException();
             }

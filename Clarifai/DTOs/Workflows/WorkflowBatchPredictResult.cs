@@ -38,7 +38,7 @@ namespace Clarifai.DTOs.Workflows
             Workflow workflow = null;
             if (response.Workflow != null)
             {
-                workflow = Workflows.Workflow.GrpcDeserialize(response.Workflow);
+                workflow = Workflow.GrpcDeserialize(response.Workflow);
             }
             var workflowResults = new List<WorkflowResult>();
             foreach (Internal.GRPC.WorkflowResult result in response.Results)

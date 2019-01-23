@@ -36,9 +36,9 @@ namespace Clarifai.DTOs.Workflows
         {
             return new WorkflowPredictResult(
                 response.Workflow != null
-                    ? Workflows.Workflow.GrpcDeserialize(response.Workflow)
+                    ? Workflow.GrpcDeserialize(response.Workflow)
                     : null,
-                Workflows.WorkflowResult.GrpcDeserialize(httpClient, response.Results[0]));
+                WorkflowResult.GrpcDeserialize(httpClient, response.Results[0]));
         }
     }
 }

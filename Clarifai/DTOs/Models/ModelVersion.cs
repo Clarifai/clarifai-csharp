@@ -108,7 +108,7 @@ namespace Clarifai.DTOs.Models
             ModelMetricsStatus modelMetricsStatus = null;
             if (modelVersion.Metrics != null)
             {
-                modelMetricsStatus = Models.ModelMetricsStatus.GrpcDeserialize(
+                modelMetricsStatus = ModelMetricsStatus.GrpcDeserialize(
                     modelVersion.Metrics.Status);
             }
 

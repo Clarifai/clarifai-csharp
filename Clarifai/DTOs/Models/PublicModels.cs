@@ -63,7 +63,7 @@ namespace Clarifai.DTOs.Models
         public ConceptModel WeddingModel { get; }
 
         /// <summary>
-        /// Demographics model predics the age, gender, and cultural appearance.
+        /// Demographics model predicts the age, gender, and cultural appearance.
         /// </summary>
         public DemographicsModel DemographicsModel { get; }
 
@@ -89,7 +89,7 @@ namespace Clarifai.DTOs.Models
         public FaceEmbeddingModel FaceEmbeddingModel { get; }
 
         /// <summary>
-        /// Focus model returs overall focus and identifies in-focus regions.
+        /// Focus model returns overall focus and identifies in-focus regions.
         /// </summary>
         public FocusModel FocusModel { get; }
 

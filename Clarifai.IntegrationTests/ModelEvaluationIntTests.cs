@@ -2,10 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
-using Clarifai.DTOs;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
-using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
 using NUnit.Framework;
 
@@ -53,7 +51,7 @@ namespace Clarifai.IntegrationTests
              * Wait until the model has finished training.
              */
             int count = 0;
-            string modelVersionID = null;
+            string modelVersionID;
             while (true)
             {
                 count++;

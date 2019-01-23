@@ -1,6 +1,5 @@
 ﻿using System;
 using Clarifai.Exceptions;
-using System.Collections.Generic;
 using Clarifai.Internal.GRPC.Status;
 
 namespace Clarifai.DTOs.Models

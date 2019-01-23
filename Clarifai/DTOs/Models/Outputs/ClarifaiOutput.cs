@@ -18,7 +18,7 @@ namespace Clarifai.DTOs.Models.Outputs
 {
     /// <summary>
     /// Output returned after running a request. Encapsulates the response content and other
-    /// data the response returnes.
+    /// data the response returns.
     /// </summary>
     public class ClarifaiOutput
     {

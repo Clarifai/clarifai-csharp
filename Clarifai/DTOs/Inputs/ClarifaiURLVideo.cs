@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Clarifai.API.Requests;
-using Clarifai.DTOs.Predictions;
 using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
 using Concept = Clarifai.DTOs.Predictions.Concept;

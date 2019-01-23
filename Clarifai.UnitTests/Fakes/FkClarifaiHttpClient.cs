@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Clarifai.API;
 using Newtonsoft.Json.Linq;
@@ -11,9 +10,9 @@ namespace Clarifai.UnitTests.Fakes
     /// </summary>
     public class FkClarifaiHttpClient : IClarifaiHttpClient
     {
-        public string ApiKey { get; }
+        public string ApiKey => "fake-api-key";
 
-        public HttpStatusCode LastResponseHttpStatusCode { get; private set; }
+        public HttpStatusCode LastResponseHttpStatusCode { get; }
         public string LastResponseRawBody { get; private set; }
 
         /// <summary>

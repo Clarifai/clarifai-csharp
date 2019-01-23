@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Clarifai.API;
 using Clarifai.API.Requests;
 using Clarifai.DTOs.Inputs;

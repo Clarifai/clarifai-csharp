@@ -2,7 +2,6 @@
 using Clarifai.API;
 using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
-using System.Collections.Generic;
 
 namespace Clarifai.DTOs.Models
 {

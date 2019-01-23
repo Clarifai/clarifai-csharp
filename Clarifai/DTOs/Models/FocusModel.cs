@@ -2,12 +2,11 @@
 using Clarifai.API;
 using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
-using System.Collections.Generic;
 
 namespace Clarifai.DTOs.Models
 {
     /// <summary>
-    /// Focus model returs overall focus and identifies in-focus regions.
+    /// Focus model returns overall focus and identifies in-focus regions.
     /// </summary>
     public class FocusModel : Model<Focus>
     {

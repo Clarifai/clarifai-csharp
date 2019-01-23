@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Clarifai.DTOs;
 using Clarifai.DTOs.Inputs;
-using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Predictions;
-using Clarifai.Exceptions;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.Solutions.Moderation.DTOs
@@ -50,7 +47,8 @@ namespace Clarifai.Solutions.Moderation.DTOs
         /// <param name="createdAt">date & time of output creation</param>
         /// <param name="input">the input</param>
         /// <param name="data">the data</param>
-        protected ModerationOutput(string id, ClarifaiStatus status, DateTime createdAt,
+        /// <param name="moderationStatus">the moderation status</param>
+        private ModerationOutput(string id, ClarifaiStatus status, DateTime createdAt,
             IClarifaiInput input, List<Concept> data, ModerationStatus moderationStatus)
         {
             ID = id;
@@ -64,7 +62,6 @@ namespace Clarifai.Solutions.Moderation.DTOs
         /// <summary>
         /// Deserializes the object out of a JSON dynamic object.
         /// </summary>
-        /// <param name="modelType">the model type</param>
         /// <param name="jsonObject">the JSON object</param>
         /// <returns>the deserialized object</returns>
         public static ModerationOutput Deserialize(dynamic jsonObject)
@@ -82,7 +79,7 @@ namespace Clarifai.Solutions.Moderation.DTOs
                     ));
         }
 
-        protected static List<Concept> DeserializePredictions(dynamic jsonObject)
+        private static List<Concept> DeserializePredictions(dynamic jsonObject)
         {
             var propertyValues = (JObject) jsonObject.data;
 

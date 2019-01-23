@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
 using Clarifai.DTOs;

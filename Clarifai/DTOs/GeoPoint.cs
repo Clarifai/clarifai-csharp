@@ -85,7 +85,7 @@ namespace Clarifai.DTOs
 
         public override string ToString()
         {
-            return string.Format("[GeoPoint: (longitude: {0}, latitude: {0})]",
+            return string.Format("[GeoPoint: (longitude: {0}, latitude: {1})]",
                 Longitude, Latitude);
         }
     }

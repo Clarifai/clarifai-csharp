@@ -5,7 +5,6 @@ using Clarifai.API.Requests;
 using Clarifai.Exceptions;
 using Clarifai.Internal.GRPC;
 using Google.Protobuf;
-using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json.Linq;
 using Concept = Clarifai.DTOs.Predictions.Concept;

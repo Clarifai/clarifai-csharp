@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Clarifai.API;
 using Clarifai.API.Requests;
-using Clarifai.DTOs.Inputs;
-using Clarifai.Exceptions;
 using Clarifai.Solutions.Moderation.DTOs;
 using Newtonsoft.Json.Linq;
 

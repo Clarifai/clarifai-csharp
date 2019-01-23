@@ -40,7 +40,7 @@ namespace Clarifai.DTOs.Predictions
                 .Select(Embedding.GrpcDeserialize)
                 .ToList();
             return new FaceEmbedding(
-                DTOs.Crop.GrpcDeserialize(faceEmbedding.RegionInfo.BoundingBox),
+                Crop.GrpcDeserialize(faceEmbedding.RegionInfo.BoundingBox),
                 embeddings);
         }
 

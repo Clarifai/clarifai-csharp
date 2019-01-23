@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Clarifai.API.Responses;
 using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Models.Outputs;
-using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
 using NUnit.Framework;
 

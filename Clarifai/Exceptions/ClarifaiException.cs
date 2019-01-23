@@ -1,7 +1,7 @@
 ﻿namespace Clarifai.Exceptions
 {
     /// <summary>
-    /// Exception that is thrown whenever Clairfai-type error is encountered.
+    /// Exception that is thrown whenever Clarifai-type error is encountered.
     /// </summary>
     public class ClarifaiException : System.Exception
     {

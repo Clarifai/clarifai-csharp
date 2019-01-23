@@ -9,7 +9,7 @@ namespace Clarifai.DTOs.Inputs
     public class ClarifaiInputsStatus
     {
         /// <summary>
-        /// Number of inputs that have been procesed.
+        /// Number of inputs that have been processed.
         /// </summary>
         public int Processed { get; }
 

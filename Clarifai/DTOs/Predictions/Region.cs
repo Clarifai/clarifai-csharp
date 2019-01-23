@@ -42,21 +42,18 @@ namespace Clarifai.DTOs.Predictions
         {
             var faceConcepts = new List<Concept>();
 
-            if (region.Data != null)
+            Face face = region.Data?.Face;
+            if (face?.Identity != null)
             {
-                Face face = region.Data.Face;
-                if (face.Identity != null)
+                foreach (Internal.GRPC.Concept concept in face.Identity.Concepts)
                 {
-                    foreach (Internal.GRPC.Concept concept in face.Identity.Concepts)
-                    {
-                        faceConcepts.Add(Concept.GrpcDeserialize(concept));
-                    }
+                    faceConcepts.Add(Concept.GrpcDeserialize(concept));
                 }
             }
 
             return new Region(
                 region.Id ,
-                DTOs.Crop.GrpcDeserialize(region.RegionInfo.BoundingBox),
+                Crop.GrpcDeserialize(region.RegionInfo.BoundingBox),
                 faceConcepts);
         }
     }

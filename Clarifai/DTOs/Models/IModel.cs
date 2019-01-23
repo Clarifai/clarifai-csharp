@@ -56,7 +56,7 @@ namespace Clarifai.DTOs.Models
         /// <param name="input">the input to run a prediction on</param>
         /// <param name="language">the language</param>
         /// <param name="minValue">
-        /// only preditions with a value greater than or equal to to minValue will be returned
+        /// only predictions with a value greater than or equal to to minValue will be returned
         /// </param>
         /// <param name="maxConcepts">
         /// the maximum maxConcepts number of predictions that will be returned
@@ -74,7 +74,7 @@ namespace Clarifai.DTOs.Models
         /// <param name="inputs">the inputs to run a prediction on</param>
         /// <param name="language">the language</param>
         /// <param name="minValue">
-        /// only preditions with a value greater than or equal to to minValue will be returned
+        /// only predictions with a value greater than or equal to to minValue will be returned
         /// </param>
         /// <param name="maxConcepts">
         /// the maximum maxConcepts number of predictions that will be returned

@@ -175,7 +175,7 @@ namespace Clarifai.DTOs.Inputs
             Crop crop = null;
             if (input.Data.Image.Crop?.Count > 0)
             {
-                crop = DTOs.Crop.GrpcDeserialize(input.Data.Image.Crop);
+                crop = Crop.GrpcDeserialize(input.Data.Image.Crop);
             }
             JObject metadata = null;
             if (input.Data.Metadata != null)
@@ -222,7 +222,7 @@ namespace Clarifai.DTOs.Inputs
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((ClarifaiFileImage) obj);
         }
 
