@@ -425,6 +425,46 @@ namespace Clarifai.UnitTests
         }
 
         [Test]
+        public async Task GetInputsStatusRequestAndResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                getResponse: @"
+{
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""counts"": {
+    ""processed"": 1,
+    ""to_process"": 2,
+    ""errors"": 3,
+    ""processing"": 4,
+    ""reindexed"": 5,
+    ""to_reindex"": 6,
+    ""reindex_errors"": 7,
+    ""reindexing"": 8
+  }
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<ClarifaiInputsStatus> response = await client.GetInputsStatus()
+                .ExecuteAsync();
+
+            Assert.AreEqual("/v2/inputs/status", httpClient.RequestedUrl);
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual("Ok", response.Status.Description);
+
+            ClarifaiInputsStatus inputsStatus = response.Get();
+
+            Assert.AreEqual(1, inputsStatus.Processed);
+            Assert.AreEqual(2, inputsStatus.ToProcess);
+            Assert.AreEqual(3, inputsStatus.Errors);
+            Assert.AreEqual(4, inputsStatus.Processing);
+            // TODO(Rok) MEDIUM: Expose the other fields.
+        }
+
+        [Test]
         public async Task DeleteAllInputsResponseShouldBeCorrect()
         {
             var httpClient = new FkClarifaiHttpClient(
