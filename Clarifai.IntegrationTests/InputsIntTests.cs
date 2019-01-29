@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Clarifai.API.Requests.Models;
 using Clarifai.API.Responses;
 using Clarifai.DTOs;
+using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
@@ -233,6 +235,47 @@ namespace Clarifai.IntegrationTests
                 Assert.AreEqual(1, concepts.Count);
                 List<string> conceptIDs = concepts.Select(c => c.ID).ToList();
                 Assert.Contains("concept1", conceptIDs);
+            }
+            finally
+            {
+                /*
+                 * Delete the input.
+                 */
+                await DeleteInput(inputID);
+            }
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task OverwritingRegionsForInputShouldBeSuccessful()
+        {
+            string inputID = GenerateRandomID();
+            ClarifaiResponse<List<IClarifaiInput>> addResponse =
+                await AddInputWithConcept1AndConcept2(inputID);
+            AssertResponseSuccess(addResponse);
+
+            try
+            {
+                ClarifaiResponse<IClarifaiInput> modifyResponse = await Client.ModifyInput(
+                        inputID,
+                        ModifyAction.Overwrite,
+                        regionFeedbacks: new List<RegionFeedback>
+                        {
+                            new RegionFeedback(
+                                new Crop(0.1m, 0.2m, 0.3m, 0.4m),
+                                Feedback.Misplaced,
+                                concepts: new List<ConceptFeedback>
+                                {
+                                    new ConceptFeedback("concept3", true),
+                                },
+                                regionID: "regionID",
+                                faceFeedback: new FaceFeedback(new List<ConceptFeedback>
+                                {
+                                    new ConceptFeedback("faceConcept1", true),
+                                }))
+                        })
+                    .ExecuteAsync();
+                AssertResponseSuccess(modifyResponse);
             }
             finally
             {

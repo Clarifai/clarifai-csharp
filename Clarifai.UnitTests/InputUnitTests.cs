@@ -6,6 +6,7 @@ using Clarifai.API;
 using Clarifai.API.Requests.Models;
 using Clarifai.API.Responses;
 using Clarifai.DTOs;
+using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
@@ -219,7 +220,7 @@ namespace Clarifai.UnitTests
     ""action"":""merge""
 }
 ");
-            Console.WriteLine(httpClient.PatchedBody);
+
             Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PatchedBody));
 
             Assert.True(response.IsSuccessful);
@@ -233,6 +234,132 @@ namespace Clarifai.UnitTests
             CollectionAssert.AreEqual(
                 new List<string>{"@negativeConcept1", "@negativeConcept2"},
                 negConcepts);
+        }
+
+        [Test]
+        public async Task ModifyInputRequestWithRegionsAndResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                patchResponse: @"
+{
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""inputs"": [
+    {
+      ""id"": ""@inputID"",
+      ""data"": {
+        ""image"": {
+          ""url"": ""@imageURL""
+        },
+        ""concepts"": [
+          {
+            ""id"": ""@concept1"",
+            ""name"": ""@concept1"",
+            ""value"": 1,
+            ""app_id"": ""@appID""
+          },
+          {
+            ""id"": ""@concept2"",
+            ""name"": ""@concept2"",
+            ""value"": 0,
+            ""app_id"": ""@appID""
+          }
+        ]
+      },
+      ""created_at"": ""2019-01-29T15:23:21.188492Z"",
+      ""modified_at"": ""2019-01-29T15:23:21.575667Z"",
+      ""status"": {
+        ""code"": 30200,
+        ""description"": ""Input image modification success""
+      }
+    }
+  ]
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<IClarifaiInput> response = await client.ModifyInput(
+                    "@inputID",
+                    ModifyAction.Overwrite,
+                    regionFeedbacks: new List<RegionFeedback>
+                    {
+                        new RegionFeedback(
+                            new Crop(0.1m, 0.2m, 0.3m, 0.4m),
+                            Feedback.Misplaced,
+                            concepts: new List<ConceptFeedback>
+                            {
+                                new ConceptFeedback("@concept1", true),
+                                new ConceptFeedback("@concept2", false),
+                            },
+                            regionID: "@regionID",
+                            faceFeedback: new FaceFeedback(new List<ConceptFeedback>
+                            {
+                                new ConceptFeedback("@faceConcept1", true),
+                                new ConceptFeedback("@faceConcept2", false),
+                            }))
+                    })
+                .ExecuteAsync();
+
+
+            var expectedRequestBody = JObject.Parse(@"
+{
+  ""inputs"": [
+    {
+      ""id"": ""@inputID"",
+      ""data"": {
+        ""regions"": [
+          {
+            ""id"": ""@regionID"",
+            ""region_info"": {
+              ""bounding_box"": {
+                ""top_row"": 0.1,
+                ""left_col"": 0.2,
+                ""bottom_row"": 0.3,
+                ""right_col"": 0.4
+              },
+              ""feedback"": ""misplaced""
+            },
+            ""data"": {
+              ""concepts"": [
+                {
+                  ""id"": ""@concept1""
+                },
+                {
+                  ""id"": ""@concept2"",
+                  ""value"": 0
+                }
+              ],
+              ""face"": {
+                ""identity"": {
+                  ""concepts"": [
+                    {
+                      ""id"": ""@faceConcept1""
+                    },
+                    {
+                      ""id"": ""@faceConcept2"",
+                      ""value"": 0
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  ""action"": ""overwrite""
+}
+");
+
+            Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PatchedBody));
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual("Ok", response.Status.Description);
+
+            Assert.AreEqual("@concept1", response.Get().PositiveConcepts.First().ID);
+            Assert.AreEqual("@concept2", response.Get().NegativeConcepts.First().ID);
         }
 
         [Test]
