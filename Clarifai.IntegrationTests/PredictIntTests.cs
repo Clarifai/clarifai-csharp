@@ -6,8 +6,11 @@ using Clarifai.API.Responses;
 using Clarifai.DTOs;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
-using Clarifai.DTOs.Predictions;
+using Clarifai.Internal.GRPC;
 using NUnit.Framework;
+using Color = Clarifai.DTOs.Predictions.Color;
+using Concept = Clarifai.DTOs.Predictions.Concept;
+using Frame = Clarifai.DTOs.Predictions.Frame;
 
 namespace Clarifai.IntegrationTests
 {
@@ -33,11 +36,14 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task ConceptPredictForOneImageShouldBeSuccessful()
+        public async Task ConceptPredictWithArgumentsForOneImageShouldBeSuccessful()
         {
             var response = await Client.Predict<Concept>(
                     Client.PublicModels.GeneralModel.ModelID,
-                    new ClarifaiURLImage(CELEB1))
+                    new ClarifaiURLImage(CELEB1),
+                    minValue: 0.98m,
+                    maxConcepts: 3,
+                    language: "de")
                 .ExecuteAsync();
 
             AssertResponseSuccess(response);

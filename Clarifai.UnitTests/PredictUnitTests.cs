@@ -110,6 +110,127 @@ namespace Clarifai.UnitTests
         }
 
         [Test]
+        public async Task ConceptPredictRequestWithArgumentsAndResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                postResponse: @"
+{
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""outputs"": [
+    {
+      ""id"": ""@outputID"",
+      ""status"": {
+        ""code"": 10000,
+        ""description"": ""Ok""
+      },
+      ""created_at"": ""2019-01-29T17:15:32.450063489Z"",
+      ""model"": {
+        ""id"": ""@modelID"",
+        ""name"": ""@modelName"",
+        ""created_at"": ""2016-03-09T17:11:39.608845Z"",
+        ""app_id"": ""main"",
+        ""output_info"": {
+          ""message"": ""Show output_info with: GET /models/{model_id}/output_info"",
+          ""type"": ""concept"",
+          ""type_ext"": ""concept""
+        },
+        ""model_version"": {
+          ""id"": ""@modelVersionID"",
+          ""created_at"": ""2016-07-13T01:19:12.147644Z"",
+          ""status"": {
+            ""code"": 21100,
+            ""description"": ""Model trained successfully""
+          },
+          ""train_stats"": {}
+        },
+        ""display_name"": ""General""
+      },
+      ""input"": {
+        ""id"": ""@inputID"",
+        ""data"": {
+          ""image"": {
+            ""url"": ""@url""
+          }
+        }
+      },
+      ""data"": {
+        ""concepts"": [
+          {
+            ""id"": ""@conceptID1"",
+            ""name"": ""menschen"",
+            ""value"": 0.9963381,
+            ""app_id"": ""main""
+          },
+          {
+            ""id"": ""@conceptID2"",
+            ""name"": ""ein"",
+            ""value"": 0.9879057,
+            ""app_id"": ""main""
+          },
+          {
+            ""id"": ""@conceptID3"",
+            ""name"": ""Porträt"",
+            ""value"": 0.98490834,
+            ""app_id"": ""main""
+          }
+        ]
+      }
+    }
+  ]
+}
+");
+
+            var client = new ClarifaiClient(httpClient);
+            var response = await client.Predict<Concept>(
+                    "",
+                    new ClarifaiURLImage("@url"),
+                    minValue: 0.98m,
+                    maxConcepts: 3,
+                    language: "de")
+                .ExecuteAsync();
+            ClarifaiOutput<Concept> output = response.Get();
+
+            var expectedRequestBody = JObject.Parse(@"
+{
+  ""inputs"": [
+    {
+      ""data"": {
+        ""image"": {
+          ""url"": ""@url""
+        }
+      }
+    }
+  ],
+  ""model"": {
+    ""output_info"": {
+      ""output_config"": {
+        ""language"": ""de"",
+        ""max_concepts"": 3,
+        ""min_value"": 0.98
+      }
+    }
+  }
+}
+");
+            Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));
+
+            Assert.True(response.IsSuccessful);
+
+            Assert.AreEqual("@inputID", output.Input.ID);
+
+            Assert.AreEqual("@outputID", output.ID);
+            Assert.AreEqual("@conceptID1", output.Data[0].ID);
+
+            Assert.AreEqual("@modelID", output.Model.ModelID);
+            Assert.AreEqual("@modelName", output.Model.Name);
+            Assert.AreEqual("@modelVersionID", output.Model.ModelVersion.ID);
+            Assert.AreEqual("concept", output.Model.OutputInfo.TypeExt);
+        }
+
+        [Test]
         public async Task ConceptBatchPredictRequestAndResponseShouldBeCorrect()
         {
             var httpClient = new FkClarifaiHttpClient(
