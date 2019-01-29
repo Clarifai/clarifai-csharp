@@ -97,7 +97,6 @@ namespace Clarifai.API.Requests.Feedbacks
 
             if (_regions != null)
             {
-                Console.WriteLine(_regions.First());
                 data = new Data(data)
                 {
                     Regions = {_regions.Select(r => r.GrpcSerialize())}

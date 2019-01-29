@@ -31,59 +31,70 @@ namespace Clarifai.IntegrationTests
                 .ExecuteAsync();
             AssertResponseSuccess(createModelResponse);
 
-            /*
-             * Add inputs associated with concepts.
-             */
-            ClarifaiResponse<List<IClarifaiInput>> addInputsResponse = await Client.AddInputs(
-                new ClarifaiURLImage(CELEB1, positiveConcepts: new List<Concept>{new Concept("celeb")},
-                    allowDuplicateUrl: true),
-                new ClarifaiURLImage(CAT1, positiveConcepts: new List<Concept>{new Concept("cat")},
-                    allowDuplicateUrl: true)
-            ).ExecuteAsync();
-            AssertResponseSuccess(addInputsResponse);
-
-            /*
-             * Train the model.
-             */
-            await Client.TrainModel<Concept>(modelID).ExecuteAsync();
-
-            /*
-             * Wait until the model has finished training.
-             */
-            int count = 0;
-            string modelVersionID;
-            while (true)
+            try
             {
-                count++;
-                if (count == 20)
-                {
-                    Assert.Fail("Model training has not finished in the allotted time.");
-                }
+                /*
+                 * Add inputs associated with concepts.
+                 */
+                ClarifaiResponse<List<IClarifaiInput>> addInputsResponse = await Client.AddInputs(
+                    new ClarifaiURLImage(CELEB1,
+                        positiveConcepts: new List<Concept> {new Concept("celeb")},
+                        allowDuplicateUrl: true),
+                    new ClarifaiURLImage(CAT1,
+                        positiveConcepts: new List<Concept> {new Concept("cat")},
+                        allowDuplicateUrl: true)
+                ).ExecuteAsync();
+                AssertResponseSuccess(addInputsResponse);
 
-                ClarifaiResponse<IModel<Concept>> response =
-                    await Client.GetModel<Concept>(modelID).ExecuteAsync();
-                modelVersionID = response.Get().ModelVersion.ID;
+                /*
+                 * Train the model.
+                 */
+                await Client.TrainModel<Concept>(modelID).ExecuteAsync();
 
-                ModelTrainingStatus status = response.Get().ModelVersion.Status;
-                if (status.IsTerminalEvent())
+                /*
+                 * Wait until the model has finished training.
+                 */
+                int count = 0;
+                string modelVersionID;
+                while (true)
                 {
-                    if (status.StatusCode == ModelTrainingStatus.Trained.StatusCode)
+                    count++;
+                    if (count == 20)
                     {
-                        break;
+                        Assert.Fail("Model training has not finished in the allotted time.");
                     }
-                    Assert.Fail("The model was not trained successfully: " + status.StatusCode);
-                }
-                Thread.Sleep(1000);
-            }
 
-            /*
-             * Start model evaluation.
-             */
-            ClarifaiResponse<ModelVersion> evalResponse = await Client.ModelEvaluation(
-                    modelID, modelVersionID)
-                .ExecuteAsync();
-            AssertResponseSuccess(evalResponse);
-            Assert.NotNull(evalResponse.Get().ModelMetricsStatus);
+                    ClarifaiResponse<IModel<Concept>> response =
+                        await Client.GetModel<Concept>(modelID).ExecuteAsync();
+                    modelVersionID = response.Get().ModelVersion.ID;
+
+                    ModelTrainingStatus status = response.Get().ModelVersion.Status;
+                    if (status.IsTerminalEvent())
+                    {
+                        if (status.StatusCode == ModelTrainingStatus.Trained.StatusCode)
+                        {
+                            break;
+                        }
+
+                        Assert.Fail("The model was not trained successfully: " + status.StatusCode);
+                    }
+
+                    Thread.Sleep(1000);
+                }
+
+                /*
+                 * Start model evaluation.
+                 */
+                ClarifaiResponse<ModelVersion> evalResponse = await Client.ModelEvaluation(
+                        modelID, modelVersionID)
+                    .ExecuteAsync();
+                AssertResponseSuccess(evalResponse);
+                Assert.NotNull(evalResponse.Get().ModelMetricsStatus);
+            }
+            finally
+            {
+                await Client.DeleteModel(modelID).ExecuteAsync();
+            }
         }
     }
 }
