@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using Clarifai.API.Responses;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Workflows;
+using Clarifai.Internal.GRPC;
 using NUnit.Framework;
+using WorkflowResult = Clarifai.DTOs.Workflows.WorkflowResult;
 
 namespace Clarifai.IntegrationTests
 {
@@ -57,13 +59,16 @@ namespace Clarifai.IntegrationTests
                         new List<IClarifaiInput>
                         {
                             new ClarifaiURLImage(CELEB1),
-                        })
+                            new ClarifaiURLImage(APPAREL1),
+                        },
+                        minValue: 0.98m,
+                        maxConcepts: 3)
                     .ExecuteAsync();
 
             AssertResponseSuccess(response);
 
             List<WorkflowResult> workflowResults = response.Get().WorkflowResults;
-            Assert.AreEqual(1, workflowResults.Count);
+            Assert.AreEqual(2, workflowResults.Count);
 
             WorkflowResult result = workflowResults[0];
             Assert.AreEqual(2, result.Predictions.Count);
