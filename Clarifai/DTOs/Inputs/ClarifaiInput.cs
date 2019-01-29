@@ -58,8 +58,10 @@ namespace Clarifai.DTOs.Inputs
             Regions = regions;
         }
 
+        [Obsolete]
         public abstract JObject Serialize();
 
+        [Obsolete]
         protected JObject Serialize(JProperty inputProperty)
         {
             var data = new JObject(inputProperty);
@@ -181,6 +183,7 @@ namespace Clarifai.DTOs.Inputs
         /// </summary>
         /// <param name="jsonObject">the JSON object</param>
         /// <returns>a new ClarifaiInput instance</returns>
+        [Obsolete]
         public static ClarifaiInput Deserialize(dynamic jsonObject)
         {
             if (jsonObject.data.image != null)

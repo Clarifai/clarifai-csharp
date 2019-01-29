@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
 using Concept = Clarifai.DTOs.Predictions.Concept;
@@ -63,6 +64,7 @@ namespace Clarifai.DTOs.Models.OutputsInfo
             Language = language;
         }
 
+        [Obsolete]
         public JObject Serialize()
         {
             return new JObject();
@@ -78,6 +80,7 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         /// </summary>
         /// <param name="jsonObject">the JSON dynamic object</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static VideoOutputInfo Deserialize(dynamic jsonObject)
         {
             List<Concept> concepts = null;

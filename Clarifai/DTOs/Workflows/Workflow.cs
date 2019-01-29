@@ -20,6 +20,7 @@ namespace Clarifai.DTOs.Workflows
         /// </summary>
         /// <param name="jsonObject">the JSON object</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static Workflow Deserialize(dynamic jsonObject)
         {
             return new Workflow((string) jsonObject.id, (string) jsonObject.app_id,

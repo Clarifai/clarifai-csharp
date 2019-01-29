@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Clarifai.API;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
@@ -30,6 +31,7 @@ namespace Clarifai.DTOs.Workflows
         /// <param name="httpClient">the HTTP client</param>
         /// <param name="jsonObject">the JSON object</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static WorkflowResult Deserialize(IClarifaiHttpClient httpClient, dynamic jsonObject)
         {
             var status = ClarifaiStatus.Deserialize(jsonObject.status);

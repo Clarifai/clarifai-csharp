@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Clarifai.Internal.GRPC;
 
@@ -15,6 +16,7 @@ namespace Clarifai.DTOs
             Unit = unit;
         }
 
+        [Obsolete]
         public JObject Serialize()
         {
             return new JObject(

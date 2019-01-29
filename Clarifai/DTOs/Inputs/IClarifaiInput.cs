@@ -75,6 +75,7 @@ namespace Clarifai.DTOs.Inputs
         /// </summary>
         List<Region> Regions { get; }
 
+        [Obsolete]
         JObject Serialize();
 
         Input GrpcSerialize();

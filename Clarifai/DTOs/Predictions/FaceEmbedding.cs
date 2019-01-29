@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Clarifai.DTOs.Predictions
@@ -17,6 +18,7 @@ namespace Clarifai.DTOs.Predictions
             Embeddings = embeddings;
         }
 
+        [Obsolete]
         public static FaceEmbedding Deserialize(dynamic jsonObject)
         {
             var embeddings = new List<Embedding>();

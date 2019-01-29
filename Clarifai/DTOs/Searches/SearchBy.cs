@@ -14,6 +14,7 @@ namespace Clarifai.DTOs.Searches
     /// </summary>
     public abstract class SearchBy
     {
+        [Obsolete]
         public abstract JObject Serialize();
 
         public abstract And GrpcSerialize();
@@ -98,6 +99,7 @@ namespace Clarifai.DTOs.Searches
                 _id = id;
             }
 
+            [Obsolete]
             public override JObject Serialize()
             {
                 return new JObject(
@@ -154,6 +156,7 @@ namespace Clarifai.DTOs.Searches
                 _name = name;
             }
 
+            [Obsolete]
             public override JObject Serialize()
             {
                 return new JObject(
@@ -210,6 +213,7 @@ namespace Clarifai.DTOs.Searches
                 _crop = crop;
             }
 
+            [Obsolete]
             public override JObject Serialize()
             {
                 var image = new JObject(
@@ -261,6 +265,7 @@ namespace Clarifai.DTOs.Searches
                 _crop = crop;
             }
 
+            [Obsolete]
             public override JObject Serialize()
             {
                 var image = new JObject(
@@ -316,6 +321,7 @@ namespace Clarifai.DTOs.Searches
                 _crop = crop;
             }
 
+            [Obsolete]
             public override JObject Serialize()
             {
                 var image = new JObject(
@@ -369,6 +375,7 @@ namespace Clarifai.DTOs.Searches
                 _metadata = metadata;
             }
 
+            [Obsolete]
             public override JObject Serialize()
             {
                 return new JObject(
@@ -403,6 +410,7 @@ namespace Clarifai.DTOs.Searches
                 _geoRadius = geoRadius;
             }
 
+            [Obsolete]
             public override JObject Serialize()
             {
                 return new JObject(
@@ -443,6 +451,7 @@ namespace Clarifai.DTOs.Searches
                 _geoPoint2 = geoPoint2;
             }
 
+            [Obsolete]
             public override JObject Serialize()
             {
                 return new JObject(

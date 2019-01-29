@@ -32,11 +32,13 @@ namespace Clarifai.DTOs
             Right = right;
         }
 
+        [Obsolete]
         public JArray SerializeAsArray()
         {
             return new JArray(new [] {Top, Left, Bottom, Right});
         }
 
+        [Obsolete]
         public JObject SerializeAsObject()
         {
             return new JObject(
@@ -62,6 +64,7 @@ namespace Clarifai.DTOs
             };
         }
 
+        [Obsolete]
         public static Crop Deserialize(dynamic jsonObject)
         {
             if (jsonObject is JArray)

@@ -1,4 +1,5 @@
-﻿using Clarifai.Internal.GRPC;
+﻿using System;
+using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs
@@ -40,6 +41,7 @@ namespace Clarifai.DTOs
             return new GeoPoint(Longitude + longitude, Latitude + latitude);
         }
 
+        [Obsolete]
         public JObject Serialize()
         {
             return new JObject(
@@ -56,6 +58,7 @@ namespace Clarifai.DTOs
             };
         }
 
+        [Obsolete]
         public static GeoPoint Deserialize(dynamic jsonObject)
         {
             dynamic point = jsonObject.geo_point;

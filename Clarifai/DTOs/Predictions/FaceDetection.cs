@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Clarifai.DTOs.Predictions
 {
@@ -13,6 +14,7 @@ namespace Clarifai.DTOs.Predictions
             Crop = crop;
         }
 
+        [Obsolete]
         public static FaceDetection Deserialize(dynamic jsonObject)
         {
             return new FaceDetection(DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box));

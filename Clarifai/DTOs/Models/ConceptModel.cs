@@ -59,6 +59,7 @@ namespace Clarifai.DTOs.Models
         /// Serializes the instance to a new JSON object.
         /// </summary>
         /// <returns>a JSON object</returns>
+        [Obsolete]
         public JObject Serialize(IEnumerable<Concept> concepts,
             bool? areConceptsMutuallyExclusive = null, bool? isEnvironmentClosed = null,
             string language = null)
@@ -190,6 +191,7 @@ namespace Clarifai.DTOs.Models
         /// <param name="httpClient">the HTTP client</param>
         /// <param name="model">the JSON object</param>
         /// <returns>a new instance</returns>
+        [Obsolete]
         public new static ConceptModel Deserialize(IClarifaiHttpClient httpClient, dynamic model)
         {
             return new ConceptModel(

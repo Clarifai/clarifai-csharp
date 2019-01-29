@@ -1,4 +1,5 @@
-﻿using Clarifai.Internal.GRPC;
+﻿using System;
+using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
@@ -30,17 +31,18 @@ namespace Clarifai.DTOs.Models.OutputsInfo
             Message = message;
         }
 
+        [Obsolete]
         public JObject Serialize()
         {
             return new JObject();
         }
-
 
         public OutputInfo GrpcSerialize()
         {
             return new OutputInfo();
         }
 
+        [Obsolete]
         public static FocusOutputInfo Deserialize(dynamic jsonObject)
         {
             return new FocusOutputInfo(

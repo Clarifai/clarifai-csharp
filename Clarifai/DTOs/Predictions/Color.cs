@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Clarifai.DTOs.Predictions
 {
@@ -52,6 +53,7 @@ namespace Clarifai.DTOs.Predictions
         /// </summary>
         /// <param name="colorJsonObject">the JSON object</param>
         /// <returns>a new instance of this class</returns>
+        [Obsolete]
         public static Color Deserialize(dynamic colorJsonObject)
         {
             return new Color(

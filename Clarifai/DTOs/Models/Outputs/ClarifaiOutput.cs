@@ -80,6 +80,7 @@ namespace Clarifai.DTOs.Models.Outputs
         /// <param name="modelType">the model type</param>
         /// <param name="jsonObject">the JSON object</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static ClarifaiOutput Deserialize(IClarifaiHttpClient httpClient,
             ModelType modelType, dynamic jsonObject)
         {
@@ -107,6 +108,7 @@ namespace Clarifai.DTOs.Models.Outputs
                 Models.Model.GrpcDeserialize(httpClient, modelType.Prediction, output.Model));
         }
 
+        [Obsolete]
         protected static List<IPrediction> DeserializePredictions(ModelType modelType,
             dynamic jsonObject)
         {
@@ -355,6 +357,7 @@ namespace Clarifai.DTOs.Models.Outputs
         /// <param name="httpClient">the HTTP client</param>
         /// <param name="jsonObject">the JSON dynamic object of an output</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static ClarifaiOutput<T> Deserialize(IClarifaiHttpClient httpClient,
             dynamic jsonObject)
         {

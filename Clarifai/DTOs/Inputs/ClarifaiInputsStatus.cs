@@ -44,6 +44,7 @@ namespace Clarifai.DTOs.Inputs
         /// </summary>
         /// <param name="jsonObject">the JSON dynamic object</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static ClarifaiInputsStatus Deserialize(dynamic jsonObject)
         {
             return new ClarifaiInputsStatus((int)jsonObject.processed, (int)jsonObject.to_process,

@@ -37,6 +37,7 @@ namespace Clarifai.DTOs.Models
         /// <param name="httpClient">the HTTP client</param>
         /// <param name="model">the JSON object</param>
         /// <returns>a new instance</returns>
+        [Obsolete]
         public new static EmbeddingModel Deserialize(IClarifaiHttpClient httpClient, dynamic model)
         {
             return new EmbeddingModel(

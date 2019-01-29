@@ -45,6 +45,7 @@ namespace Clarifai.DTOs.Inputs
         /// Serializes this object into a new JSON object.
         /// </summary>
         /// <returns>a new JSON object</returns>
+        [Obsolete]
         public override JObject Serialize()
         {
             return Serialize(
@@ -70,6 +71,7 @@ namespace Clarifai.DTOs.Inputs
         /// </summary>
         /// <param name="jsonObject">the JSON dynamic object</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public new static ClarifaiFileVideo Deserialize(dynamic jsonObject)
         {
             var positiveConcepts = new List<Concept>();

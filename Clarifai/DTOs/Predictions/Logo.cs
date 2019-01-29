@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Clarifai.DTOs.Predictions
@@ -17,6 +18,7 @@ namespace Clarifai.DTOs.Predictions
             Concepts = concepts;
         }
 
+        [Obsolete]
         public static Logo Deserialize(dynamic jsonObject)
         {
             var concepts = new List<Concept>();

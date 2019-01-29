@@ -21,6 +21,7 @@ namespace Clarifai.DTOs.Predictions
             Concepts = concepts;
         }
 
+        [Obsolete]
         public static Frame Deserialize(dynamic jsonObject)
         {
             var concepts = new List<Concept>();

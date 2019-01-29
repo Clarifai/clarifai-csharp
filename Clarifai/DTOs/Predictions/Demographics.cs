@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Clarifai.Internal.GRPC;
 
@@ -25,6 +26,7 @@ namespace Clarifai.DTOs.Predictions
             MulticulturalAppearanceConcepts = multiculturalAppearanceConcepts;
         }
 
+        [Obsolete]
         public static Demographics Deserialize(dynamic jsonObject)
         {
             dynamic face = jsonObject.data.face;

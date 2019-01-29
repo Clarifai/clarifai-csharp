@@ -1,4 +1,5 @@
-﻿using Clarifai.API;
+﻿using System;
+using Clarifai.API;
 using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Workflows
@@ -21,6 +22,7 @@ namespace Clarifai.DTOs.Workflows
         /// <param name="httpClient">the HTTP client</param>
         /// <param name="jsonObject">the JSON object</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static WorkflowPredictResult Deserialize(IClarifaiHttpClient httpClient,
             dynamic jsonObject)
         {

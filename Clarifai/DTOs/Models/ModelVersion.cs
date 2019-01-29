@@ -64,6 +64,7 @@ namespace Clarifai.DTOs.Models
         /// </summary>
         /// <param name="jsonObject">the JSON dynamic object</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static ModelVersion Deserialize(dynamic jsonObject)
         {
             int activeConceptCount = 0;

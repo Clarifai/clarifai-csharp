@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
@@ -34,6 +35,7 @@ namespace Clarifai.DTOs.Feedbacks
         /// Serializes the object to a JSON object.
         /// </summary>
         /// <returns>the JSON object</returns>
+        [Obsolete]
         public JObject Serialize()
         {
             var data = new JObject();

@@ -73,6 +73,7 @@ namespace Clarifai.DTOs.Models
         /// <param name="type">the type</param>
         /// <param name="model">the JSON dynamic object of a model</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static Model Deserialize(IClarifaiHttpClient httpClient, Type type, dynamic model)
         {
             var typeToDeserialization = new Dictionary<Type, Func<Model>> {
@@ -216,6 +217,7 @@ namespace Clarifai.DTOs.Models
         /// <param name="httpClient">the HTTP client</param>
         /// <param name="model">the JSON dynamic object of a model</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static Model<T> Deserialize(IClarifaiHttpClient httpClient, dynamic model)
         {
             Type type = typeof(T);

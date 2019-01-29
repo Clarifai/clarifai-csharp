@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Clarifai.API;
 using Clarifai.Internal.GRPC;
 
@@ -16,6 +17,7 @@ namespace Clarifai.DTOs.Workflows
             WorkflowResults = workflowResults;
         }
 
+        [Obsolete]
         public static WorkflowBatchPredictResult Deserialize(IClarifaiHttpClient httpClient,
             dynamic jsonObject)
         {

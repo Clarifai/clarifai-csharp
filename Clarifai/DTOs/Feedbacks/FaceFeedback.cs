@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
@@ -14,6 +15,7 @@ namespace Clarifai.DTOs.Feedbacks
             _identityConceptFeedbacks = identityConceptFeedbacks;
         }
 
+        [Obsolete]
         public JObject Serialize()
         {
             return new JObject(new JProperty("identity",

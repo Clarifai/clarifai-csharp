@@ -89,6 +89,7 @@ namespace Clarifai.DTOs.Models
         /// </summary>
         /// <param name="jsonObject">the JSON dynamic object</param>
         /// <returns>the deserialized object</returns>
+        [Obsolete]
         public static ModelMetricsStatus Deserialize(dynamic jsonObject)
         {
             int statusCode = (int) jsonObject.code;

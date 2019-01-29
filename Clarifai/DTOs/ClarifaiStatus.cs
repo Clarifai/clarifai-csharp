@@ -41,6 +41,7 @@ namespace Clarifai.DTOs
         /// <param name="status">the JSON object</param>
         /// <param name="httpStatusCode">the http status code</param>
         /// <returns>a new instance of ClarifaiStatus</returns>
+        [Obsolete]
         public static ClarifaiStatus Deserialize(dynamic status,
             HttpStatusCode httpStatusCode = HttpStatusCode.OK)
         {

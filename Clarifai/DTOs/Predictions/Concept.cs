@@ -66,6 +66,7 @@ namespace Clarifai.DTOs.Predictions
         /// </summary>
         /// <param name="value">true if concept is present in an input, false otherwise</param>
         /// <returns>a new JSON object</returns>
+        [Obsolete]
         public JObject Serialize(bool? value = null)
         {
             var body = new JObject(new JProperty("id", ID));
@@ -89,6 +90,7 @@ namespace Clarifai.DTOs.Predictions
         /// </summary>
         /// <param name="jsonObject">the JSON object</param>
         /// <returns>a new instance of this class</returns>
+        [Obsolete]
         public static Concept Deserialize(dynamic jsonObject)
         {
             return new Concept(

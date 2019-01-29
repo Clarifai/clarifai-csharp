@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Clarifai.Internal.GRPC;
 
@@ -15,6 +16,7 @@ namespace Clarifai.DTOs.Searches
             SearchHits = searchHits;
         }
 
+        [Obsolete]
         public static SearchInputsResult Deserialize(dynamic jsonObject)
         {
             var searchHits = new List<SearchHit>();

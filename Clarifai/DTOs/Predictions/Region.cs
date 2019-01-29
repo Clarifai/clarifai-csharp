@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Predictions
@@ -16,6 +17,7 @@ namespace Clarifai.DTOs.Predictions
             FaceConcepts = faceConcepts;
         }
 
+        [Obsolete]
         public static Region Deserialize(dynamic jsonObject)
         {
             var faceConcepts = new List<Concept>();

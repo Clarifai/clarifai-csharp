@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Clarifai.DTOs.Predictions
 {
@@ -20,6 +21,7 @@ namespace Clarifai.DTOs.Predictions
             _vector = vector;
         }
 
+        [Obsolete]
         public static Embedding Deserialize(dynamic jsonObject)
         {
             int numDimensions = jsonObject.num_dimensions;

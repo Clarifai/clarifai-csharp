@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Clarifai.DTOs.Predictions
 {
@@ -19,6 +20,7 @@ namespace Clarifai.DTOs.Predictions
             Value = value;
         }
 
+        [Obsolete]
         public static Focus Deserialize(dynamic jsonObject, decimal value)
         {
             return new Focus(

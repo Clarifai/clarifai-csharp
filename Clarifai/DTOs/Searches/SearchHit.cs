@@ -1,4 +1,5 @@
-﻿using Clarifai.DTOs.Inputs;
+﻿using System;
+using Clarifai.DTOs.Inputs;
 using Clarifai.Internal.GRPC;
 
 namespace Clarifai.DTOs.Searches
@@ -14,6 +15,7 @@ namespace Clarifai.DTOs.Searches
             Input = input;
         }
 
+        [Obsolete]
         public static SearchHit Deserialize(dynamic jsonObject)
         {
             return new SearchHit((decimal)jsonObject.score,

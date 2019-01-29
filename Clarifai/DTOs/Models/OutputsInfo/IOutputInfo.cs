@@ -1,4 +1,5 @@
-﻿using Clarifai.Internal.GRPC;
+﻿using System;
+using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
@@ -20,7 +21,9 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         /// </summary>
         string Message { get; }
 
+        [Obsolete]
         JObject Serialize();
+
         OutputInfo GrpcSerialize();
     }
 }

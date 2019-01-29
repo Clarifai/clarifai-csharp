@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.API.Requests.Models
@@ -38,6 +39,7 @@ namespace Clarifai.API.Requests.Models
         /// </summary>
         public static ModifyAction Remove => new ModifyAction("remove");
 
+        [Obsolete]
         public JToken Serialize()
         {
             return Value;
