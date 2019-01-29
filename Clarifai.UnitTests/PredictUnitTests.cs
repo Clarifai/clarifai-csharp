@@ -269,6 +269,187 @@ namespace Clarifai.UnitTests
             Assert.AreEqual("@conceptID22", output2.Data[1].ID);
         }
 
+        [Test]
+        public async Task ConceptBatchPredictRequestWithArgumentsAndResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                postResponse: @"
+{
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""outputs"": [
+    {
+      ""id"": ""@outputID1"",
+      ""status"": {
+        ""code"": 10000,
+        ""description"": ""Ok""
+      },
+      ""created_at"": ""2019-01-29T16:45:43.793810775Z"",
+      ""model"": {
+        ""id"": ""aaa03c23b3724a16a56b629203edc62c"",
+        ""name"": ""general"",
+        ""created_at"": ""2016-03-09T17:11:39.608845Z"",
+        ""app_id"": ""main"",
+        ""output_info"": {
+          ""message"": ""Show output_info with: GET /models/{model_id}/output_info"",
+          ""type"": ""concept"",
+          ""type_ext"": ""concept""
+        },
+        ""model_version"": {
+          ""id"": ""aa9ca48295b37401f8af92ad1af0d91d"",
+          ""created_at"": ""2016-07-13T01:19:12.147644Z"",
+          ""status"": {
+            ""code"": 21100,
+            ""description"": ""Model trained successfully""
+          },
+          ""train_stats"": {}
+        },
+        ""display_name"": ""General""
+      },
+      ""input"": {
+        ""id"": ""@inputID1"",
+        ""data"": {
+          ""image"": {
+            ""url"": ""https://clarifai.com/developer/static/images/model-samples/celeb-001.jpg""
+          }
+        }
+      },
+      ""data"": {
+        ""concepts"": [
+          {
+            ""id"": ""@conceptID11"",
+            ""name"": ""menschen"",
+            ""value"": 0.9963381,
+            ""app_id"": ""main""
+          },
+          {
+            ""id"": ""@conceptID12"",
+            ""name"": ""ein"",
+            ""value"": 0.9879057,
+            ""app_id"": ""main""
+          }
+        ]
+      }
+    },
+    {
+      ""id"": ""@outputID2"",
+      ""status"": {
+        ""code"": 10000,
+        ""description"": ""Ok""
+      },
+      ""created_at"": ""2019-01-29T16:45:43.793810775Z"",
+      ""model"": {
+        ""id"": ""aaa03c23b3724a16a56b629203edc62c"",
+        ""name"": ""general"",
+        ""created_at"": ""2016-03-09T17:11:39.608845Z"",
+        ""app_id"": ""main"",
+        ""output_info"": {
+          ""message"": ""Show output_info with: GET /models/{model_id}/output_info"",
+          ""type"": ""concept"",
+          ""type_ext"": ""concept""
+        },
+        ""model_version"": {
+          ""id"": ""aa9ca48295b37401f8af92ad1af0d91d"",
+          ""created_at"": ""2016-07-13T01:19:12.147644Z"",
+          ""status"": {
+            ""code"": 21100,
+            ""description"": ""Model trained successfully""
+          },
+          ""train_stats"": {}
+        },
+        ""display_name"": ""General""
+      },
+      ""input"": {
+        ""id"": ""@inputID2"",
+        ""data"": {
+          ""image"": {
+            ""url"": ""https://clarifai.com/developer/static/images/model-samples/apparel-001.jpg""
+          }
+        }
+      },
+      ""data"": {
+        ""concepts"": [
+          {
+            ""id"": ""@conceptID21"",
+            ""name"": ""brillen und kontaktlinsen"",
+            ""value"": 0.99984586,
+            ""app_id"": ""main""
+          },
+          {
+            ""id"": ""@conceptID22"",
+            ""name"": ""linse"",
+            ""value"": 0.999823,
+            ""app_id"": ""main""
+          }
+        ]
+      }
+    }
+  ]
+}
+");
+
+            var client = new ClarifaiClient(httpClient);
+            var response = await client.Predict<Concept>(
+                    "",
+                    new List<IClarifaiInput>
+                    {
+                        new ClarifaiURLImage("@url1"), new ClarifaiURLImage("@url2")
+                    },
+                    language: "de",
+                    maxConcepts: 2,
+                    minValue: 0.98m)
+                .ExecuteAsync();
+            List<ClarifaiOutput<Concept>> outputs = response.Get();
+
+            var expectedRequestBody = JObject.Parse(@"
+{
+  ""inputs"": [
+    {
+      ""data"": {
+        ""image"": {
+          ""url"": ""@url1""
+        }
+      }
+    },
+    {
+      ""data"": {
+        ""image"": {
+          ""url"": ""@url2""
+        }
+      }
+    }
+  ],
+  ""model"": {
+    ""output_info"": {
+      ""output_config"": {
+        ""language"": ""de"",
+        ""max_concepts"": 2,
+        ""min_value"": 0.98
+      }
+    }
+  }
+}
+");
+
+            Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));
+
+            Assert.True(response.IsSuccessful);
+
+            ClarifaiOutput<Concept> output1 = outputs[0];
+            Assert.AreEqual("@inputID1", output1.Input.ID);
+            Assert.AreEqual("@outputID1", output1.ID);
+            Assert.AreEqual("@conceptID11", output1.Data[0].ID);
+            Assert.AreEqual("@conceptID12", output1.Data[1].ID);
+
+            ClarifaiOutput<Concept> output2 = outputs[1];
+            Assert.AreEqual("@inputID2", output2.Input.ID);
+            Assert.AreEqual("@outputID2", output2.ID);
+            Assert.AreEqual("@conceptID21", output2.Data[0].ID);
+            Assert.AreEqual("@conceptID22", output2.Data[1].ID);
+        }
+
 
         // To be future-proof against expansion, response objects with unknown fields should be
         // parsed correctly and unknown fields ignored.

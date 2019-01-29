@@ -77,7 +77,10 @@ namespace Clarifai.IntegrationTests
                         new ClarifaiURLImage(CELEB1),
                         new ClarifaiURLImage(APPAREL1),
                         new ClarifaiURLImage(CAT1)
-                    })
+                    },
+                    language: "de",
+                    minValue: 0.98m,
+                    maxConcepts: 3)
                 .ExecuteAsync();
 
             AssertResponseSuccess(response);
