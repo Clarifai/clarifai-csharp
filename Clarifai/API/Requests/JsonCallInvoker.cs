@@ -64,9 +64,6 @@ namespace Clarifai.API.Requests
             {
                 string responseBody = await HttpRequest(request);
 
-                Console.WriteLine("RESPONSE:");
-                Console.WriteLine(responseBody);
-
                 Type methodReturnType = method.ResponseMarshaller.Deserializer.GetMethodInfo()
                     .ReturnType;
                 PropertyInfo descriptor = methodReturnType.GetRuntimeProperty("Descriptor");
@@ -134,8 +131,6 @@ namespace Clarifai.API.Requests
                     t => t.Type == JTokenType.Property && ((JProperty) t).Name == "concepts");
                 foreach (JToken conceptsProperty in conceptsPropertyIter )
                 {
-                    Console.WriteLine("conceptsProperty:");
-                    Console.WriteLine(conceptsProperty);
                     foreach (JToken conceptList in conceptsProperty.Children())
                     {
                         foreach (JToken conceptToken in conceptList.Children())

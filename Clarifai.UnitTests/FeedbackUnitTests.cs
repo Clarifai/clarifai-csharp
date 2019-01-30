@@ -93,8 +93,6 @@ namespace Clarifai.UnitTests
   }
 }
 ");
-            Console.WriteLine(expectedRequestBody);
-            Console.WriteLine(httpClient.PostedBody);
             Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));
 
             Assert.True(response.IsSuccessful);

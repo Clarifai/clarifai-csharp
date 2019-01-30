@@ -48,7 +48,6 @@ namespace Clarifai.DTOs
             int statusCode = (int)status.code;
             bool success = 200 <= (int)httpStatusCode && (int)httpStatusCode < 300;
             StatusType statusType;
-            Console.WriteLine((int)httpStatusCode);
             if (success)
             {
                 if (statusCode == 10010)

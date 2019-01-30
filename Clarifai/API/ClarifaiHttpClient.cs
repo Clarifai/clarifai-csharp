@@ -43,7 +43,6 @@ namespace Clarifai.API
 
         public async Task<string> GetAsync(string url)
         {
-            Console.WriteLine("GET");
             HttpResponseMessage response = await _httpClient.GetAsync(FullUrl(url));
 
             string responseBody = await response.Content.ReadAsStringAsync();
@@ -55,7 +54,6 @@ namespace Clarifai.API
 
         public async Task<string> PostAsync(string url, JObject body)
         {
-            Console.WriteLine("POST");
             HttpResponseMessage response = await _httpClient.PostAsync(
                 FullUrl(url), PrepareRequestContent(body));
 
@@ -68,7 +66,6 @@ namespace Clarifai.API
 
         public async Task<string> PatchAsync(string url, JObject body)
         {
-            Console.WriteLine("PATCH");
             HttpResponseMessage response = await _httpClient.PatchAsync(
                 FullUrl(url), PrepareRequestContent(body));
 
@@ -81,7 +78,6 @@ namespace Clarifai.API
 
         public async Task<string> DeleteAsync(string url, JObject body = null)
         {
-            Console.WriteLine("DELETE");
             HttpResponseMessage response;
             if (body != null)
             {
@@ -101,8 +97,6 @@ namespace Clarifai.API
 
         private StringContent PrepareRequestContent(JObject body)
         {
-            Console.WriteLine("REQUEST BODY:");
-            Console.WriteLine(SerializedBody(body));
             return new StringContent(SerializedBody(body), Encoding.UTF8,
                 "application/json");
         }

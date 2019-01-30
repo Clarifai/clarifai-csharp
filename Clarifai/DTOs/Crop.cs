@@ -87,8 +87,6 @@ namespace Clarifai.DTOs
 
         public static Crop GrpcDeserialize(RepeatedField<float> imageCrop)
         {
-            Console.WriteLine("imageCrop:");
-            Console.WriteLine(imageCrop);
             return new Crop(
                 top: (decimal) imageCrop[0],
                 left: (decimal) imageCrop[1],
