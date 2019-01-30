@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Clarifai.Internal.GRPC;
 using Newtonsoft.Json.Linq;
+using Concept = Clarifai.DTOs.Predictions.Concept;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
 {
@@ -19,16 +21,24 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         public string Message { get; }
 
         /// <summary>
+        /// The concepts.
+        /// </summary>
+        public IEnumerable<Concept> Concepts { get; }
+
+        /// <summary>
         /// Ctor.
         /// </summary>
         /// <param name="type">the type</param>
         /// <param name="typeExt">the type ext</param>
         /// <param name="message">the message</param>
-        private DemographicsOutputInfo(string type, string typeExt, string message)
+        /// <param name="concepts"></param>
+        private DemographicsOutputInfo(string type, string typeExt, string message,
+            IEnumerable<Concept> concepts)
         {
             Type = type;
             TypeExt = typeExt;
             Message = message;
+            Concepts = concepts;
         }
 
         [Obsolete]
@@ -48,19 +58,32 @@ namespace Clarifai.DTOs.Models.OutputsInfo
             return new DemographicsOutputInfo(
                 (string) jsonObject.type,
                 (string) jsonObject.type_ext,
-                (string) jsonObject.message
+                (string) jsonObject.message,
+                new List<Concept>()
             );
+        }
+
+        public static DemographicsOutputInfo GrpcDeserialize(OutputInfo outputInfo)
+        {
+            List<Concept> concepts = null;
+            if (outputInfo.Data?.Concepts != null)
+            {
+                concepts = new List<Concept>();
+                foreach (var concept in outputInfo.Data.Concepts)
+                {
+                    concepts.Add(Concept.GrpcDeserialize(concept));
+                }
+            }
+            return new DemographicsOutputInfo(
+                outputInfo.Type,
+                outputInfo.TypeExt,
+                outputInfo.Message,
+                concepts);
         }
 
         public override string ToString()
         {
             return "[DemographicsOutputInfo]";
-        }
-
-        public static DemographicsOutputInfo GrpcDeserialize(OutputInfo outputInfo)
-        {
-            return new DemographicsOutputInfo(
-                outputInfo.Type, outputInfo.TypeExt, outputInfo.Message);
         }
     }
 }
