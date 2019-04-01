@@ -172,41 +172,39 @@ namespace Clarifai.UnitTests
             var httpClient = new FkClarifaiHttpClient(
                 getResponse: @"
 {
-    ""status"": {
-
-        ""code"": 10000,
-        ""description"": ""Ok""
-
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""model"": {
+    ""id"": ""some-model-id"",
+    ""name"": ""some-model-name"",
+    ""created_at"": ""2017-05-16T19:20:38.733764Z"",
+    ""app_id"": ""main"",
+    ""output_info"": {
+      ""data"": {
+        ""concepts"": [{
+          ""id"": ""some-concept-id"",
+          ""name"": ""safe"",
+          ""created_at"": ""2017-05-16T19:20:38.450157Z"",
+          ""language"": ""en"",
+          ""app_id"": ""main""
+        }]
+      },
+      ""type"": ""concept"",
+      ""type_ext"": ""concept""
     },
-    ""model"": {
-        ""id"": ""some-model-id"",
-        ""name"": ""some-model-name"",
-        ""created_at"": ""2017-05-16T19:20:38.733764Z"",
-        ""app_id"": ""main"",
-        ""output_info"": {
-            ""data"": {
-                ""concepts"": [{
-                    ""id"": ""some-concept-id"",
-                    ""name"": ""safe"",
-                    ""created_at"": ""2017-05-16T19:20:38.450157Z"",
-                    ""language"": ""en"",
-                    ""app_id"": ""main""
-                }]
-            },
-            ""type"": ""concept"",
-            ""type_ext"": ""concept""
-        },
-        ""model_version"": {
-            ""id"": ""some-model-version-id"",
-            ""created_at"": ""2017-05-16T19:20:38.733764Z"",
-            ""status"": {
-                ""code"": 21100,
-                ""description"": ""Model trained successfully""
-            },
-            ""active_concept_count"": 5
-        },
-        ""display_name"": ""Moderation""
-    }
+    ""model_version"": {
+      ""id"": ""some-model-version-id"",
+      ""created_at"": ""2017-05-16T19:20:38.733764Z"",
+      ""status"": {
+        ""code"": 21100,
+        ""description"": ""Model trained successfully""
+      },
+      ""active_concept_count"": 5
+    },
+    ""display_name"": ""Moderation""
+  }
 }
 ");
 
@@ -303,29 +301,29 @@ namespace Clarifai.UnitTests
             var httpClient = new FkClarifaiHttpClient(
                 getResponse: @"
 {
-    ""status"": {
-        ""code"": 10000,
-        ""description"": ""Ok""
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""inputs"": [{
+    ""id"": ""@inputID"",
+    ""data"": {
+      ""image"": {
+        ""url"": ""@imageURL""
+      },
+      ""concepts"": [{
+        ""id"": ""@conceptID"",
+        ""name"": ""@conceptName"",
+        ""value"": 1,
+        ""app_id"": ""@conceptAppID""
+      }]
     },
-    ""inputs"": [{
-        ""id"": ""@inputID"",
-        ""data"": {
-            ""image"": {
-                ""url"": ""@imageURL""
-            },
-            ""concepts"": [{
-                ""id"": ""@conceptID"",
-                ""name"": ""@conceptName"",
-                ""value"": 1,
-                ""app_id"": ""@conceptAppID""
-            }]
-        },
-        ""created_at"": ""2017-10-15T16:30:52.964888Z"",
-        ""status"": {
-            ""code"": 30000,
-            ""description"": ""Download complete""
-        }
-    }]
+    ""created_at"": ""2017-10-15T16:30:52.964888Z"",
+    ""status"": {
+      ""code"": 30000,
+      ""description"": ""Download complete""
+    }
+  }]
 }
 ");
             var client = new ClarifaiClient(httpClient);
@@ -362,33 +360,33 @@ namespace Clarifai.UnitTests
             var httpClient = new FkClarifaiHttpClient(
                 patchResponse: @"
 {
-    ""status"": {
-        ""code"": 10000,
-        ""description"": ""Ok""
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""models"": [{
+    ""id"": ""@modelID"",
+    ""name"": ""@newModelName"",
+    ""created_at"": ""2017-11-27T08:35:13.911899Z"",
+    ""app_id"": ""@appID"",
+    ""output_info"": {
+      ""output_config"": {
+        ""concepts_mutually_exclusive"": true,
+        ""closed_environment"": true
+      },
+      ""message"": ""Show output_info with: GET /models/{model_id}/output_info"",
+      ""type"": ""concept"",
+      ""type_ext"": ""concept""
     },
-    ""models"": [{
-        ""id"": ""@modelID"",
-        ""name"": ""@newModelName"",
-        ""created_at"": ""2017-11-27T08:35:13.911899Z"",
-        ""app_id"": ""@appID"",
-        ""output_info"": {
-            ""output_config"": {
-                ""concepts_mutually_exclusive"": true,
-                ""closed_environment"": true
-            },
-            ""message"": ""Show output_info with: GET /models/{model_id}/output_info"",
-            ""type"": ""concept"",
-            ""type_ext"": ""concept""
-        },
-        ""model_version"": {
-            ""id"": ""@modelVersionID"",
-            ""created_at"": ""2017-11-27T08:35:14.298376733Z"",
-            ""status"": {
-                ""code"": 21102,
-                ""description"": ""Model not yet trained""
-            }
-        }
-    }]
+    ""model_version"": {
+      ""id"": ""@modelVersionID"",
+      ""created_at"": ""2017-11-27T08:35:14.298376733Z"",
+      ""status"": {
+        ""code"": 21102,
+        ""description"": ""Model not yet trained""
+      }
+    }
+  }]
 }
 ");
             var client = new ClarifaiClient(httpClient);
@@ -403,27 +401,27 @@ namespace Clarifai.UnitTests
 
             var expectedRequestBody = JObject.Parse(@"
 {
-    ""models"": [
-      {
-        ""id"": ""@modelID"",
-        ""name"": ""@newModelName"",
-        ""output_info"": {
-          ""data"": {
-            ""concepts"": [
-              {
-                ""id"": ""@conceptID1""
-              }
-            ]
-          },
-          ""output_config"": {
-            ""concepts_mutually_exclusive"": true,
-            ""closed_environment"": true
-          }
+  ""models"": [
+    {
+      ""id"": ""@modelID"",
+      ""name"": ""@newModelName"",
+      ""output_info"": {
+        ""data"": {
+          ""concepts"": [
+            {
+              ""id"": ""@conceptID1""
+            }
+          ]
+        },
+        ""output_config"": {
+          ""concepts_mutually_exclusive"": true,
+          ""closed_environment"": true
         }
       }
-    ],
-    ""action"": ""merge""
-  }
+    }
+  ],
+  ""action"": ""merge""
+}
 ");
 
             Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PatchedBody));

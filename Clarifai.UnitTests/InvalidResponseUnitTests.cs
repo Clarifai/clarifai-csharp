@@ -21,13 +21,11 @@ namespace Clarifai.UnitTests
             var httpClient = new FkClarifaiHttpClient(
                 getResponse: @"
 {
-    ""status"": {
-
-        ""code"": 10000,
-        ""description"": ""Ok""
-
-    },
-    ""model"": {
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""model"": {
 ");
 
             var client = new ClarifaiClient(httpClient);

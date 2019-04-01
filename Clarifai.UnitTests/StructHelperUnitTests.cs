@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Clarifai.UnitTests
 {
     [TestFixture]
-    public class MetadataConverterUnitTests
+    public class StructHelperUnitTests
     {
 
         [Test]

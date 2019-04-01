@@ -57,6 +57,9 @@ namespace Clarifai.API
             HttpResponseMessage response = await _httpClient.PostAsync(
                 FullUrl(url), PrepareRequestContent(body));
 
+            Console.WriteLine("RESPONSE:");
+            Console.WriteLine(response);
+
             string responseBody = await response.Content.ReadAsStringAsync();
             LastResponseRawBody = responseBody;
             LastResponseHttpStatusCode = response.StatusCode;

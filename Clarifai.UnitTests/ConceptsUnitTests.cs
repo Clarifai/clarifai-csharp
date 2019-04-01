@@ -77,17 +77,17 @@ namespace Clarifai.UnitTests
             var httpClient = new FkClarifaiHttpClient(
                 getResponse: @"
 {
-    ""status"": {
-        ""code"": 10000,
-        ""description"": ""Ok""
-    },
-    ""concept"": {
-        ""id"": ""@conceptID"",
-        ""name"": ""@conceptName"",
-        ""created_at"": ""2017-10-02T11:34:20.419915Z"",
-        ""language"": ""en"",
-        ""app_id"": ""@appID""
-    }
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""concept"": {
+    ""id"": ""@conceptID"",
+    ""name"": ""@conceptName"",
+    ""created_at"": ""2017-10-02T11:34:20.419915Z"",
+    ""language"": ""en"",
+    ""app_id"": ""@appID""
+  }
 }
 ");
 
@@ -111,23 +111,23 @@ namespace Clarifai.UnitTests
             var httpClient = new FkClarifaiHttpClient(
                 getResponse: @"
 {
-    ""status"": {
-        ""code"": 10000,
-        ""description"": ""Ok""
-    },
-    ""concepts"": [{
-        ""id"": ""@conceptID1"",
-        ""name"": ""@conceptName1"",
-        ""created_at"": ""2017-10-15T16:28:28.901994Z"",
-        ""language"": ""en"",
-        ""app_id"": ""@appID""
-    }, {
-        ""id"": ""@conceptID2"",
-        ""name"": ""@conceptName2"",
-        ""created_at"": ""2017-10-15T16:26:46.667104Z"",
-        ""language"": ""en"",
-        ""app_id"": ""@appID""
-    }]
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""concepts"": [{
+    ""id"": ""@conceptID1"",
+    ""name"": ""@conceptName1"",
+    ""created_at"": ""2017-10-15T16:28:28.901994Z"",
+    ""language"": ""en"",
+    ""app_id"": ""@appID""
+  }, {
+    ""id"": ""@conceptID2"",
+    ""name"": ""@conceptName2"",
+    ""created_at"": ""2017-10-15T16:26:46.667104Z"",
+    ""language"": ""en"",
+    ""app_id"": ""@appID""
+  }]
 }
 ");
 

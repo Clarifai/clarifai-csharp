@@ -80,7 +80,6 @@ namespace Clarifai.UnitTests
                         allowDuplicateUrl: true))
                     .ExecuteAsync();
 
-
             var expectedRequestBody = JObject.Parse(@"
 {
   ""inputs"": [
@@ -134,44 +133,44 @@ namespace Clarifai.UnitTests
             var httpClient = new FkClarifaiHttpClient(
                 patchResponse: @"
 {
-    ""status"": {
-        ""code"": 10000,
-        ""description"": ""Ok""
-    },
-    ""inputs"": [{
-        ""id"": ""@inputID"",
-        ""data"": {
-            ""image"": {
-                ""url"": ""@imageURL""
-            },
-            ""concepts"": [
-                {
-                  ""id"": ""@positiveConcept1"",
-                  ""name"": ""@positiveConceptName1"",
-                  ""value"": 1
-                },
-                {
-                  ""id"": ""@positiveConcept2"",
-                  ""value"": 1
-                },
-                {
-                  ""id"": ""@negativeConcept1"",
-                  ""name"": ""@negativeConceptName1"",
-                  ""value"": 0
-                },
-                {
-                  ""id"": ""@negativeConcept2"",
-                  ""value"": 0
-                }
-            ]
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""inputs"": [{
+    ""id"": ""@inputID"",
+    ""data"": {
+      ""image"": {
+        ""url"": ""@imageURL""
+      },
+      ""concepts"": [
+        {
+          ""id"": ""@positiveConcept1"",
+          ""name"": ""@positiveConceptName1"",
+          ""value"": 1
         },
-        ""created_at"": ""2017-10-13T20:53:00.253139Z"",
-        ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
-        ""status"": {
-            ""code"": 30200,
-            ""description"": ""Input image modification success""
+        {
+          ""id"": ""@positiveConcept2"",
+          ""value"": 1
+        },
+        {
+          ""id"": ""@negativeConcept1"",
+          ""name"": ""@negativeConceptName1"",
+          ""value"": 0
+        },
+        {
+          ""id"": ""@negativeConcept2"",
+          ""value"": 0
         }
-    }]
+      ]
+    },
+    ""created_at"": ""2017-10-13T20:53:00.253139Z"",
+    ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
+    ""status"": {
+      ""code"": 30200,
+      ""description"": ""Input image modification success""
+    }
+  }]
 }
 ");
             var client = new ClarifaiClient(httpClient);
@@ -192,32 +191,32 @@ namespace Clarifai.UnitTests
 
             var expectedRequestBody = JObject.Parse(@"
 {
-    ""inputs"": [
-      {
-        ""id"": ""@inputID"",
-        ""data"": {
-          ""concepts"": [
-            {
-              ""id"": ""@positiveConcept1"",
-              ""name"": ""@positiveConceptName1""
-            },
-            {
-              ""id"": ""@positiveConcept2""
-            },
-            {
-              ""id"": ""@negativeConcept1"",
-              ""name"": ""@negativeConceptName1"",
-              ""value"": 0
-            },
-            {
-              ""id"": ""@negativeConcept2"",
-              ""value"": 0
-            },
-          ]
-        }
+  ""inputs"": [
+    {
+      ""id"": ""@inputID"",
+      ""data"": {
+        ""concepts"": [
+          {
+            ""id"": ""@positiveConcept1"",
+            ""name"": ""@positiveConceptName1""
+          },
+          {
+            ""id"": ""@positiveConcept2""
+          },
+          {
+            ""id"": ""@negativeConcept1"",
+            ""name"": ""@negativeConceptName1"",
+            ""value"": 0
+          },
+          {
+            ""id"": ""@negativeConcept2"",
+            ""value"": 0
+          }
+        ]
       }
-    ],
-    ""action"":""merge""
+    }
+  ],
+  ""action"":""merge""
 }
 ");
 
@@ -368,34 +367,34 @@ namespace Clarifai.UnitTests
             var httpClient = new FkClarifaiHttpClient(
                 patchResponse: @"
 {
-    ""status"": {
-        ""code"": 10000,
-        ""description"": ""Ok""
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""inputs"": [{
+    ""id"": ""@inputID"",
+    ""data"": {
+      ""image"": {
+        ""url"": ""@imageURL""
+      },
+      ""concepts"": [{
+        ""id"": ""concept1"",
+        ""name"": ""concept1"",
+        ""value"": 1,
+        ""app_id"": ""@appID""
+      }],
+      ""metadata"": {
+        ""@key1"": ""@value1"",
+        ""@key2"": ""@value2""
+      }
     },
-    ""inputs"": [{
-        ""id"": ""@inputID"",
-        ""data"": {
-            ""image"": {
-                ""url"": ""@imageURL""
-            },
-            ""concepts"": [{
-                ""id"": ""concept1"",
-                ""name"": ""concept1"",
-                ""value"": 1,
-                ""app_id"": ""@appID""
-            }],
-            ""metadata"": {
-                ""@key1"": ""@value1"",
-                ""@key2"": ""@value2""
-            }
-        },
-        ""created_at"": ""2017-11-02T15:08:22.005157Z"",
-        ""modified_at"": ""2017-11-02T15:08:23.071624222Z"",
-        ""status"": {
-            ""code"": 30200,
-            ""description"": ""Input image modification success""
-        }
-    }]
+    ""created_at"": ""2017-11-02T15:08:22.005157Z"",
+    ""modified_at"": ""2017-11-02T15:08:23.071624222Z"",
+    ""status"": {
+      ""code"": 30200,
+      ""description"": ""Input image modification success""
+    }
+  }]
 }
 ");
             var client = new ClarifaiClient(httpClient);
@@ -406,21 +405,20 @@ namespace Clarifai.UnitTests
                     new JProperty("@key2", "@value2"))
                 ).ExecuteAsync();
 
-
             var expectedRequestBody = JObject.Parse(@"
 {
-    ""inputs"": [
-      {
-        ""id"": ""@inputID"",
-        ""data"": {
-          ""metadata"": {
-            ""@key1"": ""@value1"",
-            ""@key2"": ""@value2""
-          }
+  ""inputs"": [
+    {
+      ""id"": ""@inputID"",
+      ""data"": {
+        ""metadata"": {
+          ""@key1"": ""@value1"",
+          ""@key2"": ""@value2""
         }
       }
-    ],
-    ""action"":""overwrite""
+    }
+  ],
+  ""action"":""overwrite""
 }
 ");
             Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PatchedBody));
@@ -599,6 +597,13 @@ namespace Clarifai.UnitTests
             var client = new ClarifaiClient(httpClient);
             ClarifaiResponse<EmptyResponse> response = await client.DeleteAllInputs()
                 .ExecuteAsync();
+
+            var expectedRequestBody = JObject.Parse(@"
+{
+  ""delete_all"": true
+}
+");
+            Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.DeletedBody));
 
             Assert.True(response.IsSuccessful);
             Assert.AreEqual("Ok", response.Status.Description);

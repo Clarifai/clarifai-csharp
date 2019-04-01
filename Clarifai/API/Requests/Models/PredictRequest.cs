@@ -114,7 +114,6 @@ namespace Clarifai.API.Requests.Models
                         SampleMs = (uint) _sampleMs
                     };
                 }
-
                 if (_selectConcepts != null)
                 {
                     outputConfig = new OutputConfig(outputConfig)

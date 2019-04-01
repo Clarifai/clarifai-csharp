@@ -111,15 +111,15 @@ namespace Clarifai.UnitTests
 
             var expectedRequestBody = JObject.Parse(@"
 {
-    ""input"": {
-        ""id"": ""@inputID"",
-        ""feedback_info"": {
-            ""event_type"":   ""search_click"",
-            ""search_id"":    ""@searchID"",
-            ""end_user_id"":  ""@endUserID"",
-            ""session_id"":   ""@sessionID""
-        }
+  ""input"": {
+    ""id"": ""@inputID"",
+    ""feedback_info"": {
+      ""event_type"":   ""search_click"",
+      ""search_id"":    ""@searchID"",
+      ""end_user_id"":  ""@endUserID"",
+      ""session_id"":   ""@sessionID""
     }
+  }
 }
 ");
             Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));

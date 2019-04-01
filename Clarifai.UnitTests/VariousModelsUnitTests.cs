@@ -575,9 +575,9 @@ namespace Clarifai.UnitTests
             Assert.AreEqual("@inputID", output.Input.ID);
             Assert.AreEqual("@outputID", output.ID);
 
-            Embedding demo = output.Data[0];
-            Assert.AreEqual(3, demo.NumDimensions);
-            Assert.AreEqual(new[] {0.1m, 0.2m, 0.3m}, demo.Vector);
+            Embedding embedding = output.Data[0];
+            Assert.AreEqual(3, embedding.NumDimensions);
+            Assert.AreEqual(new[] {0.1m, 0.2m, 0.3m}, embedding.Vector);
         }
 
         [Test]
