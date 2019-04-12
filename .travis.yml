@@ -12,12 +12,23 @@ cache:
 before_install:
   - if [ "$OS" = "linux" ]; then sudo apt-get install libunwind8 libicu-dev libcurl4-openssl-dev; fi
 
+before_script:
+  - if [ "$OS" = "linux" ]; then pyenv global 3.6.3; alias python=python3; fi
+  - export PYTHONPATH=.
+  - export CLARIFAI_APP_ID="$(python scripts/app_and_key_for_tests.py --create-app csharp-travis)"
+  - export CLARIFAI_API_KEY="$(python scripts/app_and_key_for_tests.py --create-key ${CLARIFAI_APP_ID})"
+  - python scripts/app_and_key_for_tests.py --create-workflow ${CLARIFAI_API_KEY}
+
 script:
   - wget https://dot.net/v1/dotnet-install.sh && chmod +x dotnet-install.sh
   - ./dotnet-install.sh --channel $DOTNET_CORE_VERSION --version latest --install-dir $HOME/.dotnet
   - $HOME/.dotnet/dotnet restore
   - $HOME/.dotnet/dotnet test Clarifai.IntegrationTests/Clarifai.IntegrationTests.csproj
   - $HOME/.dotnet/dotnet test Clarifai.UnitTests/Clarifai.UnitTests.csproj
+
+after_script:
+  - export PYTHONPATH=.
+  - python scripts/app_and_key_for_tests.py --delete-app $CLARIFAI_APP_ID
 
 before_cache:
   - rm -rf $HOME/.dotnet/optimizationdata
@@ -45,16 +56,19 @@ matrix:
         - OS=osx93
         - DOTNET_CORE_VERSION=LTS
     - os: osx
+      python: "3.6"
       osx_image: xcode9.3
       env:
         - OS=osx93
         - DOTNET_CORE_VERSION=Current
     - os: osx
+      python: "3.6"
       osx_image: xcode9.2
       env:
         - OS=osx
         - DOTNET_CORE_VERSION=LTS
     - os: osx
+      python: "3.6"
       osx_image: xcode9.2
       env:
         - OS=osx

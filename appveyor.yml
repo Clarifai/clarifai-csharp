@@ -1,6 +1,10 @@
 version: '1.0.{build}'
 image: Visual Studio 2017
 
+environment:
+  matrix:
+    - PYTHON: "C:\\Python36"
+
 init:
   # Good practise, because Windows line endings are different from Unix/Linux ones
   - cmd: git config --global core.autocrlf true
@@ -12,7 +16,14 @@ before_build:
 build_script:
   - cmd: dotnet restore
 
+before_test:
+  - for /f %%i in ('%PYTHON%\python.exe scripts\app_and_key_for_tests.py --create-app csharp-appveyor') do set CLARIFAI_APP_ID=%%i
+  - for /f %%i in ('%PYTHON%\python.exe scripts\app_and_key_for_tests.py --create-key %CLARIFAI_APP_ID%') do set CLARIFAI_APP_KEY=%%i
+  - for /f %%i in ('%PYTHON%\python.exe scripts\app_and_key_for_tests.py --create-workflow %CLARIFAI_API_KEY%') do rem
+
 test_script:
   - cmd: dotnet test Clarifai.IntegrationTests/Clarifai.IntegrationTests.csproj
   - cmd: dotnet test Clarifai.UnitTests/Clarifai.UnitTests.csproj
 
+after_test:
+  - '%PYTHON%\python.exe scripts\app_and_key_for_tests.py --delete-app %CLARIFAI_APP_ID%'

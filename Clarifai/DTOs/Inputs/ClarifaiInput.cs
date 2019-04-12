@@ -101,24 +101,24 @@ namespace Clarifai.DTOs.Inputs
         {
             if (jsonObject.data.image != null)
             {
-                if (jsonObject.data.image.url != null)
+                if (jsonObject.data.image.base64 != null)
                 {
-                    return ClarifaiURLImage.Deserialize(jsonObject);
+                    return ClarifaiFileImage.Deserialize(jsonObject);
                 }
                 else
                 {
-                    return ClarifaiFileImage.Deserialize(jsonObject);
+                    return ClarifaiURLImage.Deserialize(jsonObject);
                 }
             }
             else if (jsonObject.data.video != null)
             {
-                if (jsonObject.data.video.url != null)
+                if (jsonObject.data.video.base64 != null)
                 {
-                    return ClarifaiURLVideo.Deserialize(jsonObject);
+                    return ClarifaiFileVideo.Deserialize(jsonObject);
                 }
                 else
                 {
-                    return ClarifaiFileVideo.Deserialize(jsonObject);
+                    return ClarifaiURLVideo.Deserialize(jsonObject);
                 }
             }
             else
