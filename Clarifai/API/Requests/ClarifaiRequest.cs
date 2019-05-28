@@ -110,15 +110,15 @@ namespace Clarifai.API.Requests
                 }
                 case RequestMethod.POST:
                 {
-                    return await HttpClient.PostAsync(BuildUrl(), HttpRequestBody());
+                    return await HttpClient.PostAsync(BuildUrl(), BaseHttpRequestBody());
                 }
                 case RequestMethod.PATCH:
                 {
-                    return await HttpClient.PatchAsync(BuildUrl(), HttpRequestBody());
+                    return await HttpClient.PatchAsync(BuildUrl(), BaseHttpRequestBody());
                 }
                 case RequestMethod.DELETE:
                 {
-                    return await HttpClient.DeleteAsync(BuildUrl(), HttpRequestBody());
+                    return await HttpClient.DeleteAsync(BuildUrl(), BaseHttpRequestBody());
                 }
                 default:
                 {
@@ -141,6 +141,11 @@ namespace Clarifai.API.Requests
         /// </summary>
         /// <returns>the request body</returns>
         protected abstract JObject HttpRequestBody();
+
+        protected virtual JObject BaseHttpRequestBody()
+        {
+            return HttpRequestBody();
+        }
 
         /// <summary>
         /// Unmarshalls (or deserializes) the JSON object into a concrete output object.

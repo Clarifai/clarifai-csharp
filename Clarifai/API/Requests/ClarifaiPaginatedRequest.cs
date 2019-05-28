@@ -1,4 +1,7 @@
-﻿namespace Clarifai.API.Requests
+﻿using System;
+using Newtonsoft.Json.Linq;
+
+namespace Clarifai.API.Requests
 {
     /// <summary>
     /// A paginated Clarifai request. It divides the results into pages.
@@ -44,11 +47,45 @@
             }
             else
             {
-                return Url + "?" +
-                       (_page != null ? "page=" + _page : "") +
-                       (_page != null && _perPage != null ? "&" : "") +
-                       (_perPage != null ? "per_page=" + _perPage : "");
+                if (Method == RequestMethod.GET)
+                {
+                    return Url + "?" +
+                           (_page != null ? "page=" + _page : "") +
+                           (_page != null && _perPage != null ? "&" : "") +
+                           (_perPage != null ? "per_page=" + _perPage : "");
+                }
+                else if (Method == RequestMethod.POST)
+                {
+                    return Url;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "Pagination only supported for GET and POST");
+                }
             }
+        }
+
+        protected override JObject BaseHttpRequestBody()
+        {
+            JObject httpRequestBody = base.BaseHttpRequestBody();
+
+            var pagination = new JObject();
+            if (_page != null)
+            {
+                pagination["page"] = _page;
+            }
+            if (_perPage != null)
+            {
+                pagination["per_page"] = _perPage;
+            }
+
+            if (pagination.Count > 0)
+            {
+                httpRequestBody["pagination"] = pagination;
+            }
+
+            return httpRequestBody;
         }
     }
 }
