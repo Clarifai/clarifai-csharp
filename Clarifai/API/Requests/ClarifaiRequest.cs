@@ -17,8 +17,7 @@ namespace Clarifai.API.Requests
         protected abstract RequestMethod Method { get; }
         protected abstract string Url { get; }
 
-        private readonly IClarifaiHttpClient _httpClient;
-        protected IClarifaiHttpClient HttpClient => _httpClient;
+        protected IClarifaiHttpClient HttpClient { get; }
 
         /// <summary>
         /// Ctor.
@@ -26,7 +25,7 @@ namespace Clarifai.API.Requests
         /// <param name="httpClient">the HTTP client</param>
         protected ClarifaiRequest(IClarifaiHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            HttpClient = httpClient;
         }
 
         /// <inheritdoc />
