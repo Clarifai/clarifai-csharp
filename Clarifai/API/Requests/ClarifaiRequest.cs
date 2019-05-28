@@ -110,15 +110,15 @@ namespace Clarifai.API.Requests
                 }
                 case RequestMethod.POST:
                 {
-                    return await HttpClient.PostAsync(BuildUrl(), BaseHttpRequestBody());
+                    return await HttpClient.PostAsync(BuildUrl(), HttpRequestBody());
                 }
                 case RequestMethod.PATCH:
                 {
-                    return await HttpClient.PatchAsync(BuildUrl(), BaseHttpRequestBody());
+                    return await HttpClient.PatchAsync(BuildUrl(), HttpRequestBody());
                 }
                 case RequestMethod.DELETE:
                 {
-                    return await HttpClient.DeleteAsync(BuildUrl(), BaseHttpRequestBody());
+                    return await HttpClient.DeleteAsync(BuildUrl(), HttpRequestBody());
                 }
                 default:
                 {
@@ -140,11 +140,9 @@ namespace Clarifai.API.Requests
         /// The body to be sent in the request.
         /// </summary>
         /// <returns>the request body</returns>
-        protected abstract JObject HttpRequestBody();
-
-        protected virtual JObject BaseHttpRequestBody()
+        protected virtual JObject HttpRequestBody()
         {
-            return HttpRequestBody();
+            return new JObject();
         }
 
         /// <summary>

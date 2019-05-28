@@ -66,26 +66,42 @@ namespace Clarifai.API.Requests
             }
         }
 
-        protected override JObject BaseHttpRequestBody()
+        /// <summary>
+        /// Seal this method to avoid accidentally using it instead of PaginatedHttpRequestBody
+        /// in children ClarifaiPaginatedRequest.
+        /// </summary>
+        protected sealed override JObject HttpRequestBody()
         {
-            JObject httpRequestBody = base.BaseHttpRequestBody();
+            return PaginatedHttpRequestBody();
+        }
 
-            var pagination = new JObject();
-            if (_page != null)
+        /// <summary>
+        /// The HTTP request body used in paginated requests.
+        /// </summary>
+        protected virtual JObject PaginatedHttpRequestBody()
+        {
+            JObject body = base.HttpRequestBody();
+
+            if (Method == RequestMethod.POST)
             {
-                pagination["page"] = _page;
-            }
-            if (_perPage != null)
-            {
-                pagination["per_page"] = _perPage;
+                var pagination = new JObject();
+                if (_page != null)
+                {
+                    pagination["page"] = _page;
+                }
+
+                if (_perPage != null)
+                {
+                    pagination["per_page"] = _perPage;
+                }
+
+                if (pagination.Count > 0)
+                {
+                    body["pagination"] = pagination;
+                }
             }
 
-            if (pagination.Count > 0)
-            {
-                httpRequestBody["pagination"] = pagination;
-            }
-
-            return httpRequestBody;
+            return body;
         }
     }
 }

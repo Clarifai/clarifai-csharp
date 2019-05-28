@@ -45,15 +45,17 @@ namespace Clarifai.API.Requests.Inputs
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override JObject PaginatedHttpRequestBody()
         {
+            var body = base.PaginatedHttpRequestBody();
             var query = new JObject(
                 new JProperty("ands", _searchBys.Select(c => c.Serialize())));
             if (_language != null)
             {
                 query["language"] = _language;
             }
-            return new JObject(new JProperty("query", query));
+            body["query"] = query;
+            return body;
         }
     }
 }

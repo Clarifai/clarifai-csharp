@@ -32,16 +32,18 @@ namespace Clarifai.API.Requests.Models
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override JObject PaginatedHttpRequestBody()
         {
+            JObject body = base.PaginatedHttpRequestBody();
             var query = new JObject(
                 new JProperty("name", _name));
             if (_modelType != null)
             {
                 query["type"] = _modelType.TypeExt;
             }
-            return new JObject(
-                new JProperty("model_query", query));
+
+            body["model_query"] = query;
+            return body;
         }
 
         /// <inheritdoc />

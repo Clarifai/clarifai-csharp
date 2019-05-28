@@ -20,12 +20,6 @@ namespace Clarifai.API.Requests.Models
         { }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
-        {
-            return new JObject();
-        }
-
-        /// <inheritdoc />
         protected override List<IModel> Unmarshaller(dynamic jsonObject)
         {
             var models = new List<IModel>();

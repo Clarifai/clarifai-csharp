@@ -29,11 +29,5 @@ namespace Clarifai.API.Requests.Concepts
             }
             return concepts;
         }
-
-        /// <inheritdoc />
-        protected override JObject HttpRequestBody()
-        {
-            return new JObject();
-        }
     }
 }

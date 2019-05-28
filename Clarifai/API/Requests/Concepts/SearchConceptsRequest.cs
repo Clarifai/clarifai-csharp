@@ -41,12 +41,14 @@ namespace Clarifai.API.Requests.Concepts
         }
 
         /// <inheritdoc />
-        protected override JObject HttpRequestBody()
+        protected override JObject PaginatedHttpRequestBody()
         {
-            return new JObject(
-                new JProperty("concept_query", new JObject(
+            var body = base.PaginatedHttpRequestBody();
+
+            body["concept_query"] = new JObject(
                     new JProperty("name", _query),
-                    new JProperty("language", _language))));
+                    new JProperty("language", _language));
+            return body;
         }
     }
 }
