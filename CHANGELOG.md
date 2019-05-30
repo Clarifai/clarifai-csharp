@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [[1.3.1]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.3.1) - [NuGet](https://www.nuget.org/packages/Clarifai/1.3.1) - 2019-05-30
+
+### Fixed
+- Support pagination in search requests
+
 ## [[1.3.0]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.3.0) - [NuGet](https://www.nuget.org/packages/Clarifai/1.3.0) - 2018-12-10
 
 ### Added
