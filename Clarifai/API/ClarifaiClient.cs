@@ -197,9 +197,10 @@ namespace Clarifai.API
         }
 
         /// <inheritdoc />
-        public GetModelRequest<T> GetModel<T>(string modelID) where T : IPrediction
+        public GetModelRequest<T> GetModel<T>(string modelID,
+            string modelVersionID = null) where T : IPrediction
         {
-            return new GetModelRequest<T>(HttpClient, modelID);
+            return new GetModelRequest<T>(HttpClient, modelID, modelVersionID);
         }
 
         /// <inheritdoc />

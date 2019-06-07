@@ -267,5 +267,23 @@ namespace Clarifai.IntegrationTests
                 .ExecuteAsync();
             AssertResponseSuccess(response);
         }
+
+
+        [Test]
+        public async Task GetModelWithVersionIDShouldBeSuccessful()
+        {
+            string modelID = Client.PublicModels.GeneralModel.ModelID;
+            // This is the first general model version ID.
+            string modelVersionID = "aa9ca48295b37401f8af92ad1af0d91d";
+
+            var response = await Client.GetModel<Concept>(modelID, modelVersionID)
+                .ExecuteAsync();
+            ConceptModel model = (ConceptModel) response.Get();
+
+            AssertResponseSuccess(response);
+
+            Assert.AreEqual(modelVersionID, model.ModelVersion.ID);
+            Assert.IsTrue(model.OutputInfo.Concepts.Any());
+        }
     }
 }

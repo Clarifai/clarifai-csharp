@@ -11,18 +11,36 @@ namespace Clarifai.API.Requests.Models
     public class GetModelRequest<T> : ClarifaiRequest<IModel<T>> where T : IPrediction
     {
         protected override RequestMethod Method => RequestMethod.GET;
-        protected override string Url => "/v2/models/" + _modelID + "/output_info";
+        protected override string Url
+        {
+            get
+            {
+                if (_modelVersionID == null)
+                {
+                    return $"/v2/models/{_modelID}/output_info";
+                }
+                else
+                {
+                    return $"/v2/models/{_modelID}/versions/{_modelVersionID}/output_info";
+                }
+            }
+        }
 
         private readonly string _modelID;
+        private readonly string _modelVersionID;
 
         /// <summary>
         /// Ctor.
         /// </summary>
         /// <param name="httpClient">the HTTP client</param>
         /// <param name="modelID">the model ID</param>
-        public GetModelRequest(IClarifaiHttpClient httpClient, string modelID) : base(httpClient)
+        /// <param name="modelVersionID">the model version ID (optional) if skipped, the latest
+        /// model version data will be retrieved</param>
+        public GetModelRequest(IClarifaiHttpClient httpClient, string modelID,
+            string modelVersionID = null) : base(httpClient)
         {
             _modelID = modelID;
+            _modelVersionID = modelVersionID;
         }
 
         /// <inheritdoc />

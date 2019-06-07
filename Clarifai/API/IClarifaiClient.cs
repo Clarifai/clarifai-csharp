@@ -249,8 +249,11 @@ namespace Clarifai.API
         /// </summary>
         /// <typeparam name="T">the model type</typeparam>
         /// <param name="modelID">the model ID</param>
+        /// <param name="modelVersionID">the model version ID (optional) - if skipped, the latest
+        /// model version data will be retrieved</param>
         /// <returns>a new GetModelRequest instance</returns>
-        GetModelRequest<T> GetModel<T>(string modelID) where T : IPrediction;
+        GetModelRequest<T> GetModel<T>(string modelID,
+            string modelVersionID = null) where T : IPrediction;
 
         /// <summary>
         /// Retrieves an instance of a <see cref="ModelVersion"/> using model ID and version ID.
