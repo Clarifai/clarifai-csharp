@@ -57,7 +57,7 @@ namespace Clarifai.UnitTests
         ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
         ""status"": {
             ""code"": 30200,
-            ""description"": ""Input image modification success""
+            ""description"": ""Input get success""
         }
     }]
 }
@@ -208,6 +208,300 @@ namespace Clarifai.UnitTests
 
             Assert.True(response.IsSuccessful);
             Assert.AreEqual("Ok", response.Status.Description);
+        }
+
+        [Test]
+        public async Task DeleteInputResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                deleteResponse: @"{""status"":{""code"":10000,""description"":""Ok""}}");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<EmptyResponse> response = await client.DeleteInputs(
+                    "@inputID1", "@inputID2")
+                .ExecuteAsync();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual("Ok", response.Status.Description);
+        }
+
+        [Test]
+        public async Task GetInputResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                getResponse: @"
+{
+    ""status"": {
+        ""code"": 10000,
+        ""description"": ""Ok""
+    },
+    ""input"": {
+        ""id"": ""@inputID"",
+        ""data"": {
+            ""image"": {
+                ""url"": ""@imageURL""
+            },
+            ""concepts"": [
+                {
+                  ""id"": ""@positiveConcept"",
+                  ""value"": 1
+                },
+                {
+                  ""id"": ""@negativeConcept1"",
+                  ""value"": 0
+                },
+                {
+                  ""id"": ""@negativeConcept2"",
+                  ""value"": 0
+                }
+            ]
+        },
+        ""created_at"": ""2017-10-13T20:53:00.253139Z"",
+        ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
+        ""status"": {
+            ""code"": 30200,
+            ""description"": ""Input image modification success""
+        }
+    }
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<IClarifaiInput> response = await client.GetInput("@inputID").ExecuteAsync();
+            var input = (ClarifaiURLImage)response.Get();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual(input.ID,"@inputID");  
+            Assert.AreEqual(input.URL,"@imageURL"); 
+            Assert.AreEqual(input.PositiveConcepts.ElementAt(0).ID, "@positiveConcept"); 
+            Assert.AreEqual(input.NegativeConcepts.ElementAt(0).ID, "@negativeConcept1"); 
+            Assert.AreEqual(input.NegativeConcepts.ElementAt(1).ID, "@negativeConcept2"); 
+        }
+
+
+        [Test]
+        public async Task GetInputsResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                getResponse: @"
+{
+    ""status"": {
+        ""code"": 10000,
+        ""description"": ""Ok""
+    },
+    ""inputs"": [{
+        ""id"": ""@inputID1"",
+        ""data"": {
+            ""image"": {
+                ""url"": ""@imageURL1""
+            },
+            ""concepts"": [
+                {
+                  ""id"": ""@positiveConcept"",
+                  ""value"": 1
+                },
+                {
+                  ""id"": ""@negativeConcept"",
+                  ""value"": 0
+                }
+            ]
+        },
+        ""created_at"": ""2017-10-13T20:53:00.253139Z"",
+        ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
+        ""status"": {
+            ""code"": 30200,
+            ""description"": ""Input image modification success""
+        }
+    },
+    {
+        ""id"": ""@inputID2"",
+        ""data"": {
+            ""image"": {
+                ""url"": ""@imageURL2""
+            },
+            ""geo"": {
+                ""geo_point"": {
+                    ""longitude"": 55,
+                    ""latitude"": 66
+                }
+            }
+        },
+        ""created_at"": ""2017-10-13T20:53:00.253139Z"",
+        ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
+        ""status"": {
+            ""code"": 30200,
+            ""description"": ""Input image modification success""
+        }
+    }]
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<List<IClarifaiInput>> response = await client.GetInputs().ExecuteAsync();  
+            var inputs = (List<IClarifaiInput>)response.Get();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual(inputs[0].ID,"@inputID1"); 
+            Assert.AreEqual(inputs[0].PositiveConcepts.ElementAt(0).ID, "@positiveConcept"); 
+            Assert.AreEqual(inputs[0].NegativeConcepts.ElementAt(0).ID, "@negativeConcept"); 
+            Assert.AreEqual(inputs[1].ID,"@inputID2"); 
+            Assert.AreEqual(inputs[1].Geo.Longitude,55);
+            Assert.AreEqual(inputs[1].Geo.Latitude,66); 
+        }  
+
+
+        [Test]
+        public async Task GetInputsStatusResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                getResponse: @"
+{
+  ""status"": {
+    ""code"": 10000,
+    ""description"": ""Ok""
+  },
+  ""counts"": {
+    ""processed"": 1,
+    ""to_process"": 2,
+    ""errors"": 3,
+    ""processing"": 4,
+    ""reindexed"": 5,
+    ""to_reindex"": 6,
+    ""reindex_errors"": 7,
+    ""reindexing"": 8
+  }
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<ClarifaiInputsStatus> response = await client.GetInputsStatus().ExecuteAsync(); 
+            var status = (ClarifaiInputsStatus)response.Get();
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual(status.Processed,1);
+            Assert.AreEqual(status.ToProcess,2);
+            Assert.AreEqual(status.Errors,3);
+            Assert.AreEqual(status.Processing,4);
+        }
+
+
+        [Test]
+        public async Task AddInputsResponseAndResponseShouldBeCorrect()
+        {
+            var httpClient = new FkClarifaiHttpClient(
+                postResponse: @"
+{
+    ""status"": {
+        ""code"": 10000,
+        ""description"": ""Ok""
+    },
+    ""inputs"": [{
+        ""id"": ""@inputID1"",
+        ""data"": {
+            ""image"": {
+                ""url"": ""@imageURL1""
+            },
+            ""concepts"": [
+                {
+                  ""id"": ""@positiveConcept"",
+                  ""value"": 1
+                },
+                {
+                  ""id"": ""@negativeConcept"",
+                  ""value"": 0
+                }
+            ]
+        },
+        ""created_at"": ""2017-10-13T20:53:00.253139Z"",
+        ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
+        ""status"": {
+            ""code"": 30200,
+            ""description"": ""Input image modification success""
+        }
+    },
+    {
+        ""id"": ""@inputID2"",
+        ""data"": {
+            ""image"": {
+                ""url"": ""@imageURL2""
+            },
+            ""geo"": {
+                ""geo_point"": {
+                    ""longitude"": 55,
+                    ""latitude"": 66
+                }
+            }
+        },
+        ""created_at"": ""2017-10-13T20:53:00.253139Z"",
+        ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
+        ""status"": {
+            ""code"": 30200,
+            ""description"": ""Input image modification success""
+        }
+    }]
+}
+");
+            var client = new ClarifaiClient(httpClient);
+            ClarifaiResponse<List<IClarifaiInput>> response = await client.AddInputs(
+                new  IClarifaiInput[]
+                {
+                    new ClarifaiURLImage("@imageURL1","@inputID1",
+                        positiveConcepts: new List<Concept> {new Concept("@positiveConcept")},
+                        negativeConcepts: new List<Concept> {new Concept("@negativeConcept")}),
+                    new ClarifaiURLImage("@imageURL2","@inputID2",
+                        geo: new DTOs.GeoPoint(55,66)) 
+                }
+            ).ExecuteAsync(); 
+
+
+            var expectedRequestBody = JObject.Parse(@"
+{
+    ""inputs"": [
+      {
+        ""id"": ""@inputID1"",
+        ""data"": {
+            ""image"": {
+                ""url"": ""@imageURL1""
+            },
+            ""concepts"": [
+                {
+                  ""id"": ""@positiveConcept"",
+                  ""value"": true
+                },
+                {
+                  ""id"": ""@negativeConcept"",
+                  ""value"": false
+                }
+            ]
+        }
+      },
+      {
+        ""id"": ""@inputID2"",
+        ""data"": {
+            ""image"": {
+                ""url"": ""@imageURL2""
+            },
+            ""geo"": {
+                ""geo_point"": {
+                    ""longitude"": 55.0,
+                    ""latitude"": 66.0
+                }
+            }
+        }
+      }  
+   ]
+}
+");
+
+            Assert.True(JToken.DeepEquals(expectedRequestBody, httpClient.PostedBody));
+
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual("Ok", response.Status.Description);
+
+            var inputs = (List<IClarifaiInput>)response.Get();
+            Assert.True(response.IsSuccessful);
+            Assert.AreEqual(inputs[0].ID,"@inputID1"); 
+            Assert.AreEqual(inputs[0].PositiveConcepts.ElementAt(0).ID, "@positiveConcept"); 
+            Assert.AreEqual(inputs[0].NegativeConcepts.ElementAt(0).ID, "@negativeConcept"); 
+            Assert.AreEqual(inputs[1].ID,"@inputID2"); 
+            Assert.AreEqual(inputs[1].Geo.Longitude,55);
+            Assert.AreEqual(inputs[1].Geo.Latitude,66); 
         }
     }
 }
