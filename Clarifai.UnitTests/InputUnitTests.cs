@@ -57,7 +57,7 @@ namespace Clarifai.UnitTests
         ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
         ""status"": {
             ""code"": 30200,
-            ""description"": ""Input get success""
+            ""description"": ""Input GET success""
         }
     }]
 }

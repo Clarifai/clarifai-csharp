@@ -1,6 +1,9 @@
-﻿using Clarifai.DTOs.Models;
+﻿using System.Linq;
+using Clarifai.DTOs.Inputs;
+using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Models.OutputsInfo;
 using Clarifai.DTOs.Predictions;
+using Clarifai.DTOs.Workflows;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -74,6 +77,55 @@ namespace Clarifai.UnitTests
             Assert.AreEqual("main", model.AppID);
             Assert.AreEqual("some-model-version-id", model.ModelVersion.ID);
             Assert.AreEqual(21100, model.ModelVersion.Status.StatusCode);
+        }
+
+        [Test]
+        public void InputShouldBeCorrectlyDeserialized()
+        {
+            var json = JsonConvert.DeserializeObject<dynamic>(@"
+{
+        ""id"": ""@inputID"",
+        ""data"": {
+            ""image"": {
+                ""url"": ""@imageURL""
+            },
+            ""concepts"": [
+                {
+                  ""id"": ""@positiveConcept"",
+                  ""value"": 1
+                },
+                {
+                  ""id"": ""@negativeConcept2"",
+                  ""value"": 0
+                }
+            ]
+        },
+        ""created_at"": ""2017-10-13T20:53:00.253139Z"",
+        ""modified_at"": ""2017-10-13T20:53:00.868659782Z"",
+        ""status"": {
+            ""code"": 30200,
+            ""description"": ""Input image modification success""
+        }
+}");
+            ClarifaiInput input = ClarifaiInput.Deserialize(json);
+            Assert.AreEqual(input.ID,"@inputID");
+            Assert.AreEqual(input.PositiveConcepts.ElementAt(0).ID,"@positiveConcept");
+            Assert.AreEqual(input.NegativeConcepts.ElementAt(0).ID,"@negativeConcept2");
+        }
+
+        [Test]
+        public void WorkflowShouldBeCorrectlyDeserialized()
+        {
+            var json = JsonConvert.DeserializeObject<dynamic>(@"
+{
+    ""id"": ""@workflowID"",
+    ""app_id"": ""@appID"",
+    ""created_at"": ""2017-07-10T01:45:05.672880Z""
+}");
+            Workflow workflow = Workflow.Deserialize(json);
+            Assert.AreEqual(workflow.ID,"@workflowID");
+            Assert.AreEqual(workflow.AppID,"@appID");
+            Assert.AreEqual(workflow.CreatedAt.Year,2017);
         }
     }
 }
