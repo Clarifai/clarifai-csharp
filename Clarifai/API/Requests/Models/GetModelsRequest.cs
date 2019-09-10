@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Clarifai.DTOs.Models;
-using Newtonsoft.Json.Linq;
 
 namespace Clarifai.API.Requests.Models
 {
@@ -25,8 +25,15 @@ namespace Clarifai.API.Requests.Models
             var models = new List<IModel>();
             foreach (dynamic model in jsonObject.models)
             {
-                ModelType modelType = ModelType.DetermineModelType(
-                    (string)model.output_info.type_ext);
+                string typeExt = (string)model.output_info.type_ext;
+                ModelType modelType = ModelType.DetermineModelType(typeExt);
+                if (modelType == null)
+                {
+                    Console.Error.WriteLine(
+                        $"Warning: Unknown model type '{typeExt}', skipping. Please upgrade the " +
+                        $"to the latest version of the library.");
+                    continue;
+                }
                 models.Add(Model.Deserialize(HttpClient, modelType.Prediction, model));
             }
             return models;
