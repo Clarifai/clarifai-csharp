@@ -26,8 +26,7 @@ namespace Clarifai.IntegrationTests
         protected const string BALLOONS_IMAGE_FILE = "balloons.jpg";
         protected const string BEER_VIDEO_FILE = "beer.mp4";
 
-        protected readonly IClarifaiClient Client = new ClarifaiClient(
-            Environment.GetEnvironmentVariable("CLARIFAI_API_KEY"));
+        protected IClarifaiClient Client;
 
         private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
 
@@ -36,11 +35,19 @@ namespace Clarifai.IntegrationTests
         [SetUp]
         public void SetUp()
         {
-            if (string.IsNullOrWhiteSpace(
-                Environment.GetEnvironmentVariable("CLARIFAI_API_KEY")))
+            String apiKey = Environment.GetEnvironmentVariable("CLARIFAI_API_KEY");
+            if (string.IsNullOrWhiteSpace(apiKey))
             {
                 Assert.Inconclusive("The CLARIFAI_API_KEY environment variable must be set in order to run the integration tests.");
             }
+
+            String baseUrl = Environment.GetEnvironmentVariable("CLARIFAI_BASE_URL");
+            if (string.IsNullOrWhiteSpace(baseUrl))
+            {
+                baseUrl = "https://api.clarifai.com";
+            }
+
+            Client = new ClarifaiClient(new ClarifaiHttpClient(apiKey, baseUrl));
         }
 
         protected string GenerateRandomID()
