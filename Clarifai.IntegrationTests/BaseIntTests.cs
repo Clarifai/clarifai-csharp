@@ -41,7 +41,7 @@ namespace Clarifai.IntegrationTests
                 Assert.Inconclusive("The CLARIFAI_API_KEY environment variable must be set in order to run the integration tests.");
             }
 
-            String baseUrl = Environment.GetEnvironmentVariable("CLARIFAI_BASE_URL");
+            String baseUrl = Environment.GetEnvironmentVariable("CLARIFAI_API_BASE");
             if (string.IsNullOrWhiteSpace(baseUrl))
             {
                 baseUrl = "https://api.clarifai.com";
