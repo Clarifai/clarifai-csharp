@@ -80,11 +80,18 @@ namespace Clarifai.API
 
         private string FullUrl(string url)
         {
+            string baseUrl = _baseUrl;
+            if (baseUrl.Substring(baseUrl.Length - 1, 1) != "/")
+            {
+                baseUrl += "/";
+            }
+
             if (url.Substring(0, 1) != "/")
             {
                 url = "/" + url;
             }
-            return _baseUrl + url;
+
+            return baseUrl + url;
         }
     }
 }
