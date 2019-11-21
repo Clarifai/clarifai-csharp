@@ -81,7 +81,10 @@ namespace Clarifai.IntegrationTests
             {
                 Console.WriteLine(response.Status.StatusCode);
                 Console.WriteLine(response.Status.Description);
-                Console.WriteLine(response.Status.ErrorDetails);
+                if (response.Status.ErrorDetails != null)
+                {
+                    Console.WriteLine(response.Status.ErrorDetails);
+                }
 
                 if (message != null)
                 {
