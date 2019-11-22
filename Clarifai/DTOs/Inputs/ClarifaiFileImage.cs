@@ -34,13 +34,14 @@ namespace Clarifai.DTOs.Inputs
         /// <param name="geo">input's geographical point</param>
         /// <param name="crop">the crop</param>
         /// <param name="regions">the regions</param>
+        /// <param name="status">the status</param>
         public ClarifaiFileImage(byte[] bytes, string id = null,
             IEnumerable<Concept> positiveConcepts = null,
             IEnumerable<Concept> negativeConcepts = null, JObject metadata = null,
             DateTime? createdAt = null, GeoPoint geo = null, Crop crop = null,
-            List<Region> regions = null)
+            List<Region> regions = null, ClarifaiStatus status = null)
             : base(InputType.Image, InputForm.File, id, positiveConcepts, negativeConcepts,
-                  metadata, createdAt, geo, regions)
+                  metadata, createdAt, geo, regions, status)
         {
             _bytes = bytes;
             Crop = crop;
@@ -115,6 +116,13 @@ namespace Clarifai.DTOs.Inputs
                     regions.Add(Region.Deserialize(region));
                 }
             }
+
+            ClarifaiStatus status = null;
+            if (jsonObject.status != null)
+            {
+                status = ClarifaiStatus.Deserialize(jsonObject.status);
+            }
+
             return new ClarifaiFileImage(
                 bytes: Convert.FromBase64String((string) jsonObject.data.image.base64),
                 id: (string) jsonObject.id,
@@ -124,7 +132,8 @@ namespace Clarifai.DTOs.Inputs
                 metadata: metadata,
                 createdAt: createdAt,
                 geo: geoPoint,
-                regions: regions);
+                regions: regions,
+                status: status);
         }
 
         private bool Equals(ClarifaiFileImage other)

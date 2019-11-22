@@ -22,12 +22,13 @@ namespace Clarifai.DTOs.Inputs
         /// <param name="metadata">the video's optional metadata by which you can search</param>
         /// <param name="createdAt">the date & time of video's creation</param>
         /// <param name="geo">input's geographical point</param>
+        /// <param name="status">the status</param>
         public ClarifaiURLVideo(string url, string id = null,
             IEnumerable<Concept> positiveConcepts = null,
             IEnumerable<Concept> negativeConcepts = null, JObject metadata = null,
-            DateTime? createdAt = null, GeoPoint geo = null)
+            DateTime? createdAt = null, GeoPoint geo = null, ClarifaiStatus status = null)
             : base(InputType.Video, InputForm.URL, id, positiveConcepts, negativeConcepts, metadata,
-                createdAt, geo, null)
+                createdAt, geo, null, status)
         {
             URL = url;
         }
@@ -82,6 +83,13 @@ namespace Clarifai.DTOs.Inputs
             {
                 createdAt = (DateTime)jsonObject.created_at;
             }
+
+            ClarifaiStatus status = null;
+            if (jsonObject.status != null)
+            {
+                status = ClarifaiStatus.Deserialize(jsonObject.status);
+            }
+
             return new ClarifaiURLVideo(
                 id: (string) jsonObject.id,
                 url: (string) jsonObject.data.video.url,
@@ -89,7 +97,8 @@ namespace Clarifai.DTOs.Inputs
                 negativeConcepts: negativeConcepts,
                 metadata: metadata,
                 createdAt: createdAt,
-                geo: geoPoint);
+                geo: geoPoint,
+                status: status);
         }
 
         public override bool Equals(object obj)

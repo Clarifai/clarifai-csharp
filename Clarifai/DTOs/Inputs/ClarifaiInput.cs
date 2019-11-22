@@ -21,6 +21,9 @@ namespace Clarifai.DTOs.Inputs
         public string ID { get; }
 
         /// <inheritdoc />
+        public ClarifaiStatus Status { get; }
+
+        /// <inheritdoc />
         public IEnumerable<Concept> PositiveConcepts { get; }
 
         /// <inheritdoc />
@@ -42,7 +45,8 @@ namespace Clarifai.DTOs.Inputs
 
         protected ClarifaiInput(InputType type, InputForm form, string id,
             IEnumerable<Concept> positiveConcepts, IEnumerable<Concept> negativeConcepts,
-            JObject metadata, DateTime? createdAt, GeoPoint geo, List<Region> regions)
+            JObject metadata, DateTime? createdAt, GeoPoint geo, List<Region> regions,
+            ClarifaiStatus status)
         {
             Type = type;
             Form = form;
@@ -53,6 +57,7 @@ namespace Clarifai.DTOs.Inputs
             CreatedAt = createdAt;
             Geo = geo;
             Regions = regions;
+            Status = status;
         }
 
         protected JObject Serialize(JProperty inputProperty)

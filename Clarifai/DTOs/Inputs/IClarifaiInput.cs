@@ -44,6 +44,11 @@ namespace Clarifai.DTOs.Inputs
         string ID { get; }
 
         /// <summary>
+        /// The Clarifai Status.
+        /// </summary>
+        ClarifaiStatus Status { get; }
+
+        /// <summary>
         /// The concepts associated with the input.
         /// </summary>
         IEnumerable<Concept> PositiveConcepts { get; }

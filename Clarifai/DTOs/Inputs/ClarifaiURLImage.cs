@@ -35,13 +35,14 @@ namespace Clarifai.DTOs.Inputs
         /// <param name="geo">input's geographical point</param>
         /// <param name="crop">the crop</param>
         /// <param name="regions">the regions</param>
+        /// <param name="status">the status</param>
         public ClarifaiURLImage(string url, string id = null, bool? allowDuplicateUrl = null,
             IEnumerable<Concept> positiveConcepts = null,
             IEnumerable<Concept> negativeConcepts = null, JObject metadata = null,
             DateTime? createdAt = null, GeoPoint geo = null, Crop crop = null,
-            List<Region> regions = null)
+            List<Region> regions = null, ClarifaiStatus status = null)
             : base(InputType.Image, InputForm.URL, id, positiveConcepts, negativeConcepts,
-                metadata, createdAt, geo, regions)
+                metadata, createdAt, geo, regions, status)
         {
             URL = url;
             AllowDuplicateUrl = allowDuplicateUrl;
@@ -121,6 +122,13 @@ namespace Clarifai.DTOs.Inputs
                     regions.Add(Region.Deserialize(region));
                 }
             }
+
+            ClarifaiStatus status = null;
+            if (jsonObject.status != null)
+            {
+                status = ClarifaiStatus.Deserialize(jsonObject.status);
+            }
+
             return new ClarifaiURLImage(
                 id: (string) jsonObject.id,
                 url: (string) jsonObject.data.image.url,
@@ -130,7 +138,8 @@ namespace Clarifai.DTOs.Inputs
                 metadata: metadata,
                 createdAt: createdAt,
                 geo: geoPoint,
-                regions: regions);
+                regions: regions,
+                status: status);
         }
 
         public override bool Equals(object obj)
