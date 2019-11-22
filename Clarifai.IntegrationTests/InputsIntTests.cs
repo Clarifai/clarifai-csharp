@@ -260,7 +260,7 @@ namespace Clarifai.IntegrationTests
         [Test]
         public async Task PositiveAndNegativeConceptsShouldBeHandledCorrectly()
         {
-            string inputID = "some-celeb";
+            string inputID = GenerateRandomID();
 
             var addResponse = await Client.AddInputs(
                     new ClarifaiURLImage(
