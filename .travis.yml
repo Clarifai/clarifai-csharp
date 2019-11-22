@@ -33,6 +33,7 @@ after_script:
 before_cache:
   - rm -rf $HOME/.dotnet/optimizationdata
 
+# TODO: Add support for "Current" .NET Core version (which is, at this point, 3.0).
 matrix:
   include:
     - os: linux
@@ -45,34 +46,34 @@ matrix:
       env:
         - OS=linux
         - DOTNET_CORE_VERSION=LTS
-    - os: linux
-      dist: trusty
-      env:
-        - OS=linux
-        - DOTNET_CORE_VERSION=Current
+#    - os: linux
+#      dist: trusty
+#      env:
+#        - OS=linux
+#        - DOTNET_CORE_VERSION=Current
     - os: osx
       osx_image: xcode9.3
       env:
         - OS=osx93
         - DOTNET_CORE_VERSION=LTS
-    - os: osx
-      python: "3.6"
-      osx_image: xcode9.3
-      env:
-        - OS=osx93
-        - DOTNET_CORE_VERSION=Current
+#    - os: osx
+#      python: "3.6"
+#      osx_image: xcode9.3
+#      env:
+#        - OS=osx93
+#        - DOTNET_CORE_VERSION=Current
     - os: osx
       python: "3.6"
       osx_image: xcode9.2
       env:
         - OS=osx
         - DOTNET_CORE_VERSION=LTS
-    - os: osx
-      python: "3.6"
-      osx_image: xcode9.2
-      env:
-        - OS=osx
-        - DOTNET_CORE_VERSION=Current
+#    - os: osx
+#      python: "3.6"
+#      osx_image: xcode9.2
+#      env:
+#        - OS=osx
+#        - DOTNET_CORE_VERSION=Current
 
 deploy:
   - provider: script
@@ -80,7 +81,7 @@ deploy:
       - chmod +x ./deploy.sh && ./deploy.sh
     skip_cleanup: true
     on:
-      condition: "$OS == osx && $DOTNET_CORE_VERSION == Current"
+      condition: "$OS == osx && $DOTNET_CORE_VERSION == LTS"
       tags: true
       repo: Clarifai/clarifai-csharp
   - provider: releases
@@ -91,6 +92,6 @@ deploy:
       - Clarifai/bin/Release/Clarifai.*.nupkg
       - Clarifai/bin/Release/netstandard1.3/Clarifai.dll
     on:
-      condition: "$OS == osx && $DOTNET_CORE_VERSION == Current"
+      condition: "$OS == osx && $DOTNET_CORE_VERSION == LTS"
       tags: true
       repo: Clarifai/clarifai-csharp
