@@ -105,7 +105,7 @@ namespace Clarifai.IntegrationTests
                 long start = DateTimeOffset.Now.ToUnixTimeSeconds();
                 while (true)
                 {
-                    if (DateTimeOffset.Now.ToUnixTimeSeconds() - start >= 20)
+                    if (DateTimeOffset.Now.ToUnixTimeSeconds() - start > 60)
                     {
                         throw new ClarifaiException(
                             $"Waited too long for input ID {inputID} upload.");
