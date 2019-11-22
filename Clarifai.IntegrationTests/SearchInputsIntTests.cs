@@ -71,8 +71,12 @@ namespace Clarifai.IntegrationTests
 
             AssertResponseSuccess(addInputResponse);
 
+            string inputID = addInputResponse.Get()[0].ID;
+
             try
             {
+                await WaitForSpecificInputsUpload(inputID);
+
                 ClarifaiResponse<SearchInputsResult> response =
                     await Client.SearchInputs(new List<SearchBy>
                             {
@@ -86,9 +90,8 @@ namespace Clarifai.IntegrationTests
             }
             finally
             {
-                string id = addInputResponse.Get()[0].ID;
                 ClarifaiResponse<EmptyResponse> deleteInputResponse =
-                    await Client.DeleteInputs(id).ExecuteAsync();
+                    await Client.DeleteInputs(inputID).ExecuteAsync();
                 AssertResponseSuccess(deleteInputResponse);
             }
         }
@@ -189,8 +192,12 @@ namespace Clarifai.IntegrationTests
 
             AssertResponseSuccess(addInputResponse);
 
+            string inputID = addInputResponse.Get()[0].ID;
+
             try
             {
+                await WaitForSpecificInputsUpload(inputID);
+
                 ClarifaiResponse<SearchInputsResult> response =
                     await Client.SearchInputs(new List<SearchBy>
                             {
@@ -206,9 +213,8 @@ namespace Clarifai.IntegrationTests
             }
             finally
             {
-                string id = addInputResponse.Get()[0].ID;
                 ClarifaiResponse<EmptyResponse> deleteInputResponse =
-                    await Client.DeleteInputs(id).ExecuteAsync();
+                    await Client.DeleteInputs(inputID).ExecuteAsync();
                 AssertResponseSuccess(deleteInputResponse);
             }
         }
@@ -228,8 +234,12 @@ namespace Clarifai.IntegrationTests
 
             AssertResponseSuccess(addInputResponse);
 
+            string inputID = addInputResponse.Get()[0].ID;
+
             try
             {
+                await WaitForSpecificInputsUpload(inputID);
+
                 ClarifaiResponse<SearchInputsResult> response =
                     await Client.SearchInputs(new List<SearchBy>
                         {
@@ -243,9 +253,8 @@ namespace Clarifai.IntegrationTests
             }
             finally
             {
-                string id = addInputResponse.Get()[0].ID;
                 ClarifaiResponse<EmptyResponse> deleteInputResponse =
-                    await Client.DeleteInputs(id).ExecuteAsync();
+                    await Client.DeleteInputs(inputID).ExecuteAsync();
                 AssertResponseSuccess(deleteInputResponse);
             }
         }
@@ -265,8 +274,11 @@ namespace Clarifai.IntegrationTests
 
             AssertResponseSuccess(addInputResponse);
 
+            String inputID = addInputResponse.Get()[0].ID;
             try
             {
+                await WaitForSpecificInputsUpload(inputID);
+
                 ClarifaiResponse<SearchInputsResult> response =
                     await Client.SearchInputs(new List<SearchBy>
                         {
@@ -279,9 +291,8 @@ namespace Clarifai.IntegrationTests
             }
             finally
             {
-                string id = addInputResponse.Get()[0].ID;
                 ClarifaiResponse<EmptyResponse> deleteInputResponse =
-                    await Client.DeleteInputs(id).ExecuteAsync();
+                    await Client.DeleteInputs(inputID).ExecuteAsync();
                 AssertResponseSuccess(deleteInputResponse);
             }
         }

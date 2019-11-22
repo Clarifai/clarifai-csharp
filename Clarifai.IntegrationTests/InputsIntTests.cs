@@ -38,6 +38,9 @@ namespace Clarifai.IntegrationTests
                     .ExecuteAsync();
                 AssertResponseSuccess(addResponse);
 
+                await WaitForSpecificInputsUpload(inputID1, inputID2);
+
+
                 /*
                  * Get inputs' status.
                  */
@@ -101,6 +104,8 @@ namespace Clarifai.IntegrationTests
                             allowDuplicateUrl: true))
                     .ExecuteAsync();
                 AssertResponseSuccess(addResponse);
+
+                await WaitForSpecificInputsUpload(inputID);
             }
             finally
             {
@@ -120,9 +125,10 @@ namespace Clarifai.IntegrationTests
                 await AddInputWithConcept1AndConcept2(inputID);
             AssertResponseSuccess(addResponse);
 
-
             try
             {
+                await WaitForSpecificInputsUpload(inputID);
+
                 ClarifaiResponse<IClarifaiInput> modifyResponse = await Client.ModifyInput(
                         inputID,
                         ModifyAction.Overwrite,
@@ -154,6 +160,8 @@ namespace Clarifai.IntegrationTests
 
             try
             {
+                await WaitForSpecificInputsUpload(inputID);
+
                 ClarifaiResponse<IClarifaiInput> modifyResponse = await Client.ModifyInput(
                         inputID,
                         ModifyAction.Merge,
@@ -188,6 +196,8 @@ namespace Clarifai.IntegrationTests
 
             try
             {
+                await WaitForSpecificInputsUpload(inputID);
+
                 ClarifaiResponse<IClarifaiInput> modifyResponse = await Client.ModifyInput(
                         inputID,
                         ModifyAction.Remove,
@@ -227,6 +237,8 @@ namespace Clarifai.IntegrationTests
 
             try
             {
+                await WaitForSpecificInputsUpload(inputID);
+
                 ClarifaiResponse<IClarifaiInput> modifyResponse = await Client.ModifyInputMetadata(
                         inputID,
                         new JObject(new JProperty("key3", "val3")))
@@ -258,6 +270,7 @@ namespace Clarifai.IntegrationTests
         }
 
         [Test]
+        [Retry(3)]
         public async Task PositiveAndNegativeConceptsShouldBeHandledCorrectly()
         {
             string inputID = GenerateRandomID();
@@ -280,6 +293,8 @@ namespace Clarifai.IntegrationTests
 
             try
             {
+                await WaitForSpecificInputsUpload(inputID);
+
                 var modifyResponse = await Client.ModifyInput(
                         inputID,
                         ModifyAction.Merge,
@@ -326,6 +341,8 @@ namespace Clarifai.IntegrationTests
                 AssertResponseSuccess(addResponse);
                 var input = (ClarifaiURLImage) addResponse.Get()[0];
                 Assert.AreEqual(new Crop(0.1M, 0.2M, 0.3M, 0.4M), input.Crop);
+
+                await WaitForSpecificInputsUpload(inputID);
             }
             finally
             {
@@ -356,6 +373,8 @@ namespace Clarifai.IntegrationTests
 
                 ClarifaiURLImage input = (ClarifaiURLImage) addResponse.Get()[0];
                 Assert.AreEqual(new Crop(0.1M, 0.2M, 0.3M, 0.4M), input.Crop);
+
+                await WaitForSpecificInputsUpload(inputID);
             }
             finally
             {

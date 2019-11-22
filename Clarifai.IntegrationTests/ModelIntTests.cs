@@ -158,6 +158,8 @@ namespace Clarifai.IntegrationTests
                 Assert.Fail("Adding inputs not successful: " + addInputsResponse.Status.Type);
             }
 
+            await WaitForSpecificInputsUpload(addInputsResponse.Get().Select(i => i.ID).ToArray());
+
             /*
              * Train the model.
              */

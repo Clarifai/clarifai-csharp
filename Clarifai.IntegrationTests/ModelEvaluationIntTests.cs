@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Clarifai.API.Responses;
@@ -43,6 +44,8 @@ namespace Clarifai.IntegrationTests
                     allowDuplicateUrl: true)
             ).ExecuteAsync();
             AssertResponseSuccess(addInputsResponse);
+
+            await WaitForSpecificInputsUpload(addInputsResponse.Get().Select(i => i.ID).ToArray());
 
             /*
              * Train the model.

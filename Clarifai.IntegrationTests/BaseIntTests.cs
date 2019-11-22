@@ -2,8 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Clarifai.API;
 using Clarifai.API.Responses;
+using Clarifai.DTOs.Inputs;
+using Clarifai.Exceptions;
 using NUnit.Framework;
 using NUnit.Framework.Internal.Execution;
 
@@ -91,6 +95,39 @@ namespace Clarifai.IntegrationTests
                     Console.WriteLine(message);
                 }
                 Assert.Fail("Failed response");
+            }
+        }
+
+        protected async Task WaitForSpecificInputsUpload(params String[] inputIDs)
+        {
+            foreach (string inputID in inputIDs)
+            {
+                long start = DateTimeOffset.Now.ToUnixTimeSeconds();
+                while (true)
+                {
+                    if (DateTimeOffset.Now.ToUnixTimeSeconds() - start >= 20)
+                    {
+                        throw new ClarifaiException(
+                            $"Waited too long for input ID {inputID} upload.");
+                    }
+
+                    var response = await Client.GetInput(inputID).ExecuteAsync();
+                    int statusCode = response.Get().Status.StatusCode;
+                    // INPUT_IMAGE_DOWNLOAD_SUCCESS
+                    if (statusCode == 30000)
+                    {
+                        break;
+                    }
+                    // not (INPUT_IMAGE_DOWNLOAD_PENDING or INPUT_IMAGE_DOWNLOAD_IN_PROGRESS)
+                    else if (!(statusCode == 30001 || statusCode == 30003))
+                    {
+                        throw new ClarifaiException(
+                            $"Waiting for input ID {inputID} failed because status code is " +
+                            $"{statusCode}");
+                    }
+
+                    Thread.Sleep(200);
+                }
             }
         }
     }
