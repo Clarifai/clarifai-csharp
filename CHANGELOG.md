@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [[1.3.2]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.3.2) - [NuGet](https://www.nuget.org/packages/Clarifai/1.3.2) - 2019-11-23
+
+### Added
+- Expose each input's status object
+- Getting model by version ID
+
+### Fixed
+- Skip unknown model types in GetModelsRequest
+
 ## [[1.3.1]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.3.1) - [NuGet](https://www.nuget.org/packages/Clarifai/1.3.1) - 2019-05-30
 
 ### Fixed
