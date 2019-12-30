@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Clarifai.DTOs.Predictions;
+using Clarifai.Exceptions;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Inputs
@@ -32,7 +33,7 @@ namespace Clarifai.DTOs.Inputs
         /// <param name="metadata">the video's optional metadata by which you can search</param>
         /// <param name="createdAt">the date & time of video's creation</param>
         /// <param name="geo">input's geographical point</param>
-        /// <param name="crop">the crop</param>
+        /// <param name="crop">(deprecated) the crop</param>
         /// <param name="regions">the regions</param>
         /// <param name="status">the status</param>
         public ClarifaiFileImage(byte[] bytes, string id = null,
@@ -45,6 +46,12 @@ namespace Clarifai.DTOs.Inputs
         {
             _bytes = bytes;
             Crop = crop;
+
+            if (crop != null)
+            {
+                throw new ClarifaiException(
+                    "The `crop` argument is not used/supported by any more by ClarifaiFileImage.");
+            }
         }
 
         /// <summary>
@@ -55,10 +62,6 @@ namespace Clarifai.DTOs.Inputs
         {
             var image = new JObject(
                 new JProperty("base64", Convert.ToBase64String(_bytes)));
-            if (Crop != null)
-            {
-                image.Add("crop", Crop.SerializeAsArray());
-            }
             return Serialize(
                 new JProperty("image", image));
         }
@@ -86,11 +89,6 @@ namespace Clarifai.DTOs.Inputs
                         positiveConcepts.Add(concept);
                     }
                 }
-            }
-            Crop crop = null;
-            if (jsonObject.data.image.crop != null)
-            {
-                crop = DTOs.Crop.Deserialize(jsonObject.data.image.crop);
             }
             JObject metadata = null;
             if (jsonObject.data.metadata != null)
@@ -128,7 +126,6 @@ namespace Clarifai.DTOs.Inputs
                 id: (string) jsonObject.id,
                 positiveConcepts: positiveConcepts,
                 negativeConcepts: negativeConcepts,
-                crop: crop,
                 metadata: metadata,
                 createdAt: createdAt,
                 geo: geoPoint,
@@ -138,7 +135,7 @@ namespace Clarifai.DTOs.Inputs
 
         private bool Equals(ClarifaiFileImage other)
         {
-            return base.Equals(other) && Equals(_bytes, other._bytes) && Equals(Crop, other.Crop);
+            return base.Equals(other) && Equals(_bytes, other._bytes);
         }
 
         public override bool Equals(object obj)
@@ -155,7 +152,6 @@ namespace Clarifai.DTOs.Inputs
             {
                 int hashCode = base.GetHashCode();
                 hashCode = (hashCode * 397) ^ (_bytes != null ? _bytes.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (Crop != null ? Crop.GetHashCode() : 0);
                 return hashCode;
             }
         }

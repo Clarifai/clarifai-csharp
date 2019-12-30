@@ -1,5 +1,6 @@
 ﻿using System;
 using Clarifai.DTOs.Inputs;
+using Clarifai.Exceptions;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Searches
@@ -125,80 +126,81 @@ namespace Clarifai.DTOs.Searches
         private class SearchByImageURL : SearchBy
         {
             private readonly string _imageUrl;
-            private readonly Crop _crop;
 
             public SearchByImageURL(string imageUrl, Crop crop = null)
             {
                 _imageUrl = imageUrl;
-                _crop = crop;
+
+                if (crop != null)
+                {
+                    throw new ClarifaiException(
+                        "The `crop` argument is not used/supported by any more by SearchByImageURL."
+                    );
+                }
             }
 
             public override JObject Serialize()
             {
-                var image = new JObject(
-                    new JProperty("url", _imageUrl));
-                if (_crop != null)
-                {
-                    image.Add("crop", _crop.SerializeAsArray());
-                }
                 return new JObject(
                     new JProperty("input", new JObject(
                         new JProperty("data", new JObject(
-                            new JProperty("image", image))))));
+                            new JProperty("image", new JObject(
+                                new JProperty("url", _imageUrl))))))));
             }
         }
 
         private class SearchByImageVisuallyWithUrl : SearchBy
         {
             private readonly string _imageUrl;
-            private readonly Crop _crop;
 
             public SearchByImageVisuallyWithUrl (string imageUrl, Crop crop = null)
             {
                 _imageUrl = imageUrl;
-                _crop = crop;
+
+                if (crop != null)
+                {
+                    throw new ClarifaiException(
+                        "The `crop` argument is not used/supported by any more by " +
+                        "SearchByImageVisuallyWithUrl.");
+                }
             }
 
             public override JObject Serialize()
             {
-                var image = new JObject(
-                    new JProperty("url", _imageUrl));
-                if (_crop != null)
-                {
-                    image.Add("crop", _crop.SerializeAsArray());
-                }
                 return new JObject(
                     new JProperty("output", new JObject(
                         new JProperty("input", new JObject(
                             new JProperty("data", new JObject(
-                                new JProperty("image", image))))))));
+                                new JProperty("image", new JObject(
+                                    new JProperty("url", _imageUrl))))))))));
             }
         }
 
         private class SearchByImageVisuallyWithBytes : SearchBy
         {
             private readonly byte[] _bytes;
-            private readonly Crop _crop;
 
             public SearchByImageVisuallyWithBytes(byte[] bytes, Crop crop = null)
             {
                 _bytes = bytes;
-                _crop = crop;
+
+                if (crop != null)
+                {
+                    throw new ClarifaiException(
+                        "The `crop` argument is not used/supported by any more by " +
+                        "SearchByImageVisuallyWithUrl.");
+                }
             }
 
             public override JObject Serialize()
             {
-                var image = new JObject(
-                    new JProperty("base64", Convert.ToBase64String(_bytes)));
-                if (_crop != null)
-                {
-                    image.Add("crop", _crop.SerializeAsArray());
-                }
                 return new JObject(
                     new JProperty("output", new JObject(
                         new JProperty("input", new JObject(
                             new JProperty("data", new JObject(
-                                new JProperty("image", image))))))));
+                                new JProperty("image", new JObject(
+                                    new JProperty("base64", Convert.ToBase64String(_bytes))))))))))
+                );
             }
         }
 

@@ -7,6 +7,7 @@ using Clarifai.DTOs;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
+using Clarifai.Exceptions;
 using NUnit.Framework;
 
 namespace Clarifai.IntegrationTests
@@ -50,20 +51,12 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task ConceptPredictForOneImageWithCropShouldBeSuccessful()
+        public async Task ImageWithCropThrowsWhenConstructed()
         {
-            var response = await Client.Predict<Concept>(
-                    Client.PublicModels.GeneralModel.ModelID,
-                    new ClarifaiURLImage(
-                        CELEB1,
-                        crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
-                .ExecuteAsync();
-
-            AssertResponseSuccess(response);
-            Assert.AreEqual(10000, response.Status.StatusCode);
-            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
-            Assert.NotNull(response.RawBody);
-            Assert.NotNull(response.Get().Data[0]);
+            Assert.Throws<ClarifaiException>(() =>
+            {
+                new ClarifaiURLImage(CELEB1, crop: new Crop(0.1M, 0.2M, 0.3M, 0.4M));
+            });
         }
 
         [Test]

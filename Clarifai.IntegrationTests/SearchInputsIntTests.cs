@@ -8,6 +8,7 @@ using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models.Outputs;
 using Clarifai.DTOs.Predictions;
 using Clarifai.DTOs.Searches;
+using Clarifai.Exceptions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
@@ -134,16 +135,12 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task SearchVisuallyByImageUrlWithCropShouldBeSuccessful()
+        public void SearchVisuallyByImageUrlWithCropShouldThrowWhenConstructed()
         {
-            ClarifaiResponse<SearchInputsResult> response =
-                await Client.SearchInputs(SearchBy.ImageVisually(
-                        CELEB1,
-                        new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
-                    .ExecuteAsync();
-
-            AssertResponseSuccess(response);
-            Assert.NotNull(response.Get().SearchHits);
+            Assert.Throws<ClarifaiException>(() =>
+            {
+                SearchBy.ImageVisually(CELEB1, new Crop(0.1M, 0.2M, 0.3M, 0.4M));
+            });
         }
 
         [Test]
@@ -160,17 +157,14 @@ namespace Clarifai.IntegrationTests
         }
 
         [Test]
-        [Retry(3)]
-        public async Task SearchVisuallyByImageFileWithCropShouldBeSuccessful()
+        public void SearchVisuallyByImageFileWithCropShouldThrowWhenConstructed()
         {
-            ClarifaiResponse<SearchInputsResult> response =
-                await Client.SearchInputs(SearchBy.ImageVisually(
-                        new ClarifaiFileImage(ReadResource(BALLOONS_IMAGE_FILE)),
-                        new Crop(0.1M, 0.2M, 0.3M, 0.4M)))
-                    .ExecuteAsync();
-
-            AssertResponseSuccess(response);
-            Assert.NotNull(response.Get().SearchHits);
+            Assert.Throws<ClarifaiException>(() =>
+            {
+                SearchBy.ImageVisually(
+                    new ClarifaiFileImage(ReadResource(BALLOONS_IMAGE_FILE)),
+                    new Crop(0.1M, 0.2M, 0.3M, 0.4M));
+            });
         }
 
         [Test]

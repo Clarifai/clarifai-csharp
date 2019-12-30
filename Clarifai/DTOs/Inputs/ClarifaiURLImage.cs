@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Clarifai.DTOs.Predictions;
+using Clarifai.Exceptions;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Inputs
@@ -33,7 +34,7 @@ namespace Clarifai.DTOs.Inputs
         /// <param name="metadata">the image's optional metadata by which you can search</param>
         /// <param name="createdAt">the date & time of image's creation</param>
         /// <param name="geo">input's geographical point</param>
-        /// <param name="crop">the crop</param>
+        /// <param name="crop">(deprecated) the crop</param>
         /// <param name="regions">the regions</param>
         /// <param name="status">the status</param>
         public ClarifaiURLImage(string url, string id = null, bool? allowDuplicateUrl = null,
@@ -47,6 +48,12 @@ namespace Clarifai.DTOs.Inputs
             URL = url;
             AllowDuplicateUrl = allowDuplicateUrl;
             Crop = crop;
+
+            if (crop != null)
+            {
+                throw new ClarifaiException(
+                    "The `crop` argument is not used/supported by any more by ClarifaiURLImage.");
+            }
         }
 
         /// <summary>
@@ -57,10 +64,6 @@ namespace Clarifai.DTOs.Inputs
         {
             var image = new JObject(
                 new JProperty("url", URL));
-            if (Crop != null)
-            {
-                image.Add("crop", Crop.SerializeAsArray());
-            }
             if (AllowDuplicateUrl != null)
             {
                 image.Add("allow_duplicate_url", AllowDuplicateUrl);
@@ -92,11 +95,6 @@ namespace Clarifai.DTOs.Inputs
                         positiveConcepts.Add(concept);
                     }
                 }
-            }
-            Crop crop = null;
-            if (jsonObject.data.image.crop != null)
-            {
-                crop = DTOs.Crop.Deserialize(jsonObject.data.image.crop);
             }
             JObject metadata = null;
             if (jsonObject.data.metadata != null)
@@ -134,7 +132,6 @@ namespace Clarifai.DTOs.Inputs
                 url: (string) jsonObject.data.image.url,
                 positiveConcepts: positiveConcepts,
                 negativeConcepts: negativeConcepts,
-                crop: crop,
                 metadata: metadata,
                 createdAt: createdAt,
                 geo: geoPoint,
