@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Clarifai.API.Requests.Models;
-using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Predictions;
 using Newtonsoft.Json.Linq;
@@ -20,7 +19,6 @@ namespace Clarifai.API.Requests.Inputs
         private readonly ModifyAction _action;
         private readonly IEnumerable<Concept> _positiveConcepts;
         private readonly IEnumerable<Concept> _negativeConcepts;
-        private readonly IEnumerable<RegionFeedback> _regionFeedbacks;
 
         /// <summary>
         /// Ctor.
@@ -30,17 +28,15 @@ namespace Clarifai.API.Requests.Inputs
         /// <param name="action">the action</param>
         /// <param name="positiveConcepts">positive concepts</param>
         /// <param name="negativeConcepts">negative concepts</param>
-        /// <param name="regionFeedbacks">region feedbacks</param>
-        public ModifyInputRequest(IClarifaiHttpClient httpClient, string inputID, ModifyAction action,
-            IEnumerable<Concept> positiveConcepts, IEnumerable<Concept> negativeConcepts,
-            IEnumerable<RegionFeedback> regionFeedbacks = null)
+        public ModifyInputRequest(IClarifaiHttpClient httpClient, string inputID,
+            ModifyAction action, IEnumerable<Concept> positiveConcepts,
+            IEnumerable<Concept> negativeConcepts)
             : base(httpClient)
         {
             _inputID = inputID;
             _action = action;
             _positiveConcepts = positiveConcepts;
             _negativeConcepts = negativeConcepts;
-            _regionFeedbacks = regionFeedbacks;
         }
 
         /// <inheritdoc />
@@ -62,17 +58,13 @@ namespace Clarifai.API.Requests.Inputs
             {
                 concepts.AddRange(_negativeConcepts.Select(c => c.Serialize(false)));
             }
-            var data = new JObject(
-                new JProperty("concepts", concepts));
-            if (_regionFeedbacks !=  null && _regionFeedbacks.Any())
-            {
-                data["regions"] = new JArray(_regionFeedbacks.Select(r => r.Serialize()));
-            }
+
             return new JObject(
                 new JProperty("action", _action.Serialize()),
                 new JProperty("inputs", new JArray(new JObject(
                     new JProperty("id", _inputID),
-                    new JProperty("data", data)))));
+                    new JProperty("data", new JObject(
+                        new JProperty("concepts", concepts)))))));
         }
     }
 }

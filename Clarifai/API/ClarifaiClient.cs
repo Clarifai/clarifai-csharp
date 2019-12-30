@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Clarifai.API.Requests.Concepts;
-using Clarifai.API.Requests.Feedbacks;
 using Clarifai.API.Requests.Inputs;
 using Clarifai.API.Requests.Models;
-using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Models.OutputsInfo;
@@ -118,11 +116,10 @@ namespace Clarifai.API
         /// <inheritdoc />
         public ModifyInputRequest ModifyInput(string inputID, ModifyAction action,
             IEnumerable<Concept> positiveConcepts = null,
-            IEnumerable<Concept> negativeConcepts = null,
-            IEnumerable<RegionFeedback> regionFeedbacks = null)
+            IEnumerable<Concept> negativeConcepts = null)
         {
             return new ModifyInputRequest(HttpClient, inputID, action, positiveConcepts,
-                negativeConcepts, regionFeedbacks);
+                negativeConcepts);
         }
 
         /// <inheritdoc />
@@ -294,23 +291,6 @@ namespace Clarifai.API
             string language = null)
         {
             return new SearchInputsRequest(HttpClient, searchClauses, language);
-        }
-
-        /// <inheritdoc />
-        public ModelFeedbackRequest ModelFeedback(string modelID, string imageUrl, string inputID,
-            string outputID, string endUserID, string sessionID,
-            IEnumerable<ConceptFeedback> concepts = null,
-            IEnumerable<RegionFeedback> regions = null)
-        {
-            return new ModelFeedbackRequest(HttpClient, modelID, imageUrl, inputID, outputID, endUserID,
-                sessionID, concepts, regions);
-        }
-
-        /// <inheritdoc />
-        public SearchesFeedbackRequest SearchesFeedback(string inputID, string searchID,
-            string endUserID, string sessionID)
-        {
-            return new SearchesFeedbackRequest(HttpClient, inputID, searchID, endUserID, sessionID);
         }
 
         /// <summary>

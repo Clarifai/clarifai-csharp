@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using Clarifai.API.Requests.Concepts;
-using Clarifai.API.Requests.Feedbacks;
 using Clarifai.API.Requests.Inputs;
 using Clarifai.API.Requests.Models;
-using Clarifai.DTOs.Feedbacks;
 using Clarifai.DTOs.Inputs;
 using Clarifai.DTOs.Models;
 using Clarifai.DTOs.Models.OutputsInfo;
@@ -109,12 +107,10 @@ namespace Clarifai.API
         /// <param name="action">the action</param>
         /// <param name="positiveConcepts">the concepts associated with the input</param>
         /// <param name="negativeConcepts">the concepts not associated with the input</param>
-        /// <param name="regionFeedbacks">the regions</param>
         /// <returns>a new ModifyInputRequest instance</returns>
         ModifyInputRequest ModifyInput(string inputID, ModifyAction action,
             IEnumerable<Concept> positiveConcepts = null,
-            IEnumerable<Concept> negativeConcepts = null,
-            IEnumerable<RegionFeedback> regionFeedbacks = null);
+            IEnumerable<Concept> negativeConcepts = null);
 
         /// <summary>
         /// Sets the given metadata to this input's metadata.
@@ -379,35 +375,5 @@ namespace Clarifai.API
         /// <returns>a new SearchInputsRequest instance</returns>
         SearchInputsRequest SearchInputs(IEnumerable<SearchBy> searchClauses,
             string language = null);
-
-        /// <summary>
-        /// Used to send a feedback of prediction success to the model.
-        /// </summary>
-        /// <param name="modelID">the model ID</param>
-        /// <param name="imageUrl">the input URL (image or video)</param>
-        /// <param name="inputID">the input ID</param>
-        /// <param name="outputID">the output ID</param>
-        /// <param name="endUserID">the end user ID</param>
-        /// <param name="sessionID">the session ID</param>
-        /// <param name="concepts">the concepts</param>
-        /// <param name="regions">the regions</param>
-        /// <returns>a new ModelFeedbackRequest instance</returns>
-        ModelFeedbackRequest ModelFeedback(string modelID, string imageUrl, string inputID,
-            string outputID, string endUserID, string sessionID,
-            IEnumerable<ConceptFeedback> concepts = null,
-            IEnumerable<RegionFeedback> regions = null);
-
-        /// <summary>
-        /// This request is meant to collect the correctly searched inputs, which is usually done by
-        /// capturing your end user's clicks on the given search results. Your feedback will help us
-        /// improve our search algorithm.
-        /// </summary>
-        /// <param name="inputID">the input ID of a correct image (hit)</param>
-        /// <param name="searchID">ID of the search from SearchInputsRequest.</param>
-        /// <param name="endUserID">the ID associated with your end user</param>
-        /// <param name="sessionID">the ID associated with your user's interface</param>
-        /// <returns></returns>
-        SearchesFeedbackRequest SearchesFeedback(string inputID, string searchID, string endUserID,
-            string sessionID);
     }
 }
