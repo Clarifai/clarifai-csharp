@@ -54,6 +54,10 @@ namespace Clarifai.API.Requests.Models
             {
                 ModelType modelType = ModelType.DetermineModelType(
                     (string)model.output_info.type_ext);
+                if (modelType == null)
+                {
+                    continue;
+                }
                 models.Add(Model.Deserialize(HttpClient, modelType.Prediction, model));
             }
             return models;
