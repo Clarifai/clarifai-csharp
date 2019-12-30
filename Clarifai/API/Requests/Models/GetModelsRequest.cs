@@ -29,9 +29,6 @@ namespace Clarifai.API.Requests.Models
                 ModelType modelType = ModelType.DetermineModelType(typeExt);
                 if (modelType == null)
                 {
-                    Console.Error.WriteLine(
-                        $"Warning: Unknown model type '{typeExt}', skipping. Please upgrade the " +
-                        $"to the latest version of the library.");
                     continue;
                 }
                 models.Add(Model.Deserialize(HttpClient, modelType.Prediction, model));
