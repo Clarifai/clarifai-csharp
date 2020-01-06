@@ -51,7 +51,7 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task ImageWithCropThrowsWhenConstructed()
+        public void ImageWithCropThrowsWhenConstructed()
         {
             Assert.Throws<ClarifaiException>(() =>
             {
