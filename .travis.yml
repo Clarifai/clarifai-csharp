@@ -40,40 +40,23 @@ matrix:
       dist: trusty
       env:
         - OS=linux
-        - DOTNET_CORE_VERSION=2.0
+        - DOTNET_CORE_VERSION=LTS
     - os: linux
       dist: trusty
       env:
         - OS=linux
-        - DOTNET_CORE_VERSION=LTS
-#    - os: linux
-#      dist: trusty
-#      env:
-#        - OS=linux
-#        - DOTNET_CORE_VERSION=Current
+        - DOTNET_CORE_VERSION=Current
     - os: osx
       osx_image: xcode9.3
       env:
         - OS=osx93
         - DOTNET_CORE_VERSION=LTS
-#    - os: osx
-#      python: "3.6"
-#      osx_image: xcode9.3
-#      env:
-#        - OS=osx93
-#        - DOTNET_CORE_VERSION=Current
     - os: osx
       python: "3.6"
-      osx_image: xcode9.2
+      osx_image: xcode9.3
       env:
-        - OS=osx
-        - DOTNET_CORE_VERSION=LTS
-#    - os: osx
-#      python: "3.6"
-#      osx_image: xcode9.2
-#      env:
-#        - OS=osx
-#        - DOTNET_CORE_VERSION=Current
+        - OS=osx93
+        - DOTNET_CORE_VERSION=Current
 
 deploy:
   - provider: script
