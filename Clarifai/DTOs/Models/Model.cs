@@ -83,7 +83,6 @@ namespace Clarifai.DTOs.Models
                 { typeof(FaceConcepts), () => FaceConceptsModel.Deserialize(httpClient, model)},
                 { typeof(FaceDetection), () => FaceDetectionModel.Deserialize(httpClient, model)},
                 { typeof(FaceEmbedding), () => FaceEmbeddingModel.Deserialize(httpClient, model)},
-                { typeof(Focus), () => FocusModel.Deserialize(httpClient, model)},
                 { typeof(Logo), () => LogoModel.Deserialize(httpClient, model)},
                 { typeof(Frame), () => VideoModel.Deserialize(httpClient, model)},
             };

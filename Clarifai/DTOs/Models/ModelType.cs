@@ -23,8 +23,6 @@ namespace Clarifai.DTOs.Models
             new ModelType("facedetect", typeof(FaceDetectionModel), typeof(FaceDetection));
         public static ModelType FaceEmbedding =>
             new ModelType("detect-embed", typeof(FaceEmbeddingModel), typeof(FaceEmbedding));
-        public static ModelType Focus =>
-            new ModelType("focus", typeof(FocusModel), typeof(Focus));
         public static ModelType Logo =>
             new ModelType("detection", typeof(LogoModel), typeof(Logo));
         public static ModelType Video =>
@@ -51,7 +49,7 @@ namespace Clarifai.DTOs.Models
             var modelTypes = new List<ModelType>
             {
                 Color, Concept, Demographics, Embedding, FaceConcepts, FaceDetection, FaceEmbedding,
-                Focus, Logo, Video
+                Logo, Video
             };
             var query = modelTypes.Where(mt => mt.TypeExt == typeExt).ToList();
             if (!query.Any()) return null;

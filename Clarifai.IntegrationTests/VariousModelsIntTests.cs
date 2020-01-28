@@ -228,39 +228,6 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task GetFocusModelShouldBeSuccessful()
-        {
-            ClarifaiResponse<IModel<Focus>> response =
-                await Client.GetModel<Focus>(Client.PublicModels.FocusModel.ModelID)
-                    .ExecuteAsync();
-
-            AssertResponseSuccess(response);
-            Assert.AreEqual(10000, response.Status.StatusCode);
-            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
-            Assert.NotNull(response.RawBody);
-
-            FocusModel focusModel = (FocusModel) response.Get();
-            Assert.NotNull(focusModel.ModelID);
-        }
-
-        [Test]
-        [Retry(3)]
-        public async Task PredictOnFocusModelShouldBeSuccessful()
-        {
-            string modelID = Client.PublicModels.FocusModel.ModelID;
-
-            ClarifaiResponse<ClarifaiOutput<Focus>> predictResponse =
-                await Client.Predict<Focus>(
-                        modelID,
-                        new ClarifaiURLImage(APPAREL1))
-                    .ExecuteAsync();
-            AssertResponseSuccess(predictResponse);
-            Focus focus = predictResponse.Get().Data[0];
-            Assert.NotNull(focus.Crop);
-        }
-
-        [Test]
-        [Retry(3)]
         public async Task GetLogoModelShouldBeSuccessful()
         {
             ClarifaiResponse<IModel<Logo>> response =

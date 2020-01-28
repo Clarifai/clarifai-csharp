@@ -77,13 +77,13 @@ namespace Clarifai.UnitTests
     },
     ""models"": [{
         ""id"": ""@modelID"",
-        ""name"": ""focus"",
+        ""name"": ""color"",
         ""created_at"": ""2017-03-06T22:57:00.660603Z"",
         ""app_id"": ""main"",
         ""output_info"": {
             ""message"": ""Show output_info with: GET /models/{model_id}/output_info"",
-            ""type"": ""blur"",
-            ""type_ext"": ""focus""
+            ""type"": ""color"",
+            ""type_ext"": ""color""
         },
         ""model_version"": {
             ""id"": ""@modelVersionID"",
@@ -93,20 +93,20 @@ namespace Clarifai.UnitTests
                 ""description"": ""Model trained successfully""
             }
         },
-        ""display_name"": ""Focus""
+        ""display_name"": ""Color""
     }]
 }
 ");
 
             var client = new ClarifaiClient(httpClient);
-            var response = await client.SearchModels("*", ModelType.Focus).ExecuteAsync();
+            var response = await client.SearchModels("*", ModelType.Color).ExecuteAsync();
 
 
             var expectedRequestBody = JObject.Parse(@"
 {
     ""model_query"": {
       ""name"": ""*"",
-      ""type"": ""focus""
+      ""type"": ""color""
     }
 }
 ");
