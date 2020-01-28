@@ -155,15 +155,6 @@ namespace Clarifai.DTOs.Models.Outputs
                         }
                         break;
                     }
-                    case "Focus":
-                    {
-                        foreach (dynamic focus in jsonObject.data.regions)
-                        {
-                            data.Add(Focus.Deserialize(focus,
-                                (decimal) jsonObject.data.focus.value));
-                        }
-                        break;
-                    }
                     case "Frame":
                     {
                         foreach (dynamic frame in jsonObject.data.frames)

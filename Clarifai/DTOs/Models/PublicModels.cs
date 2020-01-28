@@ -89,11 +89,6 @@ namespace Clarifai.DTOs.Models
         public FaceEmbeddingModel FaceEmbeddingModel { get; }
 
         /// <summary>
-        /// Focus model returs overall focus and identifies in-focus regions.
-        /// </summary>
-        public FocusModel FocusModel { get; }
-
-        /// <summary>
         /// Logo model detects and identifies brand logos.
         /// </summary>
         public LogoModel LogoModel { get; }
@@ -144,8 +139,6 @@ namespace Clarifai.DTOs.Models
 
             FaceDetectionModel = new FaceDetectionModel(httpClient,
                 "a403429f2ddf4b49b307e318f00e528b");
-
-            FocusModel = new FocusModel(httpClient, "c2cf7cecd8a6427da375b9f35fcd2381");
 
             LogoModel = new LogoModel(httpClient, "c443119bf2ed4da98487520d01a0b1e3");
 

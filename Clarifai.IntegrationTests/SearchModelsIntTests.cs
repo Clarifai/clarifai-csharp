@@ -26,7 +26,7 @@ namespace Clarifai.IntegrationTests
         public async Task SearchModelsByTypeShouldBeSuccessful()
         {
             ClarifaiResponse<List<IModel>> response = await Client.SearchModels("*",
-                    ModelType.Focus)
+                    ModelType.Color)
                 .ExecuteAsync();
 
             AssertResponseSuccess(response);
