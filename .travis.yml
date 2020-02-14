@@ -64,7 +64,7 @@ deploy:
       - chmod +x ./deploy.sh && ./deploy.sh
     skip_cleanup: true
     on:
-      condition: "$OS == osx && $DOTNET_CORE_VERSION == LTS"
+      condition: "$OS == osx93 && $DOTNET_CORE_VERSION == Current"
       tags: true
       repo: Clarifai/clarifai-csharp
   - provider: releases
