@@ -23,13 +23,13 @@ namespace Clarifai.UnitTests
     },
     ""models"": [{
         ""id"": ""@modelID"",
-        ""name"": ""celeb-v1.3"",
+        ""name"": ""moderation"",
         ""created_at"": ""2016-10-25T19:30:38.541073Z"",
         ""app_id"": ""main"",
         ""output_info"": {
             ""message"": ""Show output_info with: GET /models/{model_id}/output_info"",
             ""type"": ""concept"",
-            ""type_ext"": ""facedetect-identity""
+            ""type_ext"": ""concept""
         },
         ""model_version"": {
             ""id"": ""@modelVersionID"",
@@ -40,18 +40,18 @@ namespace Clarifai.UnitTests
             },
             ""active_concept_count"": 10554
         },
-        ""display_name"": ""Celebrity""
+        ""display_name"": ""Moderation""
     }]
 }
 ");
 
             var client = new ClarifaiClient(httpClient);
-            var response = await client.SearchModels("celeb*").ExecuteAsync();
+            var response = await client.SearchModels("moder*").ExecuteAsync();
 
             var expectedRequestBody = JObject.Parse(@"
 {
     ""model_query"": {
-      ""name"": ""celeb*""
+      ""name"": ""moder*""
     }
 }
 ");

@@ -50,44 +50,6 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task GetDemographicsModelShouldBeSuccessful()
-        {
-            ClarifaiResponse<IModel<Demographics>> response =
-                await Client.GetModel<Demographics>(
-                        Client.PublicModels.DemographicsModel.ModelID)
-                    .ExecuteAsync();
-
-            AssertResponseSuccess(response);
-            Assert.AreEqual(10000, response.Status.StatusCode);
-            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
-            Assert.NotNull(response.RawBody);
-
-            DemographicsModel demographicsModel = (DemographicsModel) response.Get();
-            Assert.NotNull(demographicsModel.ModelID);
-        }
-
-        [Test]
-        [Retry(3)]
-        public async Task PredictOnDemographicsModelShouldBeSuccessful()
-        {
-            string modelID = Client.PublicModels.DemographicsModel.ModelID;
-
-            ClarifaiResponse<ClarifaiOutput<Demographics>> predictResponse =
-                await Client.Predict<Demographics>(
-                        modelID,
-                        new ClarifaiURLImage(CELEB1))
-                    .ExecuteAsync();
-            AssertResponseSuccess(predictResponse);
-
-            Demographics demographics = predictResponse.Get().Data[0];
-            Assert.NotNull(demographics.Crop);
-            Assert.NotNull(demographics.AgeAppearanceConcepts);
-            Assert.NotNull(demographics.GenderAppearanceConcepts);
-            Assert.NotNull(demographics.MulticulturalAppearanceConcepts);
-        }
-
-        [Test]
-        [Retry(3)]
         public async Task GetEmbeddingModelShouldBeSuccessful()
         {
             ClarifaiResponse<IModel<Embedding>> response =
@@ -118,75 +80,6 @@ namespace Clarifai.IntegrationTests
             AssertResponseSuccess(predictResponse);
             Embedding embedding = predictResponse.Get().Data[0];
             Assert.NotNull(embedding.Vector);
-        }
-
-        [Test]
-        [Retry(3)]
-        public async Task GetFaceConceptsModelShouldBeSuccessful()
-        {
-            ClarifaiResponse<IModel<FaceConcepts>> response =
-                await Client.GetModel<FaceConcepts>(
-                        Client.PublicModels.CelebrityModel.ModelID)
-                    .ExecuteAsync();
-
-            AssertResponseSuccess(response);
-            Assert.AreEqual(10000, response.Status.StatusCode);
-            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
-            Assert.NotNull(response.RawBody);
-
-            FaceConceptsModel faceConceptsModel = (FaceConceptsModel) response.Get();
-            Assert.NotNull(faceConceptsModel.ModelID);
-        }
-
-        [Test]
-        [Retry(3)]
-        public async Task PredictOnFaceConceptsModelShouldBeSuccessful()
-        {
-            string modelID = Client.PublicModels.CelebrityModel.ModelID;
-
-            ClarifaiResponse<ClarifaiOutput<FaceConcepts>> predictResponse =
-                await Client.Predict<FaceConcepts>(
-                        modelID,
-                        new ClarifaiURLImage(FACE1))
-                    .ExecuteAsync();
-            AssertResponseSuccess(predictResponse);
-            FaceConcepts faceConcepts = predictResponse.Get().Data[0];
-            Assert.NotNull(faceConcepts.Crop);
-            Assert.NotNull(faceConcepts.Concepts);
-        }
-
-        [Test]
-        [Retry(3)]
-        public async Task GetFaceDetectionModelShouldBeSuccessful()
-        {
-            ClarifaiResponse<IModel<FaceDetection>> response =
-                await Client.GetModel<FaceDetection>(
-                        Client.PublicModels.FaceDetectionModel.ModelID)
-                    .ExecuteAsync();
-
-            AssertResponseSuccess(response);
-            Assert.AreEqual(10000, response.Status.StatusCode);
-            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
-            Assert.NotNull(response.RawBody);
-
-            FaceDetectionModel faceDetectionModel = (FaceDetectionModel) response.Get();
-            Assert.NotNull(faceDetectionModel.ModelID);
-        }
-
-        [Test]
-        [Retry(3)]
-        public async Task PredictOnFaceDetectionModelShouldBeSuccessful()
-        {
-            string modelID = Client.PublicModels.FaceDetectionModel.ModelID;
-
-            ClarifaiResponse<ClarifaiOutput<FaceDetection>> predictResponse =
-                await Client.Predict<FaceDetection>(
-                        modelID,
-                        new ClarifaiURLImage(FACE1))
-                    .ExecuteAsync();
-            AssertResponseSuccess(predictResponse);
-            FaceDetection faceDetection = predictResponse.Get().Data[0];
-            Assert.NotNull(faceDetection.Crop);
         }
 
         [Test]
@@ -228,10 +121,10 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
-        public async Task GetLogoModelShouldBeSuccessful()
+        public async Task GetDetectionModelShouldBeSuccessful()
         {
-            ClarifaiResponse<IModel<Logo>> response =
-                await Client.GetModel<Logo>(Client.PublicModels.LogoModel.ModelID)
+            ClarifaiResponse<IModel<Detection>> response =
+                await Client.GetModel<Detection>(Client.PublicModels.LogoModel.ModelID)
                     .ExecuteAsync();
 
             AssertResponseSuccess(response);
@@ -239,23 +132,23 @@ namespace Clarifai.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
             Assert.NotNull(response.RawBody);
 
-            LogoModel logoModel = (LogoModel) response.Get();
+            DetectionModel logoModel = (DetectionModel) response.Get();
             Assert.NotNull(logoModel.ModelID);
             Assert.NotNull(logoModel.OutputInfo.Concepts);
         }
 
         [Test]
         [Retry(3)]
-        public async Task PredictOnLogoModelShouldBeSuccessful()
+        public async Task PredictOnDetectionModelShouldBeSuccessful()
         {
             string modelID = Client.PublicModels.LogoModel.ModelID;
 
-            ClarifaiResponse<ClarifaiOutput<Logo>> predictResponse =
-                await Client.Predict<Logo>(
+            ClarifaiResponse<ClarifaiOutput<Detection>> predictResponse =
+                await Client.Predict<Detection>(
                         modelID, new ClarifaiURLImage(APPAREL1))
                     .ExecuteAsync();
             AssertResponseSuccess(predictResponse);
-            Logo logo = predictResponse.Get().Data[0];
+            Detection logo = predictResponse.Get().Data[0];
             Assert.NotNull(logo.Crop);
             Assert.NotNull(logo.Concepts);
         }

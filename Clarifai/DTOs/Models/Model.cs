@@ -78,12 +78,9 @@ namespace Clarifai.DTOs.Models
             var typeToDeserialization = new Dictionary<Type, Func<Model>> {
                 { typeof(Color), () => ColorModel.Deserialize(httpClient, model)},
                 { typeof(Concept), () => ConceptModel.Deserialize(httpClient, model)},
-                { typeof(Demographics), () => DemographicsModel.Deserialize(httpClient, model)},
+                { typeof(Detection), () => DetectionModel.Deserialize(httpClient, model)},
                 { typeof(Embedding), () => EmbeddingModel.Deserialize(httpClient, model)},
-                { typeof(FaceConcepts), () => FaceConceptsModel.Deserialize(httpClient, model)},
-                { typeof(FaceDetection), () => FaceDetectionModel.Deserialize(httpClient, model)},
                 { typeof(FaceEmbedding), () => FaceEmbeddingModel.Deserialize(httpClient, model)},
-                { typeof(Logo), () => LogoModel.Deserialize(httpClient, model)},
                 { typeof(Frame), () => VideoModel.Deserialize(httpClient, model)},
             };
 

@@ -6,15 +6,12 @@ using System.Collections.Generic;
 
 namespace Clarifai.DTOs.Models
 {
-    /// <summary>
-    /// The face detection model finds regions where faces are detected.
-    /// </summary>
-    public class FaceDetectionModel : Model<FaceDetection>
+    public class DetectionModel : Model<Detection>
     {
         /// <summary>
         /// The output info.
         /// </summary>
-        public new FaceDetectionOutputInfo OutputInfo => (FaceDetectionOutputInfo) base.OutputInfo;
+        public new DetectionOutputInfo OutputInfo => (DetectionOutputInfo) base.OutputInfo;
 
         /// <summary>
         /// Ctor.
@@ -26,9 +23,9 @@ namespace Clarifai.DTOs.Models
         /// <param name="appID">the application ID</param>
         /// <param name="modelVersion">the model version</param>
         /// <param name="outputInfo">the output info</param>
-        public FaceDetectionModel(IClarifaiHttpClient httpClient, string modelID,
-            string name = null, DateTime? createdAt = null, string appID = null,
-            ModelVersion modelVersion = null, FaceDetectionOutputInfo outputInfo = null)
+        public DetectionModel(IClarifaiHttpClient httpClient, string modelID, string name = null,
+            DateTime? createdAt = null, string appID = null, ModelVersion modelVersion = null,
+            DetectionOutputInfo outputInfo = null)
             : base(httpClient, modelID, name, createdAt, appID, modelVersion, outputInfo)
         { }
 
@@ -38,22 +35,22 @@ namespace Clarifai.DTOs.Models
         /// <param name="httpClient">the HTTP client</param>
         /// <param name="model">the JSON object</param>
         /// <returns>a new instance</returns>
-        public new static FaceDetectionModel Deserialize(IClarifaiHttpClient httpClient,
-            dynamic model)
+        public new static DetectionModel Deserialize(IClarifaiHttpClient httpClient, dynamic model)
         {
-            return new FaceDetectionModel(
+            return new DetectionModel(
                 httpClient,
                 (string)model.id,
                 name: (string)model.name,
                 createdAt: (DateTime)model.created_at,
                 appID: (string)model.app_id,
-                outputInfo: FaceDetectionOutputInfo.Deserialize(model.output_info),
+                outputInfo: DetectionOutputInfo.Deserialize(model.output_info),
                 modelVersion: Models.ModelVersion.Deserialize(model.model_version));
         }
 
+
         public override string ToString()
         {
-            return $"[FaceDetectionModel: (modelID: {ModelID}]";
+            return $"[DetectionModel: (modelID: {ModelID}]";
         }
     }
 }

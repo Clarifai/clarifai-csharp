@@ -12,19 +12,14 @@ namespace Clarifai.DTOs.Models
             new ModelType("color", typeof(ColorModel), typeof(Color));
         public static ModelType Concept =>
             new ModelType("concept", typeof(ConceptModel), typeof(Concept));
-        public static ModelType Demographics =>
-            new ModelType("facedetect-demographics", typeof(DemographicsModel),
-                typeof(Demographics));
+        public static ModelType DetectConcept =>
+            new ModelType("detect-concept", typeof(DetectionModel), typeof(Detection));
+        public static ModelType Detection =>
+            new ModelType("detection", typeof(DetectionModel), typeof(Detection));
         public static ModelType Embedding =>
             new ModelType("embed", typeof(EmbeddingModel), typeof(Embedding));
-        public static ModelType FaceConcepts =>
-            new ModelType("facedetect-identity", typeof(FaceConceptsModel), typeof(FaceConcepts));
-        public static ModelType FaceDetection =>
-            new ModelType("facedetect", typeof(FaceDetectionModel), typeof(FaceDetection));
         public static ModelType FaceEmbedding =>
             new ModelType("detect-embed", typeof(FaceEmbeddingModel), typeof(FaceEmbedding));
-        public static ModelType Logo =>
-            new ModelType("detection", typeof(LogoModel), typeof(Logo));
         public static ModelType Video =>
             new ModelType("video", typeof(VideoModel), typeof(Frame));
 
@@ -48,8 +43,7 @@ namespace Clarifai.DTOs.Models
             // TODO(Rok) MEDIUM: This should be removed and reflection used to get all model types.
             var modelTypes = new List<ModelType>
             {
-                Color, Concept, Demographics, Embedding, FaceConcepts, FaceDetection, FaceEmbedding,
-                Logo, Video
+                Color, Concept, DetectConcept, Detection, Embedding, FaceEmbedding, Video
             };
             var query = modelTypes.Where(mt => mt.TypeExt == typeExt).ToList();
             if (!query.Any()) return null;
