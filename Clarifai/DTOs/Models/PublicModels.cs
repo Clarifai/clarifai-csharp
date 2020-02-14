@@ -63,9 +63,9 @@ namespace Clarifai.DTOs.Models
         public ConceptModel WeddingModel { get; }
 
         /// <summary>
-        /// Demographics model predics the age, gender, and cultural appearance.
+        /// Demographics model predicts the age, gender, and cultural appearance.
         /// </summary>
-        public DemographicsModel DemographicsModel { get; }
+        public DetectionModel DemographicsModel { get; }
 
         /// <summary>
         /// General embedding model computes numerical embedding vectors using our General model.
@@ -75,12 +75,12 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Celebrity model identifies celebrities that closely resemble detected faces.
         /// </summary>
-        public FaceConceptsModel CelebrityModel { get; }
+        public DetectionModel CelebrityModel { get; }
 
         /// <summary>
         /// Face detection model detects the presence and location of human faces.
         /// </summary>
-        public FaceDetectionModel FaceDetectionModel { get; }
+        public DetectionModel FaceDetectionModel { get; }
 
         /// <summary>
         /// Face embedding model computes numerical embedding vectors using our Face detection
@@ -91,7 +91,7 @@ namespace Clarifai.DTOs.Models
         /// <summary>
         /// Logo model detects and identifies brand logos.
         /// </summary>
-        public LogoModel LogoModel { get; }
+        public DetectionModel LogoModel { get; }
 
 
         public VideoModel ApparelVideoModel { get; }
@@ -126,21 +126,21 @@ namespace Clarifai.DTOs.Models
             TravelModel = new ConceptModel(httpClient, "eee28c313d69466f836ab83287a54ed9");
             WeddingModel = new ConceptModel(httpClient, "c386b7a870114f4a87477c0824499348");
 
-            DemographicsModel = new DemographicsModel(httpClient,
+            DemographicsModel = new DetectionModel(httpClient,
                 "c0c0ac362b03416da06ab3fa36fb58e3");
 
             GeneralEmbeddingModel = new EmbeddingModel(httpClient,
                 "bbb5f41425b8468d9b7a554ff10f8581");
 
-            CelebrityModel = new FaceConceptsModel(httpClient, "e466caa0619f444ab97497640cefc4dc");
+            CelebrityModel = new DetectionModel(httpClient, "e466caa0619f444ab97497640cefc4dc");
 
             FaceEmbeddingModel = new FaceEmbeddingModel(httpClient,
                 "d02b4508df58432fbb84e800597b8959");
 
-            FaceDetectionModel = new FaceDetectionModel(httpClient,
+            FaceDetectionModel = new DetectionModel(httpClient,
                 "a403429f2ddf4b49b307e318f00e528b");
 
-            LogoModel = new LogoModel(httpClient, "c443119bf2ed4da98487520d01a0b1e3");
+            LogoModel = new DetectionModel(httpClient, "c443119bf2ed4da98487520d01a0b1e3");
 
             ApparelVideoModel = new VideoModel(httpClient, "e0be3b9d6a454f0493ac3a30784001ff");
             FoodVideoModel = new VideoModel(httpClient, "bd367be194cf45149e75f01d59f77ba7");

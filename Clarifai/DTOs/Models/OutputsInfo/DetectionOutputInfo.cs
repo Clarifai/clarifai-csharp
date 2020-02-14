@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Clarifai.DTOs.Predictions;
 using Newtonsoft.Json.Linq;
 
 namespace Clarifai.DTOs.Models.OutputsInfo
 {
     /// <summary>
-    /// Certain information regarding the Logo model.
+    /// Certain information regarding the Detection model.
     /// </summary>
-    public class LogoOutputInfo : IOutputInfo
+    public class DetectionOutputInfo : IOutputInfo
     {
         /// <inheritdoc />
         public string Type { get; }
@@ -47,8 +47,8 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         /// <param name="concepts">the concepts</param>
         /// <param name="areConceptsMutuallyExclusive">are concepts exclusive</param>
         /// <param name="isEnvironmentClosed">is environment closed</param>
-        /// <param name="language">the lanugage</param>
-        private LogoOutputInfo(string type, string typeExt, string message,
+        /// <param name="language">the language</param>
+        private DetectionOutputInfo(string type, string typeExt, string message,
             IEnumerable<Concept> concepts, bool areConceptsMutuallyExclusive = false,
             bool isEnvironmentClosed = false, string language = null)
         {
@@ -71,7 +71,7 @@ namespace Clarifai.DTOs.Models.OutputsInfo
         /// </summary>
         /// <param name="jsonObject">the JSON dynamic object</param>
         /// <returns>the deserialized object</returns>
-        public static LogoOutputInfo Deserialize(dynamic jsonObject)
+        public static DetectionOutputInfo Deserialize(dynamic jsonObject)
         {
             List<Concept> concepts = null;
             if (jsonObject.data != null)
@@ -88,7 +88,7 @@ namespace Clarifai.DTOs.Models.OutputsInfo
                 areConceptsMutuallyExclusive = jsonObject.output_config.concepts_mutually_exclusive;
                 isEnvironmentClosed = jsonObject.output_config.closed_environment;
             }
-            return new LogoOutputInfo(
+            return new DetectionOutputInfo(
                 (string) jsonObject.type,
                 (string) jsonObject.type_ext,
                 (string) jsonObject.message,
@@ -100,7 +100,7 @@ namespace Clarifai.DTOs.Models.OutputsInfo
 
         public override bool Equals(object obj)
         {
-            return obj is LogoOutputInfo info &&
+            return obj is DetectionOutputInfo info &&
                    EqualityComparer<IEnumerable<Concept>>.Default.Equals(Concepts, info.Concepts) &&
                    AreConceptsMutuallyExclusive == info.AreConceptsMutuallyExclusive &&
                    IsEnvironmentClosed == info.IsEnvironmentClosed &&
@@ -121,7 +121,7 @@ namespace Clarifai.DTOs.Models.OutputsInfo
 
         public override string ToString()
         {
-            return $"[LogoOutputInfo: (concepts: {Concepts})]";
+            return $"[DetectionOutputInfo: (concepts: {Concepts})]";
         }
     }
 }

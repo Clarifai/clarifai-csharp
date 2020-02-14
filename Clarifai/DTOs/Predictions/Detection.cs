@@ -1,36 +1,36 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Clarifai.DTOs.Predictions
 {
-    public class Logo : IPrediction
+    public class Detection : IPrediction
     {
-        public string TYPE => "logo";
+        public string TYPE => "detection";
 
         public Crop Crop { get; }
 
         public List<Concept> Concepts { get; }
 
-        private Logo(Crop crop, List<Concept> concepts)
+        private Detection(Crop crop, List<Concept> concepts)
         {
             Crop = crop;
             Concepts = concepts;
         }
 
-        public static Logo Deserialize(dynamic jsonObject)
+        public static Detection Deserialize(dynamic jsonObject)
         {
             var concepts = new List<Concept>();
             foreach (dynamic concept in jsonObject.data.concepts)
             {
                 concepts.Add(Concept.Deserialize(concept));
             }
-            return new Logo(DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box), concepts);
+            return new Detection(DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box), concepts);
         }
 
         public override bool Equals(object obj)
         {
-            return obj is Logo logo &&
-                   EqualityComparer<Crop>.Default.Equals(Crop, logo.Crop) &&
-                   EqualityComparer<List<Concept>>.Default.Equals(Concepts, logo.Concepts);
+            return obj is Detection detection &&
+                   EqualityComparer<Crop>.Default.Equals(Crop, detection.Crop) &&
+                   EqualityComparer<List<Concept>>.Default.Equals(Concepts, detection.Concepts);
         }
 
         public override int GetHashCode()
@@ -43,7 +43,7 @@ namespace Clarifai.DTOs.Predictions
 
         public override string ToString()
         {
-            return $"[Logo: (crop: {Crop}, concepts: {Concepts})]";
+            return $"[Detection: (crop: {Crop}, concepts: {Concepts})]";
         }
     }
 }

@@ -114,36 +114,11 @@ namespace Clarifai.DTOs.Models.Outputs
                         }
                         break;
                     }
-                    case "Demographics":
-                    {
-                        foreach (dynamic demographics in jsonObject.data.regions)
-                        {
-                            data.Add(Demographics.Deserialize(demographics));
-                        }
-                        break;
-                    }
                     case "Embedding":
                     {
                         foreach (dynamic embedding in jsonObject.data.embeddings)
                         {
                             data.Add(Embedding.Deserialize(embedding));
-                        }
-                        break;
-                    }
-                    case "FaceConcepts":
-                    {
-                        foreach (dynamic faceConcepts in
-                            jsonObject.data.regions)
-                        {
-                            data.Add(FaceConcepts.Deserialize(faceConcepts));
-                        }
-                        break;
-                    }
-                    case "FaceDetection":
-                    {
-                        foreach (dynamic faceDetection in jsonObject.data.regions)
-                        {
-                            data.Add(FaceDetection.Deserialize(faceDetection));
                         }
                         break;
                     }
@@ -163,11 +138,19 @@ namespace Clarifai.DTOs.Models.Outputs
                         }
                         break;
                     }
-                    case "Logo":
+                    case "DetectConcept":
                     {
-                        foreach (dynamic logo in jsonObject.data.regions)
+                        foreach (dynamic detectConcept in jsonObject.data.regions)
                         {
-                            data.Add(Logo.Deserialize(logo));
+                            data.Add(Detection.Deserialize(detectConcept));
+                        }
+                        break;
+                    }
+                    case "Detection":
+                    {
+                        foreach (dynamic detection in jsonObject.data.regions)
+                        {
+                            data.Add(Detection.Deserialize(detection));
                         }
                         break;
                     }
