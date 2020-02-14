@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [[1.4.0]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.4.0) - [NuGet](https://www.nuget.org/packages/Clarifai/1.4.0) - 2020-02-14
+
+See the API changes for more details on the Face proto deprecation and the facedetect* model type cleanup:
+https://docs.clarifai.com/product-updates/upcoming-api-changes
+
+### Added
+- DetectionModel
+
+### Removed
+- DemographicsModel, LogoModel, FaceConceptsModel, FaceDetectionModel, FocusModel.
+- Feedback
+
 ## [[1.3.2]](https://github.com/Clarifai/clarifai-csharp/releases/tag/1.3.2) - [NuGet](https://www.nuget.org/packages/Clarifai/1.3.2) - 2019-11-23
 
 ### Added

@@ -12,7 +12,7 @@ namespace Clarifai.API
     /// <inheritdoc />
     public class ClarifaiHttpClient : IClarifaiHttpClient
     {
-        public string CurrentVersion => "1.3.2";
+        public string CurrentVersion => "1.4.0";
 
         public string ApiKey { get; }
 
