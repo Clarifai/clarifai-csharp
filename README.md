@@ -54,7 +54,7 @@ namespace hello_csharp
         public static void Main()
         {
             // With `CLARIFAI_API_KEY` defined as an environment variable
-            var client = new ClarifaiClient().
+            var client = new ClarifaiClient();
             
             // When passed in as a string
             var client = new ClarifaiClient("YOUR_CLARIFAI_API_KEY");
@@ -62,7 +62,7 @@ namespace hello_csharp
             // When using async/await
             var res = await client.PublicModels.GeneralModel
                 .Predict(new ClarifaiURLImage("https://samples.clarifai.com/metro-north.jpg"))
-                .ExecuteAsync()
+                .ExecuteAsync();
                             
             // When synchronous
             var res = client.PublicModels.GeneralModel
