@@ -75,6 +75,6 @@ deploy:
       - Clarifai/bin/Release/Clarifai.*.nupkg
       - Clarifai/bin/Release/netstandard1.3/Clarifai.dll
     on:
-      condition: "$OS == osx && $DOTNET_CORE_VERSION == LTS"
+      condition: "$OS == osx93 && $DOTNET_CORE_VERSION == Current"
       tags: true
       repo: Clarifai/clarifai-csharp
