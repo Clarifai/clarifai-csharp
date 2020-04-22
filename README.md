@@ -44,6 +44,7 @@ Find complete code samples in the [docs](https://clarifai.com/developer/docs/).
 
 ```csharp
 using System;
+using System.Threading.Tasks;
 using Clarifai.API;
 using Clarifai.DTOs.Inputs;
 
@@ -51,7 +52,7 @@ namespace hello_csharp
 {
     internal class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
             // With `CLARIFAI_API_KEY` defined as an environment variable
             var client = new ClarifaiClient();
