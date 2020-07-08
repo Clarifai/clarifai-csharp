@@ -161,7 +161,7 @@ namespace Clarifai.IntegrationTests
 
             foreach (Frame frame in response.Get().Data)
             {
-                Assert.AreEqual(0, frame.Time % 2000);
+                Assert.AreEqual(0, (frame.Time + 1000) % 2000);
             }
         }
 
@@ -204,7 +204,7 @@ namespace Clarifai.IntegrationTests
 
             foreach (Frame frame in response.Get().Data)
             {
-                Assert.AreEqual(0, frame.Time % 2000);
+                Assert.AreEqual(0, (frame.Time + 1000) % 2000);
             }
         }
 
@@ -227,7 +227,7 @@ namespace Clarifai.IntegrationTests
 
             foreach (Frame frame in response.Get().Data)
             {
-                Assert.AreEqual(0, frame.Time % 2000);
+                Assert.AreEqual(0, (frame.Time + 1000) % 2000);
             }
         }
 
