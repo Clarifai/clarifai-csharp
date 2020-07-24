@@ -135,10 +135,10 @@ namespace Clarifai.DTOs.Models
             CelebrityModel = new DetectionModel(httpClient, "e466caa0619f444ab97497640cefc4dc");
 
             FaceEmbeddingModel = new FaceEmbeddingModel(httpClient,
-                "d02b4508df58432fbb84e800597b8959");
+                "e15d0f873e66047e579f90cf82c9882z");
 
             FaceDetectionModel = new DetectionModel(httpClient,
-                "a403429f2ddf4b49b307e318f00e528b");
+                "53e1df302c079b3db8a0a36033ed2d15");
 
             LogoModel = new DetectionModel(httpClient, "c443119bf2ed4da98487520d01a0b1e3");
 

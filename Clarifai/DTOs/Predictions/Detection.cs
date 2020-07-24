@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Clarifai.DTOs.Predictions
@@ -19,10 +20,14 @@ namespace Clarifai.DTOs.Predictions
         public static Detection Deserialize(dynamic jsonObject)
         {
             var concepts = new List<Concept>();
-            foreach (dynamic concept in jsonObject.data.concepts)
+            if (jsonObject.data.concepts != null)
             {
-                concepts.Add(Concept.Deserialize(concept));
+                foreach (dynamic concept in jsonObject.data.concepts)
+                {
+                    concepts.Add(Concept.Deserialize(concept));
+                }
             }
+
             return new Detection(DTOs.Crop.Deserialize(jsonObject.region_info.bounding_box), concepts);
         }
 
