@@ -121,6 +121,43 @@ namespace Clarifai.IntegrationTests
 
         [Test]
         [Retry(3)]
+        public async Task GetFaceDetectionModelShouldBeSuccessful()
+        {
+            ClarifaiResponse<IModel<Detection>> response =
+                await Client.GetModel<Detection>(
+                        Client.PublicModels.FaceDetectionModel.ModelID)
+                    .ExecuteAsync();
+
+            AssertResponseSuccess(response);
+            Assert.AreEqual(10000, response.Status.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.HttpCode);
+            Assert.NotNull(response.RawBody);
+
+            DetectionModel faceDetectionModel = (DetectionModel) response.Get();
+            Assert.NotNull(faceDetectionModel.ModelID);
+        }
+
+        [Test]
+        [Retry(3)]
+        public async Task PredictOnFaceDetectionModelShouldBeSuccessful()
+        {
+            string modelID = Client.PublicModels.FaceDetectionModel.ModelID;
+
+            ClarifaiResponse<ClarifaiOutput<Detection>> predictResponse =
+                await Client.Predict<Detection>(
+                        modelID,
+                        new ClarifaiURLImage(CELEB1))
+                    .ExecuteAsync();
+
+            AssertResponseSuccess(predictResponse);
+
+            Detection faceDetection = predictResponse.Get().Data[0];
+            Assert.NotNull(faceDetection.Crop);
+            Assert.NotNull(faceDetection.Concepts);
+        }
+
+        [Test]
+        [Retry(3)]
         public async Task GetDetectionModelShouldBeSuccessful()
         {
             ClarifaiResponse<IModel<Detection>> response =
