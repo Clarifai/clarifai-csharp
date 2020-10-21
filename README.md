@@ -1,5 +1,11 @@
 ![Clarifai logo](logo.png)
 
+# DEPRECATED
+
+## This API Client is no longer supported.
+
+### Please use [Clarifai C# gRPC](https://github.com/Clarifai/clarifai-csharp-grpc) instead, which is faster and more feature-rich.
+
 # Clarifai API C# Client
 
 [![NuGet](https://img.shields.io/nuget/v/Clarifai.svg)](https://www.nuget.org/packages/Clarifai)
