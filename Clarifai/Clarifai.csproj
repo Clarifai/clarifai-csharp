@@ -14,6 +14,6 @@
     <PackageTags>clarifai api prediction deep machine learning computer vision</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 </Project>
